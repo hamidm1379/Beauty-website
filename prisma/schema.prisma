@@ -1,0 +1,559 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
+
+model Product {
+
+  id              Int             @id @default(autoincrement())
+
+  title           String
+  slug            String          @unique
+
+  shortDescription String?
+  description     String?
+
+  sku             String?         @unique
+
+  barcode         String?
+
+  price           Int
+  discountPrice   Int?
+
+  stock           Int             @default(0)
+
+  soldCount       Int             @default(0)
+
+  weight          Float?
+
+  thumbnail       String?
+
+  status          ProductStatus   @default(ACTIVE)
+
+  seoTitle        String?
+  seoDescription  String?
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  brandId         Int?
+  brand           Brand?          @relation(fields: [brandId], references: [id])
+
+  categoryId      Int
+  category        Category        @relation(fields: [categoryId], references: [id])
+
+  images          ProductImage[]
+  banners Banner[]
+  review Review[]
+  orderitem OrderItem[]
+  wishlist Wishlist[]
+  cartitem CartItem[]
+}
+model Category {
+
+  id          Int        @id @default(autoincrement())
+
+  title       String
+
+  slug        String     @unique
+
+  image       String?
+
+  parentId    Int?
+
+  parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+
+  children    Category[] @relation("CategoryTree")
+
+  products    Product[]
+
+  createdAt   DateTime @default(now())
+
+  banners Banner[]
+
+}
+model Brand {
+
+  id        Int      @id @default(autoincrement())
+
+  title     String
+
+  slug      String   @unique
+
+  logo      String?
+
+  products  Product[]
+
+}
+model ProductImage {
+
+  id         Int      @id @default(autoincrement())
+
+  image      String
+
+  sortOrder  Int      @default(0)
+
+  productId  Int
+
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+}
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+
+  firstName     String
+  lastName      String?
+
+  email         String    @unique
+  phone         String    @unique
+
+  password      String
+
+  avatar        String?
+
+  role          UserRole  @default(CUSTOMER)
+
+  isActive      Boolean   @default(true)
+
+  emailVerified Boolean   @default(false)
+
+  phoneVerified Boolean   @default(false)
+
+  createdAt     DateTime  @default(now())
+
+  updatedAt     DateTime  @updatedAt
+
+  addresses     Address[]
+
+  orders        Order[]
+
+  reviews       Review[]
+
+  wishlist      Wishlist[]
+
+  cart          Cart?
+  notifications Notification[]
+  blog Blog[]
+}
+model Address {
+  id              Int      @id @default(autoincrement())
+
+  title           String
+
+  receiverName    String
+
+  receiverPhone   String
+
+  province        String
+
+  city            String
+
+  postalCode      String
+
+  addressLine     String
+
+  plaque          String?
+
+  unit            String?
+
+  latitude        Float?
+
+  longitude       Float?
+
+  isDefault       Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
+
+  updatedAt       DateTime @updatedAt
+
+  userId          Int
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order Order[]
+}
+
+
+model Blog {
+
+  id              Int          @id @default(autoincrement())
+
+  title           String
+
+  slug            String       @unique
+
+  excerpt         String?
+
+  content         String
+
+  coverImage      String?
+
+  seoTitle        String?
+
+  seoDescription  String?
+
+  views           Int          @default(0)
+
+  published       Boolean      @default(false)
+
+  publishedAt     DateTime?
+
+  createdAt       DateTime     @default(now())
+
+  updatedAt       DateTime     @updatedAt
+
+  authorId        Int
+
+  author          User         @relation(fields: [authorId], references: [id])
+
+  categoryId      Int?
+
+  category        BlogCategory? @relation(fields: [categoryId], references: [id])
+
+  comments        BlogComment[]
+
+  tags            BlogTagOnPost[]
+  
+}
+model BlogCategory {
+
+  id          Int      @id @default(autoincrement())
+
+  title       String
+
+  slug        String   @unique
+
+  createdAt   DateTime @default(now())
+
+  blogs       Blog[]
+}
+model BlogTag {
+
+  id          Int      @id @default(autoincrement())
+
+  title       String
+
+  slug        String   @unique
+
+  posts       BlogTagOnPost[]
+}
+model BlogTagOnPost {
+
+  blogId      Int
+
+  tagId       Int
+
+  blog         Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+
+  tag          BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([blogId, tagId])
+}
+model BlogComment {
+
+  id          Int      @id @default(autoincrement())
+
+  name        String
+
+  email       String
+
+  message     String
+
+  approved    Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+
+  blogId      Int
+
+  blog        Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+}
+
+model Cart {
+
+  id          Int        @id @default(autoincrement())
+
+  createdAt   DateTime   @default(now())
+
+  updatedAt   DateTime   @updatedAt
+
+  userId      Int        @unique
+
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  items        CartItem[]
+}
+model CartItem {
+
+  id          Int       @id @default(autoincrement())
+
+  quantity    Int       @default(1)
+
+  unitPrice   Int
+
+  createdAt   DateTime  @default(now())
+
+  updatedAt   DateTime  @updatedAt
+
+  cartId      Int
+  cart        Cart      @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  productId   Int
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productId])
+}
+
+model Wishlist {
+
+  id          Int       @id @default(autoincrement())
+
+  createdAt   DateTime  @default(now())
+
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  productId   Int
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model Order {
+
+  id                Int             @id @default(autoincrement())
+
+  orderNumber       String          @unique
+
+  status            OrderStatus     @default(PENDING)
+
+  paymentStatus     PaymentStatus   @default(PENDING)
+
+  subtotal          Int
+
+  discount          Int             @default(0)
+
+  shippingCost      Int             @default(0)
+
+  total             Int
+
+  trackingCode      String?
+
+  paymentRef        String?
+
+  notes             String?
+
+  createdAt         DateTime        @default(now())
+
+  updatedAt         DateTime        @updatedAt
+
+  userId            Int
+  user              User            @relation(fields: [userId], references: [id])
+
+  addressId         Int
+  address           Address         @relation(fields: [addressId], references: [id])
+
+  // 👇 این دو خط را اینجا اضافه کن
+  couponId          Int?
+  coupon            Coupon?         @relation(fields: [couponId], references: [id])
+
+  items             OrderItem[]
+}
+
+model OrderItem {
+
+  id              Int       @id @default(autoincrement())
+
+  quantity        Int
+
+  unitPrice       Int
+
+  discount        Int       @default(0)
+
+  totalPrice      Int
+
+  productTitle    String
+
+  productImage    String?
+
+  createdAt       DateTime  @default(now())
+
+  orderId         Int
+  order           Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId       Int
+  product         Product   @relation(fields: [productId], references: [id])
+}
+
+model Review {
+
+  id            Int      @id @default(autoincrement())
+
+  title         String?
+
+  comment       String
+
+  rating        Int
+
+  advantages    String?
+
+  disadvantages String?
+
+  isApproved    Boolean  @default(false)
+
+  createdAt     DateTime @default(now())
+
+  updatedAt     DateTime @updatedAt
+
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  productId     Int
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+enum CouponType {
+  PERCENT
+  FIXED
+}
+
+model Coupon {
+
+  id                Int          @id @default(autoincrement())
+
+  code              String       @unique
+
+  title             String?
+
+  description       String?
+
+  type              CouponType
+
+  value             Int
+
+  minimumPurchase   Int?
+
+  maximumDiscount   Int?
+
+  usageLimit        Int?
+
+  usedCount         Int          @default(0)
+
+  isActive          Boolean      @default(true)
+
+  startsAt          DateTime?
+
+  expiresAt         DateTime?
+
+  createdAt         DateTime     @default(now())
+
+  updatedAt         DateTime     @updatedAt
+
+  orders            Order[]
+}
+
+enum BannerPosition {
+  HOME_HERO
+  HOME_TOP
+  HOME_MIDDLE
+  HOME_BOTTOM
+  CATEGORY
+}
+
+model Banner {
+
+  id             Int              @id @default(autoincrement())
+
+  title          String
+
+  subtitle       String?
+
+  image          String
+
+  mobileImage    String?
+
+  buttonText     String?
+
+  buttonLink     String?
+
+  position       BannerPosition
+
+  sortOrder      Int              @default(0)
+
+  isActive       Boolean          @default(true)
+
+  startsAt       DateTime?
+
+  expiresAt      DateTime?
+
+  createdAt      DateTime         @default(now())
+
+  updatedAt      DateTime         @updatedAt
+
+  categoryId     Int?
+  category       Category?        @relation(fields: [categoryId], references: [id])
+
+  productId      Int?
+  product        Product?         @relation(fields: [productId], references: [id])
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+model Notification {
+
+  id          Int                 @id @default(autoincrement())
+
+  title       String
+
+  message     String
+
+  type        NotificationType    @default(INFO)
+
+  isRead      Boolean             @default(false)
+
+  createdAt   DateTime            @default(now())
+
+  expiresAt   DateTime?
+
+  userId      Int?
+
+  user        User?               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+}
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  RETURNED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}

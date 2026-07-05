@@ -20,7 +20,7 @@ export default function FeaturesSection() {
         lg:grid-cols-4
       "
         >
-          {features.map((feature, index) => (
+          {features.map((feature) => (
             <div
               key={feature.id}
               className="

@@ -1,6 +1,8 @@
+import type { ComponentType } from "react";
+
 type Props = {
   title: string;
-  icon: any;
+  icon: ComponentType<{ size?: number; className?: string }>;
 };
 
 export default function CategoryBaseCard({ title, icon: Icon }: Props) {

@@ -8,7 +8,9 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 import L from "leaflet";
 
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+if (L.Icon && L.Icon.Default) {
+  delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
+}
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:

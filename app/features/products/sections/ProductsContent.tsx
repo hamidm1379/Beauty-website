@@ -1,5 +1,5 @@
 import ProductCard from "@/app/features/home/components/ProductCard";
-import ProductsPagination from "./ProductsPagination";
+// Removed unused ProductsPagination import
 import { newProducts } from "@/app/features/home/data/products";
 
 export default function ProductsContent() {

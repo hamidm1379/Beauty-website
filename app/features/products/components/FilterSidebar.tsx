@@ -5,15 +5,7 @@ import CategoryFilter from "@/app/features/products/components/CategoryFilter";
 import BrandFilter from "@/app/features/products/components/BrandFilter";
 import PriceFilter from "@/app/features/products/components/PriceFilter";
 
-const categories = [
-  "آرایش صورت",
-  "آرایش چشم",
-  "آرایش لب",
-  "مراقبت پوست",
-  "مراقبت مو",
-];
-
-const brands = ["L'Oréal", "CeraVe", "Bioderma", "Vichy", "The Ordinary"];
+// Removed unused categories and brands arrays
 
 export default function FilterSidebar() {
   return (

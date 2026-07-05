@@ -1,4 +1,4 @@
-import CategoryFilter from "@/app/features/products/components/CategoryFilter";
+// Removed unused CategoryFilter import
 import FilterSidebar from "@/app/features/products/components/FilterSidebar";
 import SortDropdown from "@/app/features/products/components/SortDropdown";
 import ProductsContent from "@/app/features/products/sections/ProductsContent";

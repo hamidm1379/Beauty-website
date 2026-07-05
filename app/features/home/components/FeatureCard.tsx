@@ -1,7 +1,9 @@
+import type { ComponentType } from "react";
+
 type Props = {
   title: string;
   description: string;
-  icon: any;
+  icon: ComponentType<{ className?: string }>; // Icon component
 };
 
 export default function FeatureCard({
