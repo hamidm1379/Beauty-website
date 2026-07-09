@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
+import ImageUploader from "@/app/shared/components/UploadImage";
 
 interface CategoryFormProps {
   mode: "create" | "edit";
@@ -19,7 +20,8 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
   const [form, setForm] = useState({
     title: "",
     slug: "",
-    image: "",
+    imageFile: null as File | null,
+    imageUrl: "",
   });
 
   useEffect(() => {
@@ -28,7 +30,8 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
     setForm({
       title: initialData.title ?? "",
       slug: initialData.slug ?? "",
-      image: initialData.image ?? "",
+      imageFile: null,
+      imageUrl: initialData.image ?? "",
     });
   }, [initialData]);
 
@@ -60,7 +63,28 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
   }
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    let imagePath = form.imageUrl;
 
+    if (form.imageFile) {
+      const uploadForm = new FormData();
+
+      uploadForm.append("file", form.imageFile);
+
+      uploadForm.append("folder", "categories");
+
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: uploadForm,
+      });
+
+      const uploadData = await uploadRes.json();
+
+      if (!uploadRes.ok || !uploadData.success) {
+        throw new Error(uploadData.message || "خطا در آپلود تصویر");
+      }
+
+      imagePath = uploadData.url;
+    }
     try {
       setLoading(true);
 
@@ -78,7 +102,7 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
           body: JSON.stringify({
             title: form.title,
             slug: form.slug,
-            image: form.image,
+            image: imagePath,
           }),
         },
       );
@@ -170,29 +194,22 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
           تصویر دسته‌بندی
         </label>
 
-        <input
-          type="text"
-          name="image"
-          value={form.image}
-          onChange={handleChange}
-          placeholder="/categories/skincare.jpg"
-          className="
-            w-full
-            rounded-xl
-            border
-            border-gray-200
-            px-4
-            py-3
-            outline-none
-            transition
-            focus:border-pink-500
-          "
+        <ImageUploader
+          multiple={false}
+          value={form.imageFile}
+          preview={form.imageUrl}
+          onChange={(file) =>
+            setForm((prev) => ({
+              ...prev,
+              imageFile: file,
+            }))
+          }
         />
       </div>
 
       {/* Preview */}
 
-      {form.image && (
+      {/* {form.imageFile && (
         <div>
           <label className="mb-2 block text-sm font-medium text-gray-700">
             پیش‌نمایش تصویر
@@ -200,13 +217,13 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
 
           <div className="overflow-hidden rounded-2xl border border-gray-200">
             <img
-              src={form.image}
+              src={form.imageFile}
               alt={form.title}
               className="h-64 w-full object-cover"
             />
           </div>
         </div>
-      )}
+      )} */}
       {/* Buttons */}
 
       <div className="flex justify-end gap-4 border-t pt-6">

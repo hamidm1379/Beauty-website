@@ -3,8 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "sqlite"
+  url       = env("DATABASE_URL")
   directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
@@ -15,405 +15,395 @@ enum ProductStatus {
 }
 
 model Product {
-  id              Int             @id @default(autoincrement())
-  title           String
-  slug            String          @unique
+  id               Int            @id @default(autoincrement())
+  title            String
+  slug             String         @unique
   shortDescription String?
-  description     String?
-  sku             String?         @unique
-  barcode         String?
-  price           Int
-  discountPrice   Int?
-  stock           Int             @default(0)
-  soldCount       Int             @default(0)
-  weight          Float?
-  thumbnail       String?
-  status          ProductStatus   @default(ACTIVE)
-  seoTitle        String?
-  seoDescription  String?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  brandId         Int?
-  brand           Brand?          @relation(fields: [brandId], references: [id])
-  categoryId      Int
-  category        Category        @relation(fields: [categoryId], references: [id])
-  images          ProductImage[]
-  banners Banner[]
-  review Review[]
-  orderitem OrderItem[]
-  wishlist Wishlist[]
-  cartitem CartItem[]
+  description      String?
+  sku              String?        @unique
+  barcode          String?
+  price            Int
+  discountPrice    Int?
+  stock            Int            @default(0)
+  soldCount        Int            @default(0)
+  weight           Float?
+  thumbnail        String?
+  status           ProductStatus  @default(ACTIVE)
+  seoTitle         String?
+  seoDescription   String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  brandId          Int?
+  brand            Brand?         @relation(fields: [brandId], references: [id])
+  categoryId       Int
+  category         Category       @relation(fields: [categoryId], references: [id])
+  images           ProductImage[]
+  banners          Banner[]
+  review           Review[]
+  orderitem        OrderItem[]
+  wishlist         Wishlist[]
+  cartitem         CartItem[]
 }
 
 model Category {
+  id Int @id @default(autoincrement())
 
-  id          Int        @id @default(autoincrement())
+  title String
 
-  title       String
+  slug String @unique
 
-  slug        String     @unique
+  image String?
 
-  image       String?
+  parentId Int?
 
-  parentId    Int?
+  parent Category? @relation("CategoryTree", fields: [parentId], references: [id])
 
-  parent      Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryTree")
 
-  children    Category[] @relation("CategoryTree")
+  products Product[]
 
-  products    Product[]
-
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 
   banners Banner[]
-
 }
+
 model Brand {
+  id Int @id @default(autoincrement())
 
-  id        Int      @id @default(autoincrement())
+  title String
 
-  title     String
-
-  slug      String   @unique
+  slug String @unique
 
   logo      String?
-
+  createdAt DateTime  @default(now())
   products  Product[]
-
 }
+
 model ProductImage {
+  id Int @id @default(autoincrement())
 
-  id         Int      @id @default(autoincrement())
+  image String
 
-  image      String
+  sortOrder Int @default(0)
 
-  sortOrder  Int      @default(0)
+  productId Int
 
-  productId  Int
-
-  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
+
 enum UserRole {
   CUSTOMER
   ADMIN
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  username      String?   @unique
+  username String? @unique
 
-  firstName     String
-  lastName      String?
+  firstName String
+  lastName  String?
 
-  email         String?   @unique
+  email String? @unique
 
-  phone         String    @unique
+  phone String @unique
 
-  password      String?
+  password String?
 
-  avatar        String?
+  avatar String?
 
-  role          UserRole  @default(CUSTOMER)
+  role UserRole @default(CUSTOMER)
 
-  isActive      Boolean   @default(true)
+  isActive Boolean @default(true)
 
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean @default(false)
 
-  phoneVerified Boolean   @default(false)
+  phoneVerified Boolean @default(false)
 
-  createdAt     DateTime  @default(now())
+  createdAt DateTime @default(now())
 
-  updatedAt     DateTime  @updatedAt
+  updatedAt DateTime @updatedAt
 
-  addresses     Address[]
+  addresses Address[]
 
-  orders        Order[]
+  orders Order[]
 
-  reviews       Review[]
+  reviews Review[]
 
-  wishlist      Wishlist[]
+  wishlist Wishlist[]
 
-  cart          Cart?
+  cart Cart?
 
   notifications Notification[]
 
-  blog          Blog[]
+  blog Blog[]
 }
+
 model Address {
-  id              Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  title           String
+  title String
 
-  receiverName    String
+  receiverName String
 
-  receiverPhone   String
+  receiverPhone String
 
-  province        String
+  province String
 
-  city            String
+  city String
 
-  postalCode      String
+  postalCode String
 
-  addressLine     String
+  addressLine String
 
-  plaque          String?
+  plaque String?
 
-  unit            String?
+  unit String?
 
-  latitude        Float?
+  latitude Float?
 
-  longitude       Float?
+  longitude Float?
 
-  isDefault       Boolean  @default(false)
+  isDefault Boolean @default(false)
 
-  createdAt       DateTime @default(now())
+  createdAt DateTime @default(now())
 
-  updatedAt       DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 
-  userId          Int
+  userId Int
 
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   order Order[]
 }
 
-
 model Blog {
+  id Int @id @default(autoincrement())
 
-  id              Int          @id @default(autoincrement())
+  title String
 
-  title           String
+  slug String @unique
 
-  slug            String       @unique
+  excerpt String?
 
-  excerpt         String?
+  content String
 
-  content         String
+  coverImage String?
 
-  coverImage      String?
+  seoTitle String?
 
-  seoTitle        String?
+  seoDescription String?
 
-  seoDescription  String?
+  views Int @default(0)
 
-  views           Int          @default(0)
+  published Boolean @default(false)
 
-  published       Boolean      @default(false)
+  publishedAt DateTime?
 
-  publishedAt     DateTime?
+  createdAt DateTime @default(now())
 
-  createdAt       DateTime     @default(now())
+  updatedAt DateTime @updatedAt
 
-  updatedAt       DateTime     @updatedAt
+  authorId Int
 
-  authorId        Int
+  author User @relation(fields: [authorId], references: [id])
 
-  author          User         @relation(fields: [authorId], references: [id])
+  categoryId Int?
 
-  categoryId      Int?
+  category BlogCategory? @relation(fields: [categoryId], references: [id])
 
-  category        BlogCategory? @relation(fields: [categoryId], references: [id])
+  comments BlogComment[]
 
-  comments        BlogComment[]
-
-  tags            BlogTagOnPost[]
-  
+  tags BlogTagOnPost[]
 }
+
 model BlogCategory {
+  id Int @id @default(autoincrement())
 
-  id          Int      @id @default(autoincrement())
+  title String
 
-  title       String
+  slug String @unique
 
-  slug        String   @unique
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime @default(now())
-
-  blogs       Blog[]
+  blogs Blog[]
 }
+
 model BlogTag {
+  id Int @id @default(autoincrement())
 
-  id          Int      @id @default(autoincrement())
+  title String
 
-  title       String
+  slug String @unique
 
-  slug        String   @unique
-
-  posts       BlogTagOnPost[]
+  posts BlogTagOnPost[]
 }
+
 model BlogTagOnPost {
+  blogId Int
 
-  blogId      Int
+  tagId Int
 
-  tagId       Int
+  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
 
-  blog         Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
-
-  tag          BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tag BlogTag @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([blogId, tagId])
 }
+
 model BlogComment {
+  id Int @id @default(autoincrement())
 
-  id          Int      @id @default(autoincrement())
+  name String
 
-  name        String
+  email String
 
-  email       String
+  message String
 
-  message     String
+  approved Boolean @default(false)
 
-  approved    Boolean  @default(false)
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime @default(now())
+  blogId Int
 
-  blogId      Int
-
-  blog        Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
 }
 
 model Cart {
+  id Int @id @default(autoincrement())
 
-  id          Int        @id @default(autoincrement())
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime   @default(now())
+  updatedAt DateTime @updatedAt
 
-  updatedAt   DateTime   @updatedAt
+  userId Int @unique
 
-  userId      Int        @unique
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  items        CartItem[]
+  items CartItem[]
 }
+
 model CartItem {
+  id Int @id @default(autoincrement())
 
-  id          Int       @id @default(autoincrement())
+  quantity Int @default(1)
 
-  quantity    Int       @default(1)
+  unitPrice Int
 
-  unitPrice   Int
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime  @default(now())
+  updatedAt DateTime @updatedAt
 
-  updatedAt   DateTime  @updatedAt
+  cartId Int
+  cart   Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
 
-  cartId      Int
-  cart        Cart      @relation(fields: [cartId], references: [id], onDelete: Cascade)
-
-  productId   Int
-  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([cartId, productId])
 }
 
 model Wishlist {
+  id Int @id @default(autoincrement())
 
-  id          Int       @id @default(autoincrement())
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime  @default(now())
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  productId   Int
-  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
 
 model Order {
+  id Int @id @default(autoincrement())
 
-  id                Int             @id @default(autoincrement())
+  orderNumber String @unique
 
-  orderNumber       String          @unique
+  status OrderStatus @default(PENDING)
 
-  status            OrderStatus     @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
 
-  paymentStatus     PaymentStatus   @default(PENDING)
+  subtotal Int
 
-  subtotal          Int
+  discount Int @default(0)
 
-  discount          Int             @default(0)
+  shippingCost Int @default(0)
 
-  shippingCost      Int             @default(0)
+  total Int
 
-  total             Int
+  trackingCode String?
 
-  trackingCode      String?
+  paymentRef String?
 
-  paymentRef        String?
+  notes String?
 
-  notes             String?
+  createdAt DateTime @default(now())
 
-  createdAt         DateTime        @default(now())
+  updatedAt DateTime @updatedAt
 
-  updatedAt         DateTime        @updatedAt
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 
-  userId            Int
-  user              User            @relation(fields: [userId], references: [id])
-
-  addressId         Int
-  address           Address         @relation(fields: [addressId], references: [id])
+  addressId Int
+  address   Address @relation(fields: [addressId], references: [id])
 
   // 👇 این دو خط را اینجا اضافه کن
-  couponId          Int?
-  coupon            Coupon?         @relation(fields: [couponId], references: [id])
+  couponId Int?
+  coupon   Coupon? @relation(fields: [couponId], references: [id])
 
-  items             OrderItem[]
+  items OrderItem[]
 }
 
 model OrderItem {
+  id Int @id @default(autoincrement())
 
-  id              Int       @id @default(autoincrement())
+  quantity Int
 
-  quantity        Int
+  unitPrice Int
 
-  unitPrice       Int
+  discount Int @default(0)
 
-  discount        Int       @default(0)
+  totalPrice Int
 
-  totalPrice      Int
+  productTitle String
 
-  productTitle    String
+  productImage String?
 
-  productImage    String?
+  createdAt DateTime @default(now())
 
-  createdAt       DateTime  @default(now())
+  orderId Int
+  order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  orderId         Int
-  order           Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  productId       Int
-  product         Product   @relation(fields: [productId], references: [id])
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model Review {
+  id Int @id @default(autoincrement())
 
-  id            Int      @id @default(autoincrement())
+  title String?
 
-  title         String?
+  comment String
 
-  comment       String
+  rating Int
 
-  rating        Int
-
-  advantages    String?
+  advantages String?
 
   disadvantages String?
 
-  isApproved    Boolean  @default(false)
+  isApproved Boolean @default(false)
 
-  createdAt     DateTime @default(now())
+  createdAt DateTime @default(now())
 
-  updatedAt     DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 
-  userId        Int
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  productId     Int
-  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }
@@ -424,38 +414,37 @@ enum CouponType {
 }
 
 model Coupon {
+  id Int @id @default(autoincrement())
 
-  id                Int          @id @default(autoincrement())
+  code String @unique
 
-  code              String       @unique
+  title String?
 
-  title             String?
+  description String?
 
-  description       String?
+  type CouponType
 
-  type              CouponType
+  value Int
 
-  value             Int
+  minimumPurchase Int?
 
-  minimumPurchase   Int?
+  maximumDiscount Int?
 
-  maximumDiscount   Int?
+  usageLimit Int?
 
-  usageLimit        Int?
+  usedCount Int @default(0)
 
-  usedCount         Int          @default(0)
+  isActive Boolean @default(true)
 
-  isActive          Boolean      @default(true)
+  startsAt DateTime?
 
-  startsAt          DateTime?
+  expiresAt DateTime?
 
-  expiresAt         DateTime?
+  createdAt DateTime @default(now())
 
-  createdAt         DateTime     @default(now())
+  updatedAt DateTime @updatedAt
 
-  updatedAt         DateTime     @updatedAt
-
-  orders            Order[]
+  orders Order[]
 }
 
 enum BannerPosition {
@@ -467,40 +456,39 @@ enum BannerPosition {
 }
 
 model Banner {
+  id Int @id @default(autoincrement())
 
-  id             Int              @id @default(autoincrement())
+  title String
 
-  title          String
+  subtitle String?
 
-  subtitle       String?
+  image String
 
-  image          String
+  mobileImage String?
 
-  mobileImage    String?
+  buttonText String?
 
-  buttonText     String?
+  buttonLink String?
 
-  buttonLink     String?
+  position BannerPosition
 
-  position       BannerPosition
+  sortOrder Int @default(0)
 
-  sortOrder      Int              @default(0)
+  isActive Boolean @default(true)
 
-  isActive       Boolean          @default(true)
+  startsAt DateTime?
 
-  startsAt       DateTime?
+  expiresAt DateTime?
 
-  expiresAt      DateTime?
+  createdAt DateTime @default(now())
 
-  createdAt      DateTime         @default(now())
+  updatedAt DateTime @updatedAt
 
-  updatedAt      DateTime         @updatedAt
+  categoryId Int?
+  category   Category? @relation(fields: [categoryId], references: [id])
 
-  categoryId     Int?
-  category       Category?        @relation(fields: [categoryId], references: [id])
-
-  productId      Int?
-  product        Product?         @relation(fields: [productId], references: [id])
+  productId Int?
+  product   Product? @relation(fields: [productId], references: [id])
 }
 
 enum NotificationType {
@@ -511,26 +499,25 @@ enum NotificationType {
 }
 
 model Notification {
+  id Int @id @default(autoincrement())
 
-  id          Int                 @id @default(autoincrement())
+  title String
 
-  title       String
+  message String
 
-  message     String
+  type NotificationType @default(INFO)
 
-  type        NotificationType    @default(INFO)
+  isRead Boolean @default(false)
 
-  isRead      Boolean             @default(false)
+  createdAt DateTime @default(now())
 
-  createdAt   DateTime            @default(now())
+  expiresAt DateTime?
 
-  expiresAt   DateTime?
+  userId Int?
 
-  userId      Int?
-
-  user        User?               @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
 enum OrderStatus {
   PENDING
   CONFIRMED
@@ -547,19 +534,20 @@ enum PaymentStatus {
   FAILED
   REFUNDED
 }
+
 model Otp {
-  id         Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  phone      String
-  code       String
+  phone String
+  code  String
 
-  type       OtpType  @default(LOGIN)
+  type OtpType @default(LOGIN)
 
-  expiresAt  DateTime
+  expiresAt DateTime
 
-  used       Boolean  @default(false)
+  used Boolean @default(false)
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@index([phone])
   @@index([expiresAt])
@@ -569,4 +557,51 @@ enum OtpType {
   LOGIN
   REGISTER
   RESET_PASSWORD
+}
+
+model ArticleCategory {
+  id Int @id @default(autoincrement())
+  title String
+  slug String @unique
+  image String?
+  seoTitle String?
+  seoDescription String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  articles Article[]
+}
+
+model Article {
+  id          Int      @id @default(autoincrement())
+
+  
+  title       String
+  slug        String   @unique
+  excerpt     String?  
+  content  String
+
+  
+  thumbnail   String?
+
+ 
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String?
+
+  status      ArticleStatus @default(DRAFT)
+
+  categoryId  Int
+  category    ArticleCategory @relation(fields: [categoryId], references: [id])
+
+  views       Int @default(0)
+
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
 }

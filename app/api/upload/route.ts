@@ -20,6 +20,7 @@ const ALLOWED_FOLDERS = [
   "categories",
   "banners",
   "users",
+  "article-categories",
 ];
 
 export async function POST(request: NextRequest) {

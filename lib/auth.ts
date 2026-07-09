@@ -1,65 +1,24 @@
 import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { compare } from "bcrypt";
 
-import { prisma } from "@/lib/prisma";
+import authConfig from "./auth.config";
+import { prisma } from "./prisma";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  secret: process.env.AUTH_SECRET,
+export const {
+  handlers,
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   adapter: PrismaAdapter(prisma),
 
   session: {
     strategy: "jwt",
   },
 
-  providers: [
-    Credentials({
-      id: "admin-login",
-      name: "Admin Login",
+  secret: process.env.AUTH_SECRET,
 
-      credentials: {
-        username: {
-          label: "Username",
-          type: "text",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-        },
-      },
-
-      async authorize(credentials, request) {
-        if (!credentials?.username || !credentials?.password) {
-          return null;
-        }
-
-        const user = await prisma.user.findUnique({
-          where: {
-            username: credentials.username as string,
-          },
-        });
-
-        if (!user) return null;
-
-        if (!user.password) return null;
-
-        const valid = await compare(
-          credentials.password as string,
-          user.password,
-        );
-
-        if (!valid) return null;
-
-        return {
-          id: String(user.id),
-          name: user.username,
-          email: user.email,
-          role: user.role,
-        };
-      },
-    }),
-  ],
+  ...authConfig,
 
   callbacks: {
     async jwt({ token, user }) {
@@ -72,15 +31,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.sub;
+        (session.user as any).id = token.sub!;
         (session.user as any).role = token.role;
       }
 
       return session;
     },
-  },
-
-  pages: {
-    signIn: "/admin/login",
   },
 });

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search, Loader2, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import DeleteCategoryModal from "./DeleteCategoryModal";
+import Image from "next/image";
 
 // Types
 interface Category {
@@ -165,7 +166,21 @@ export default function CategoriesTable() {
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-4">
                         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-pink-100 font-bold text-pink-600">
-                          {category.title.charAt(0)}
+                          {/* {category.title.charAt(0)} */}
+                          {typeof category.image === "string" &&
+                          category.image.length > 0 ? (
+                            <Image
+                              src={category.image}
+                              alt={category.title}
+                              width={48}
+                              height={48}
+                              className="h-12 w-12 rounded-xl border border-gray-200 object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-pink-100 font-bold text-pink-600">
+                              {category.title.charAt(0)}
+                            </div>
+                          )}
                         </div>
                         <h3 className="font-semibold text-gray-900">
                           {category.title}

@@ -1,4 +1,7 @@
 import { categoryRepository } from "@/lib/repositories/category.repository";
+import fs from "fs/promises";
+import path from "path";
+import { prisma } from "@/lib/prisma";
 
 class CategoryService {
   async getAll() {
@@ -15,11 +18,7 @@ class CategoryService {
     return category;
   }
 
-  async create(data: {
-    title: string;
-    slug?: string;
-    image?: string;
-  }) {
+  async create(data: { title: string; slug?: string; image?: string }) {
     if (!data.title.trim()) {
       throw new Error("عنوان دسته‌بندی الزامی است.");
     }
@@ -48,7 +47,7 @@ class CategoryService {
       title?: string;
       slug?: string;
       image?: string;
-    }
+    },
   ) {
     await this.getById(id);
 
@@ -64,11 +63,38 @@ class CategoryService {
   }
 
   async delete(id: number) {
-    await this.getById(id);
+    const category = await prisma.category.findUnique({
+      where: { id },
+      include: {
+        products: true,
+      },
+    });
+
+    if (!category) {
+      throw new Error("دسته‌بندی پیدا نشد.");
+    }
+
+    if (category.products.length > 0) {
+      throw new Error("این دسته‌بندی دارای محصول است و قابل حذف نیست.");
+    }
+
+    // حذف عکس
+    if (category.image) {
+      try {
+        const filePath = path.join(
+          process.cwd(),
+          "public",
+          category.image.replace(/^\/+/, ""),
+        );
+
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.error("Delete image:", err);
+      }
+    }
 
     return categoryRepository.delete(id);
   }
-
   async count() {
     return categoryRepository.count();
   }

@@ -1,4 +1,6 @@
 import { brandRepository } from "@/lib/repositories/brand.repository";
+import fs from "fs/promises";
+import path from "path";
 
 class BrandService {
   async getAll() {
@@ -15,11 +17,7 @@ class BrandService {
     return brand;
   }
 
-  async create(data: {
-    title: string;
-    slug?: string;
-    logo?: string;
-  }) {
+  async create(data: { title: string; slug?: string; logo?: string }) {
     if (!data.title.trim()) {
       throw new Error("عنوان برند الزامی است.");
     }
@@ -48,7 +46,7 @@ class BrandService {
       title?: string;
       slug?: string;
       logo?: string;
-    }
+    },
   ) {
     await this.getById(id);
 
@@ -64,11 +62,30 @@ class BrandService {
   }
 
   async delete(id: number) {
-    await this.getById(id);
+    const brand = await this.getById(id);
+
+    // اگر محصول دارد حذف نشود
+    if ((brand as any).products?.length) {
+      throw new Error("ابتدا محصولات این برند را حذف یا منتقل کنید.");
+    }
+
+    // حذف فایل لوگو
+    if (brand.logo) {
+      try {
+        const filePath = path.join(
+          process.cwd(),
+          "public",
+          brand.logo.replace(/^\/+/, ""),
+        );
+
+        await fs.unlink(filePath);
+      } catch {
+        // اگر فایل وجود نداشت مشکلی نیست
+      }
+    }
 
     return brandRepository.delete(id);
   }
-
   async count() {
     return brandRepository.count();
   }

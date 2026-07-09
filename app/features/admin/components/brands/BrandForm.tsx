@@ -20,7 +20,8 @@ export default function BrandForm({ mode, initialData }: BrandFormProps) {
   const [form, setForm] = useState({
     title: "",
     slug: "",
-    logo: "",
+    logoFile: null as File | null,
+    logoUrl: "",
   });
 
   useEffect(() => {
@@ -29,7 +30,8 @@ export default function BrandForm({ mode, initialData }: BrandFormProps) {
     setForm({
       title: initialData.title ?? "",
       slug: initialData.slug ?? "",
-      logo: initialData.logo ?? "",
+      logoFile: null,
+      logoUrl: initialData.logo ?? "",
     });
   }, [initialData]);
 
@@ -62,8 +64,31 @@ export default function BrandForm({ mode, initialData }: BrandFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    let logoPath = form.logoUrl;
+
     try {
       setLoading(true);
+
+      // آپلود لوگو
+      if (form.logoFile) {
+        const uploadForm = new FormData();
+
+        uploadForm.append("file", form.logoFile);
+        uploadForm.append("folder", "brands");
+
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          body: uploadForm,
+        });
+
+        const uploadData = await uploadRes.json();
+
+        if (!uploadRes.ok || !uploadData.success) {
+          throw new Error(uploadData.message || "خطا در آپلود لوگو");
+        }
+
+        logoPath = uploadData.url;
+      }
 
       const response = await fetch(
         mode === "create" ? "/api/brands" : `/api/brands/${initialData.id}`,
@@ -77,7 +102,7 @@ export default function BrandForm({ mode, initialData }: BrandFormProps) {
           body: JSON.stringify({
             title: form.title,
             slug: form.slug,
-            logo: form.logo,
+            logo: logoPath,
           }),
         },
       );
@@ -95,7 +120,6 @@ export default function BrandForm({ mode, initialData }: BrandFormProps) {
       );
 
       router.push("/admin/brands");
-
       router.refresh();
     } catch (error: any) {
       toast.error(error.message ?? "خطایی رخ داده است.");
@@ -168,19 +192,20 @@ export default function BrandForm({ mode, initialData }: BrandFormProps) {
         <label className="mb-2 block text-sm font-medium">لوگوی برند</label>
 
         <ImageUploader
-          folder="brands"
-          value={form.logo ? [form.logo] : []}
-          onChange={(urls) =>
+          multiple={false}
+          value={form.logoFile}
+          preview={form.logoUrl}
+          onChange={(file) =>
             setForm((prev) => ({
               ...prev,
-              logo: urls[0] ?? "",
+              logoFile: file,
             }))
           }
         />
       </div>
 
       {/* Logo Preview */}
-
+      {/* 
       {form.logo && (
         <div>
           <label className="mb-2 block text-sm font-medium text-gray-700">
@@ -207,7 +232,7 @@ export default function BrandForm({ mode, initialData }: BrandFormProps) {
             />
           </div>
         </div>
-      )}
+      )} */}
       {/* Buttons */}
 
       <div className="flex justify-end gap-4 border-t pt-6">

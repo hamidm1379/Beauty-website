@@ -65,6 +65,16 @@ const menu = [
     title: "مقالات",
     icon: Newspaper,
     href: "/admin/articles",
+     children: [
+      {
+        title: "مقالات",
+        href: "/admin/articles",
+      },
+      {
+        title: "دسته بندی مقالات",
+        href: "/admin/article-categories",
+      },
+    ],
   },
 
   {
