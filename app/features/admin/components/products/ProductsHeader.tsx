@@ -10,11 +10,17 @@ import {
 } from "lucide-react";
 
 interface ProductsHeaderProps {
-  totalProducts?: number;
+  totalProducts: number;
+  activeProducts: number;
+  outOfStockProducts: number;
+  totalCategories: number;
 }
 
 export default function ProductsHeader({
-  totalProducts = 245,
+  totalProducts,
+  activeProducts,
+  outOfStockProducts,
+  totalCategories,
 }: ProductsHeaderProps) {
   return (
     <motion.section
@@ -150,7 +156,7 @@ export default function ProductsHeader({
             {/* Add */}
 
             <Link
-              href="/admin/products/create"
+              href="/admin/products/new"
               className="
                 flex
                 items-center
@@ -234,7 +240,7 @@ export default function ProductsHeader({
             </p>
 
             <h3 className="mt-1 text-xl font-black text-green-600">
-              ۲۲۱
+              {activeProducts.toLocaleString("fa-IR")}
             </h3>
           </div>
 
@@ -253,7 +259,7 @@ export default function ProductsHeader({
             </p>
 
             <h3 className="mt-1 text-xl font-black text-orange-600">
-              ۲۴
+              {outOfStockProducts.toLocaleString("fa-IR")}
             </h3>
           </div>
 
@@ -272,7 +278,7 @@ export default function ProductsHeader({
             </p>
 
             <h3 className="mt-1 text-xl font-black text-sky-600">
-              ۱۸
+              {totalCategories.toLocaleString("fa-IR")}
             </h3>
           </div>
         </div>

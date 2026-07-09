@@ -15,44 +15,28 @@ enum ProductStatus {
 }
 
 model Product {
-
   id              Int             @id @default(autoincrement())
-
   title           String
   slug            String          @unique
-
   shortDescription String?
   description     String?
-
   sku             String?         @unique
-
   barcode         String?
-
   price           Int
   discountPrice   Int?
-
   stock           Int             @default(0)
-
   soldCount       Int             @default(0)
-
   weight          Float?
-
   thumbnail       String?
-
   status          ProductStatus   @default(ACTIVE)
-
   seoTitle        String?
   seoDescription  String?
-
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-
   brandId         Int?
   brand           Brand?          @relation(fields: [brandId], references: [id])
-
   categoryId      Int
   category        Category        @relation(fields: [categoryId], references: [id])
-
   images          ProductImage[]
   banners Banner[]
   review Review[]
@@ -60,6 +44,7 @@ model Product {
   wishlist Wishlist[]
   cartitem CartItem[]
 }
+
 model Category {
 
   id          Int        @id @default(autoincrement())
@@ -117,13 +102,16 @@ enum UserRole {
 model User {
   id            Int       @id @default(autoincrement())
 
+  username      String?   @unique
+
   firstName     String
   lastName      String?
 
-  email         String    @unique
+  email         String?   @unique
+
   phone         String    @unique
 
-  password      String
+  password      String?
 
   avatar        String?
 
@@ -148,8 +136,10 @@ model User {
   wishlist      Wishlist[]
 
   cart          Cart?
+
   notifications Notification[]
-  blog Blog[]
+
+  blog          Blog[]
 }
 model Address {
   id              Int      @id @default(autoincrement())
@@ -556,4 +546,27 @@ enum PaymentStatus {
   PAID
   FAILED
   REFUNDED
+}
+model Otp {
+  id         Int      @id @default(autoincrement())
+
+  phone      String
+  code       String
+
+  type       OtpType  @default(LOGIN)
+
+  expiresAt  DateTime
+
+  used       Boolean  @default(false)
+
+  createdAt  DateTime @default(now())
+
+  @@index([phone])
+  @@index([expiresAt])
+}
+
+enum OtpType {
+  LOGIN
+  REGISTER
+  RESET_PASSWORD
 }

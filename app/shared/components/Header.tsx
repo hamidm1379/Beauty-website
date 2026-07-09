@@ -38,7 +38,7 @@ export default function Header() {
           <Link href="/" className="flex shrink-0 items-center gap-2">
             <div className="h-9 w-9 rounded-full bg-pink-500" />
 
-            <span className="text-2xl font-bold text-gray-800">زیبارو</span>
+            <span className="text-2xl font-bold text-gray-800">برق لب</span>
           </Link>
 
           {/* Navigation */}

@@ -93,7 +93,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: RouteParams
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -102,7 +102,7 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: "محصول با موفقیت حذف شد.",
+      message: "محصول حذف شد.",
     });
   } catch (error: any) {
     return NextResponse.json(

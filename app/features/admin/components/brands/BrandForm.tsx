@@ -1,0 +1,286 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import { useRouter } from "next/navigation";
+
+import { toast } from "sonner";
+import ImageUploader from "@/app/shared/components/UploadImage";
+
+interface BrandFormProps {
+  mode: "create" | "edit";
+  initialData?: any;
+}
+
+export default function BrandForm({ mode, initialData }: BrandFormProps) {
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+
+  const [form, setForm] = useState({
+    title: "",
+    slug: "",
+    logo: "",
+  });
+
+  useEffect(() => {
+    if (!initialData) return;
+
+    setForm({
+      title: initialData.title ?? "",
+      slug: initialData.slug ?? "",
+      logo: initialData.logo ?? "",
+    });
+  }, [initialData]);
+
+  function generateSlug(text: string) {
+    return text
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]/g, "");
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value } = e.target;
+
+    if (name === "title") {
+      setForm((prev) => ({
+        ...prev,
+        title: value,
+        slug: generateSlug(value),
+      }));
+
+      return;
+    }
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const response = await fetch(
+        mode === "create" ? "/api/brands" : `/api/brands/${initialData.id}`,
+        {
+          method: mode === "create" ? "POST" : "PUT",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            title: form.title,
+            slug: form.slug,
+            logo: form.logo,
+          }),
+        },
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+
+      toast.success(
+        mode === "create"
+          ? "برند با موفقیت ایجاد شد."
+          : "برند با موفقیت بروزرسانی شد.",
+      );
+
+      router.push("/admin/brands");
+
+      router.refresh();
+    } catch (error: any) {
+      toast.error(error.message ?? "خطایی رخ داده است.");
+    } finally {
+      setLoading(false);
+    }
+  }
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-8 rounded-3xl bg-white p-8 shadow-sm"
+    >
+      {/* Title */}
+
+      <div>
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          عنوان برند
+        </label>
+
+        <input
+          type="text"
+          name="title"
+          value={form.title}
+          onChange={handleChange}
+          placeholder="مثلاً La Roche Posay"
+          className="
+            w-full
+            rounded-xl
+            border
+            border-gray-200
+            px-4
+            py-3
+            outline-none
+            transition
+            focus:border-pink-500
+          "
+        />
+      </div>
+
+      {/* Slug */}
+
+      <div>
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          Slug
+        </label>
+
+        <input
+          type="text"
+          name="slug"
+          value={form.slug}
+          onChange={handleChange}
+          placeholder="la-roche-posay"
+          className="
+            w-full
+            rounded-xl
+            border
+            border-gray-200
+            px-4
+            py-3
+            outline-none
+            transition
+            focus:border-pink-500
+          "
+        />
+      </div>
+
+      {/* Logo */}
+
+      <div>
+        <label className="mb-2 block text-sm font-medium">لوگوی برند</label>
+
+        <ImageUploader
+          folder="brands"
+          value={form.logo ? [form.logo] : []}
+          onChange={(urls) =>
+            setForm((prev) => ({
+              ...prev,
+              logo: urls[0] ?? "",
+            }))
+          }
+        />
+      </div>
+
+      {/* Logo Preview */}
+
+      {form.logo && (
+        <div>
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            پیش‌نمایش لوگو
+          </label>
+
+          <div
+            className="
+              flex
+              h-40
+              items-center
+              justify-center
+
+              rounded-2xl
+              border
+              border-gray-200
+              bg-gray-50
+            "
+          >
+            <img
+              src={form.logo}
+              alt={form.title}
+              className="max-h-28 max-w-48 object-contain"
+            />
+          </div>
+        </div>
+      )}
+      {/* Buttons */}
+
+      <div className="flex justify-end gap-4 border-t pt-6">
+        <button
+          type="button"
+          onClick={() => router.back()}
+          disabled={loading}
+          className="
+            rounded-xl
+            border
+            border-gray-300
+            px-6
+            py-3
+            font-medium
+            transition
+            hover:bg-gray-100
+            disabled:opacity-50
+          "
+        >
+          انصراف
+        </button>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="
+            flex
+            items-center
+            gap-2
+
+            rounded-xl
+
+            bg-pink-600
+
+            px-8
+            py-3
+
+            font-semibold
+            text-white
+
+            transition
+
+            hover:bg-pink-700
+
+            disabled:opacity-50
+          "
+        >
+          {loading && (
+            <svg
+              className="h-5 w-5 animate-spin"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+                className="opacity-20"
+              />
+
+              <path
+                fill="currentColor"
+                className="opacity-80"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              />
+            </svg>
+          )}
+
+          {mode === "create" ? "ثبت برند" : "بروزرسانی برند"}
+        </button>
+      </div>
+    </form>
+  );
+}

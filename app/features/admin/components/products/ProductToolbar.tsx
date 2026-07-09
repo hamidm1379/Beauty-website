@@ -1,14 +1,60 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Search,
-  RefreshCcw,
-  Trash2,
-  Filter,
-} from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function ProductToolbar() {
+import { Search, RefreshCcw, Trash2, Filter } from "lucide-react";
+interface Category {
+  id: number;
+  title: string;
+}
+
+interface Brand {
+  id: number;
+  title: string;
+}
+
+interface ToolbarFilters {
+  search: string;
+  category: string;
+  brand: string;
+  status: string;
+  sort: string;
+  page: number;
+}
+
+interface ProductToolbarProps {
+  categories: Category[];
+  brands: Brand[];
+
+  filters: ToolbarFilters;
+
+  totalProducts: number;
+}
+
+export default function ProductToolbar({
+  categories,
+  brands,
+  filters,
+  totalProducts,
+}: ProductToolbarProps) {
+  const router = useRouter();
+
+  const searchParams = useSearchParams();
+
+  function updateFilter(key: string, value: string) {
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+
+    params.delete("page");
+
+    router.push(`/admin/products?${params.toString()}`);
+  }
   return (
     <motion.section
       initial={{
@@ -55,27 +101,25 @@ export default function ProductToolbar() {
 
           <input
             type="text"
+            defaultValue={filters.search}
             placeholder="جستجوی نام محصول..."
+            onKeyDown={(e) => {
+              if (e.key !== "Enter") return;
+
+              updateFilter("search", (e.target as HTMLInputElement).value);
+            }}
             className="
               h-12
               w-full
-
               rounded-2xl
-
               border
               border-gray-200
-
               bg-gray-50
-
               pr-11
               pl-4
-
               text-sm
-
               outline-none
-
               transition
-
               focus:border-pink-500
               focus:bg-white
             "
@@ -93,89 +137,103 @@ export default function ProductToolbar() {
           "
         >
           <select
+            value={filters.category}
+            onChange={(e) => updateFilter("category", e.target.value)}
             className="
               h-12
-
               rounded-2xl
-
               border
               border-gray-200
-
               bg-white
-
               px-4
-
               text-sm
-
               outline-none
-
               transition
-
               focus:border-pink-500
             "
           >
-            <option>همه دسته‌بندی‌ها</option>
-            <option>مراقبت پوست</option>
-            <option>مراقبت مو</option>
-            <option>آرایش</option>
-            <option>عطر</option>
+            <option value="">همه دسته‌بندی‌ها</option>
+
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.title}
+              </option>
+            ))}
+          </select>
+          <select
+            value={filters.brand}
+            onChange={(e) => updateFilter("brand", e.target.value)}
+            className="
+    h-12
+    rounded-2xl
+    border
+    border-gray-200
+    bg-white
+    px-4
+    text-sm
+    outline-none
+    transition
+    focus:border-pink-500
+  "
+          >
+            <option value="">همه برندها</option>
+
+            {brands.map((brand) => (
+              <option key={brand.id} value={brand.id}>
+                {brand.title}
+              </option>
+            ))}
+          </select>
+          <select
+            value={filters.status}
+            onChange={(e) => updateFilter("status", e.target.value)}
+            className="
+    h-12
+    rounded-2xl
+    border
+    border-gray-200
+    bg-white
+    px-4
+    text-sm
+    outline-none
+    transition
+    focus:border-pink-500
+  "
+          >
+            <option value="">همه وضعیت‌ها</option>
+
+            <option value="ACTIVE">فعال</option>
+
+            <option value="INACTIVE">غیرفعال</option>
+
+            <option value="DRAFT">پیش‌نویس</option>
           </select>
 
           <select
+            value={filters.sort}
+            onChange={(e) => updateFilter("sort", e.target.value)}
             className="
-              h-12
-
-              rounded-2xl
-
-              border
-              border-gray-200
-
-              bg-white
-
-              px-4
-
-              text-sm
-
-              outline-none
-
-              transition
-
-              focus:border-pink-500
-            "
+    h-12
+    rounded-2xl
+    border
+    border-gray-200
+    bg-white
+    px-4
+    text-sm
+    outline-none
+    transition
+    focus:border-pink-500
+  "
           >
-            <option>همه وضعیت‌ها</option>
-            <option>فعال</option>
-            <option>ناموجود</option>
-            <option>پیش نویس</option>
-          </select>
+            <option value="newest">جدیدترین</option>
 
-          <select
-            className="
-              h-12
+            <option value="oldest">قدیمی‌ترین</option>
 
-              rounded-2xl
+            <option value="price-desc">بیشترین قیمت</option>
 
-              border
-              border-gray-200
+            <option value="price-asc">کمترین قیمت</option>
 
-              bg-white
-
-              px-4
-
-              text-sm
-
-              outline-none
-
-              transition
-
-              focus:border-pink-500
-            "
-          >
-            <option>جدیدترین</option>
-            <option>قدیمی‌ترین</option>
-            <option>بیشترین قیمت</option>
-            <option>کمترین قیمت</option>
-            <option>بیشترین موجودی</option>
+            <option value="stock-desc">بیشترین موجودی</option>
           </select>
         </div>
       </div>
@@ -219,7 +277,6 @@ export default function ProductToolbar() {
             "
           >
             <RefreshCcw size={17} />
-
             بروزرسانی
           </button>
 
@@ -248,7 +305,6 @@ export default function ProductToolbar() {
             "
           >
             <Trash2 size={17} />
-
             حذف گروهی
           </button>
         </div>
@@ -265,11 +321,8 @@ export default function ProductToolbar() {
           "
         >
           <Filter size={17} />
-
           در حال نمایش
-          <span className="font-bold text-pink-600">
-            ۲۴۵
-          </span>
+          <span className="font-bold text-pink-600">۲۴۵</span>
           محصول
         </div>
       </div>

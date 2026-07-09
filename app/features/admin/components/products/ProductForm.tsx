@@ -3,12 +3,29 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import ProductImages from "@/app/features/admin/components/products/ProductImages";
 
+import ImageUploader from "@/app/shared/components/UploadImage";
 
 interface ProductFormProps {
   mode: "create" | "edit";
-  initialData?: any;
+  initialData?: ProductData;
+}
+
+interface ProductData {
+  id: number;
+  title: string;
+  slug: string;
+  description: string;
+  price: number;
+  stock: number;
+  thumbnail?: string;
+  images: {
+    id: number;
+    url: string;
+  }[];
+  categoryId: number;
+  brandId: number;
+  status: "ACTIVE" | "DRAFT" | "INACTIVE";
 }
 
 interface Category {
@@ -21,137 +38,207 @@ interface Brand {
   title: string;
 }
 
+interface FormState {
+  title: string;
+  slug: string;
+  description: string;
+  price: string;
+  stock: string;
+  thumbnailFile: File | null;
+  imageFiles: File[];
+  thumbnail: string;
+  imageUrls: string[];
+  categoryId: string;
+  brandId: string;
+  status: "ACTIVE" | "DRAFT" | "INACTIVE";
+}
+
+const INITIAL_FORM_STATE: FormState = {
+  title: "",
+  slug: "",
+  description: "",
+  price: "",
+  stock: "",
+  thumbnailFile: null,
+  imageFiles: [],
+  thumbnail: "",
+  imageUrls: [],
+  categoryId: "",
+  brandId: "",
+  status: "ACTIVE",
+};
+
 export default function ProductForm({ mode, initialData }: ProductFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
-  const [form, setForm] = useState({
-    title: "",
-    slug: "",
-    description: "",
-    price: "",
-    stock: "",
-    image: "",
-    categoryId: "",
-    brandId: "",
-    status: "ACTIVE",
-  });
+  const [form, setForm] = useState<FormState>(INITIAL_FORM_STATE);
 
-  // Initialize form with existing data
   useEffect(() => {
-    if (initialData) {
-      setForm({
-        title: initialData.title,
-        slug: initialData.slug,
-        description: initialData.description ?? "",
-        price: initialData.price.toString(),
-        stock: initialData.stock.toString(),
-        image: initialData.image ?? "",
-        categoryId: initialData.categoryId.toString(),
-        brandId: initialData.brandId.toString(),
-        status: initialData.status,
-      });
-    }
+    if (!initialData) return;
+
+    setForm({
+      title: initialData.title,
+      slug: initialData.slug,
+      description: initialData.description ?? "",
+      price: initialData.price.toString(),
+      stock: initialData.stock.toString(),
+      thumbnailFile: null,
+      imageFiles: [],
+      thumbnail: initialData.thumbnail ?? "",
+      imageUrls: initialData.images?.map((img) => img.url) ?? [],
+      categoryId: initialData.categoryId.toString(),
+      brandId: initialData.brandId.toString(),
+      status: initialData.status,
+    });
   }, [initialData]);
 
-  // Load categories and brands on mount
   useEffect(() => {
     loadCategories();
     loadBrands();
   }, []);
 
   async function loadCategories() {
-    try {
-      const res = await fetch("/api/categories");
-      const json = await res.json();
-      setCategories(json.data);
-    } catch {
-      toast.error("خطا در دریافت دسته‌بندی‌ها");
-    }
+    const res = await fetch("/api/categories");
+    const json = await res.json();
+    setCategories(json.data ?? []);
   }
 
   async function loadBrands() {
-    try {
-      const res = await fetch("/api/brands");
-      const json = await res.json();
-      setBrands(json.data);
-    } catch {
-      toast.error("خطا در دریافت برندها");
-    }
+    const res = await fetch("/api/brands");
+    const json = await res.json();
+    setBrands(json.data ?? []);
+  }
+
+  function generateSlug(text: string) {
+    return text
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]/g, "");
   }
 
   function handleChange(
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) {
     const { name, value } = e.target;
+
+    if (name === "title") {
+      setForm((prev) => ({
+        ...prev,
+        title: value,
+        slug: generateSlug(value),
+      }));
+      return;
+    }
 
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
+  }
 
-    // Auto-generate slug from title
-    if (name === "title") {
-      setForm((prev) => ({
-        ...prev,
-        title: value,
-        slug: value
-          .toLowerCase()
-          .trim()
-          .replace(/\s+/g, "-")
-          .replace(/[^\w-]/g, ""),
-      }));
+  function handleThumbnailChange(file: File | null) {
+    setForm((prev) => ({
+      ...prev,
+      thumbnailFile: file,
+    }));
+  }
+
+  function handleImagesChange(files: File[]) {
+    setForm((prev) => ({
+      ...prev,
+      imageFiles: files,
+    }));
+  }
+
+  async function uploadSingleImage(file: File, folder: string): Promise<string> {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", folder);
+
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message);
     }
+
+    return result.url;
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
 
     try {
-      const endpoint =
+      setLoading(true);
+
+      let thumbnail = form.thumbnail;
+      let gallery = [...form.imageUrls];
+
+      // Upload thumbnail
+      if (form.thumbnailFile) {
+        thumbnail = await uploadSingleImage(form.thumbnailFile, "products");
+      }
+
+      // Upload gallery
+      if (form.imageFiles.length > 0) {
+        gallery = [];
+        for (const file of form.imageFiles) {
+          const url = await uploadSingleImage(file, "products");
+          gallery.push(url);
+        }
+      }
+
+      const payload = {
+        title: form.title,
+        slug: form.slug,
+        description: form.description,
+        price: Number(form.price),
+        stock: Number(form.stock),
+        thumbnail,
+        images: gallery,
+        categoryId: Number(form.categoryId),
+        brandId: Number(form.brandId),
+        status: form.status,
+      };
+
+      const response = await fetch(
         mode === "create"
           ? "/api/products"
-          : `/api/products/${initialData?.id}`;
-      const method = mode === "create" ? "POST" : "PUT";
-
-      const response = await fetch(endpoint, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: form.title,
-          slug: form.slug,
-          description: form.description,
-          price: Number(form.price),
-          stock: Number(form.stock),
-          image: form.image,
-          status: form.status,
-          categoryId: Number(form.categoryId),
-          brandId: Number(form.brandId),
-        }),
-      });
+          : `/api/products/${initialData?.id}`,
+        {
+          method: mode === "create" ? "POST" : "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || "خطا در ذخیره محصول");
+        throw new Error(result.message);
       }
 
       toast.success(
         mode === "create"
           ? "محصول با موفقیت ایجاد شد."
-          : "محصول با موفقیت بروزرسانی شد.",
+          : "محصول با موفقیت بروزرسانی شد."
       );
 
       router.push("/admin/products");
       router.refresh();
     } catch (error: any) {
-      toast.error(error.message ?? "خطایی رخ داده است.");
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -162,155 +249,148 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       onSubmit={handleSubmit}
       className="space-y-8 rounded-3xl bg-white p-8 shadow-sm"
     >
-      {/* اطلاعات اصلی */}
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Title */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">
-            عنوان محصول
-          </label>
-          <input
-            name="title"
-            value={form.title}
-            onChange={handleChange}
-            placeholder="مثلاً کرم آبرسان"
-            required
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-pink-500"
-          />
-        </div>
+      {/* Title */}
+      <div>
+        <label className="mb-2 block text-sm font-medium">عنوان محصول</label>
+        <input
+          type="text"
+          name="title"
+          value={form.title}
+          onChange={handleChange}
+          className="w-full rounded-xl border px-4 py-3"
+        />
+      </div>
 
-        {/* Slug */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">Slug</label>
-          <input
-            name="slug"
-            value={form.slug}
-            onChange={handleChange}
-            placeholder="hydrating-cream"
-            required
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-pink-500"
-          />
-        </div>
+      {/* Slug */}
+      <div>
+        <label className="mb-2 block text-sm font-medium">Slug</label>
+        <input
+          type="text"
+          name="slug"
+          value={form.slug}
+          onChange={handleChange}
+          className="w-full rounded-xl border px-4 py-3"
+        />
+      </div>
 
-        {/* Price */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">قیمت</label>
+      {/* Description */}
+      <div>
+        <label className="mb-2 block text-sm font-medium">توضیحات</label>
+        <textarea
+          rows={6}
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          className="w-full rounded-xl border px-4 py-3"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <label className="mb-2 block text-sm font-medium">قیمت</label>
           <input
             type="number"
             name="price"
             value={form.price}
             onChange={handleChange}
-            placeholder="350000"
-            required
-            min="0"
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-pink-500"
+            className="w-full rounded-xl border px-4 py-3"
           />
         </div>
 
-        {/* Stock */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">موجودی</label>
+        <div>
+          <label className="mb-2 block text-sm font-medium">موجودی</label>
           <input
             type="number"
             name="stock"
             value={form.stock}
             onChange={handleChange}
-            placeholder="25"
-            required
-            min="0"
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-pink-500"
-          />
-        </div>
-
-        {/* Category */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">دسته بندی</label>
-          <select
-            name="categoryId"
-            value={form.categoryId}
-            onChange={handleChange}
-            required
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-pink-500"
-          >
-            <option value="">انتخاب دسته بندی</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.title}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Brand */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">برند</label>
-          <select
-            name="brandId"
-            value={form.brandId}
-            onChange={handleChange}
-            required
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-pink-500"
-          >
-            <option value="">انتخاب برند</option>
-            {brands.map((brand) => (
-              <option key={brand.id} value={brand.id}>
-                {brand.title}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Status */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">وضعیت</label>
-          <select
-            name="status"
-            value={form.status}
-            onChange={handleChange}
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-pink-500"
-          >
-            <option value="ACTIVE">فعال</option>
-            <option value="DRAFT">پیش نویس</option>
-            <option value="OUT_OF_STOCK">ناموجود</option>
-          </select>
-        </div>
-
-        {/* Image */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">
-            تصویر محصول
-          </label>
-          <ProductImages
-            value={form.image}
-            onChange={(value) =>
-              setForm((prev) => ({
-                ...prev,
-                image: value,
-              }))
-            }
+            className="w-full rounded-xl border px-4 py-3"
           />
         </div>
       </div>
 
-      {/* Description */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700">توضیحات</label>
-        <textarea
-          rows={8}
-          name="description"
-          value={form.description}
+      {/* Category */}
+      <div>
+        <label className="mb-2 block text-sm font-medium">دسته بندی</label>
+        <select
+          name="categoryId"
+          value={form.categoryId}
           onChange={handleChange}
-          placeholder="توضیحات کامل محصول..."
-          className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-pink-500"
+          className="w-full rounded-xl border px-4 py-3"
+        >
+          <option value="">انتخاب کنید</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.title}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Brand */}
+      <div>
+        <label className="mb-2 block text-sm font-medium">برند</label>
+        <select
+          name="brandId"
+          value={form.brandId}
+          onChange={handleChange}
+          className="w-full rounded-xl border px-4 py-3"
+        >
+          <option value="">انتخاب کنید</option>
+          {brands.map((brand) => (
+            <option key={brand.id} value={brand.id}>
+              {brand.title}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Status */}
+      <div>
+        <label className="mb-2 block text-sm font-medium">وضعیت</label>
+        <select
+          name="status"
+          value={form.status}
+          onChange={handleChange}
+          className="w-full rounded-xl border px-4 py-3"
+        >
+          <option value="ACTIVE">فعال</option>
+          <option value="DRAFT">پیش نویس</option>
+          <option value="INACTIVE">غیرفعال</option>
+        </select>
+      </div>
+
+      {/* Thumbnail */}
+      <div>
+        <label className="mb-3 block text-sm font-semibold">
+          تصویر اصلی محصول
+        </label>
+        <ImageUploader
+          multiple={false}
+          value={form.thumbnailFile}
+          preview={form.thumbnail}
+          onChange={handleThumbnailChange}
         />
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex items-center justify-end gap-4 border-t pt-6">
+      {/* Gallery */}
+      <div>
+        <label className="mb-3 block text-sm font-semibold">گالری تصاویر</label>
+        <ImageUploader
+          multiple
+          value={form.imageFiles}
+          previews={form.imageUrls}
+          onChange={handleImagesChange}
+        />
+      </div>
+
+      {/* Buttons */}
+      <div className="flex justify-end gap-4 border-t pt-6">
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-xl border border-gray-300 px-6 py-3 font-medium text-gray-700 transition hover:bg-gray-100"
+          disabled={loading}
+          className="rounded-xl border border-gray-300 px-6 py-3 font-medium transition hover:bg-gray-100 disabled:opacity-50"
         >
           انصراف
         </button>
@@ -318,13 +398,26 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-xl bg-pink-600 px-8 py-3 font-semibold text-white transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex items-center gap-2 rounded-xl bg-pink-600 px-8 py-3 font-semibold text-white transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {loading
-            ? "در حال ذخیره..."
-            : mode === "create"
-              ? "ثبت محصول"
-              : "بروزرسانی محصول"}
+          {loading && (
+            <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+                className="opacity-20"
+              />
+              <path
+                fill="currentColor"
+                className="opacity-80"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              />
+            </svg>
+          )}
+          {mode === "create" ? "ثبت محصول" : "بروزرسانی محصول"}
         </button>
       </div>
     </form>

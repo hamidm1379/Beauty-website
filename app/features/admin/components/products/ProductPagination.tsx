@@ -1,10 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface ProductPaginationProps {
   page?: number;
@@ -15,15 +13,32 @@ interface ProductPaginationProps {
 
 export default function ProductPagination({
   page = 1,
-  totalPages = 12,
-  totalItems = 245,
-  perPage = 10,
+  totalPages = 1,
+  totalItems = 0,
+  perPage = 12,
 }: ProductPaginationProps) {
-  const pages = Array.from(
-    { length: totalPages },
-    (_, i) => i + 1
-  );
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const router = useRouter();
 
+  const searchParams = useSearchParams();
+
+  function changePage(newPage: number) {
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set("page", newPage.toString());
+
+    router.push(`/admin/products?${params.toString()}`);
+  }
+
+  function changeLimit(limit: number) {
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set("limit", limit.toString());
+
+    params.set("page", "1");
+
+    router.push(`/admin/products?${params.toString()}`);
+  }
   return (
     <motion.section
       initial={{
@@ -58,26 +73,17 @@ export default function ProductPagination({
 
         <div className="text-sm text-gray-500">
           نمایش
-
           <span className="mx-1 font-bold text-pink-600">
             {((page - 1) * perPage + 1).toLocaleString("fa-IR")}
           </span>
-
           تا
-
           <span className="mx-1 font-bold text-pink-600">
-            {Math.min(
-              page * perPage,
-              totalItems
-            ).toLocaleString("fa-IR")}
+            {Math.min(page * perPage, totalItems).toLocaleString("fa-IR")}
           </span>
-
           از
-
           <span className="mx-1 font-bold text-gray-900">
             {totalItems.toLocaleString("fa-IR")}
           </span>
-
           محصول
         </div>
 
@@ -87,7 +93,6 @@ export default function ProductPagination({
           {/* Prev */}
 
           <button
-            disabled={page === 1}
             className="
               flex
               h-11
@@ -108,6 +113,8 @@ export default function ProductPagination({
               disabled:cursor-not-allowed
               disabled:opacity-40
             "
+            onClick={() => changePage(page - 1)}
+            disabled={page === 1}
           >
             <ChevronRight size={18} />
           </button>
@@ -117,6 +124,7 @@ export default function ProductPagination({
           {pages.map((item) => (
             <button
               key={item}
+              onClick={() => changePage(item)}
               className={`
                 h-11
                 w-11
@@ -142,6 +150,7 @@ export default function ProductPagination({
           {/* Next */}
 
           <button
+            onClick={() => changePage(page + 1)}
             disabled={page === totalPages}
             className="
               flex
@@ -171,11 +180,11 @@ export default function ProductPagination({
         {/* Per Page */}
 
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500">
-            تعداد نمایش
-          </span>
+          <span className="text-sm text-gray-500">تعداد نمایش</span>
 
           <select
+            value={perPage}
+            onChange={(e) => changeLimit(Number(e.target.value))}
             className="
               h-11
 

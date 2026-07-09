@@ -1,25 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import Image from "next/image";
 import {
-  ArrowLeft,
   BookOpen,
   Sparkles,
   Heart,
   Clock3,
-  LayoutGrid,
-  FileText,
-  Eye,
-  Star,
+ 
 } from "lucide-react";
-
-const stats = [
-  { icon: FileText, number: "۲۵۰+", label: "مقاله تخصصی", bg: "bg-violet-100", color: "text-violet-500" },
-  { icon: Eye, number: "۸۰K+", label: "بازدید ماهانه", bg: "bg-pink-100", color: "text-pink-500" },
-  { icon: Star, number: "۳۰+", label: "دسته‌بندی متنوع", bg: "bg-rose-100", color: "text-rose-500" },
-];
 
 const floatingCards = [
   {
@@ -97,48 +86,6 @@ export default function ArticlesHero() {
             زندگی و معرفی بهترین محصولات زیبایی را در مجله ما مطالعه کنید.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.7 }}
-            className="mt-12 flex flex-col gap-4 sm:flex-row"
-          >
-            <Link
-              href="#articles"
-              className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-linear-to-l from-pink-500 to-rose-500 px-8 py-4 font-bold text-white shadow-lg shadow-pink-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
-            >
-              مقالات جدید را ببینید
-              <ArrowLeft size={20} className="transition group-hover:-translate-x-1" />
-            </Link>
-
-            <Link
-              href="/categories"
-              className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-8 py-4 font-semibold text-slate-700 transition-all duration-300 hover:bg-slate-50"
-            >
-              <LayoutGrid size={18} />
-              دسته‌بندی‌ها
-            </Link>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.7 }}
-            className="mt-16 flex flex-wrap items-center gap-8"
-          >
-            {stats.map((item) => (
-              <div key={item.label} className="flex items-center gap-3">
-                <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${item.bg} ${item.color}`}>
-                  <item.icon size={20} />
-                </span>
-                <div>
-                  <p className="text-2xl font-black text-slate-900">{item.number}</p>
-                  <p className="text-sm text-slate-400">{item.label}</p>
-                </div>
-              </div>
-            ))}
-          </motion.div>
         </div>
 
         {/* ---------------- Right column (visual) ---------------- */}
@@ -215,21 +162,7 @@ export default function ArticlesHero() {
         </motion.div>
       </div>
 
-      {/* Scroll hint */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        className="mt-16 flex flex-col items-center gap-2 text-sm text-slate-400"
-      >
-        <span>برای مشاهده مقالات اسکرول کنید</span>
-        <motion.span
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity }}
-        >
-          ↓
-        </motion.span>
-      </motion.div>
+    
     </section>
   );
 }
