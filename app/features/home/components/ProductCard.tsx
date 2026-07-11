@@ -1,29 +1,37 @@
 "use client";
 
+import Image from "next/image";
+import { ShoppingCart } from "lucide-react";
+import Link from "next/link";
+
 export interface Product {
-  id: string;
+  id: number;
   title: string;
   slug: string;
 
-  image: string;
+  thumbnail?: string | null;
 
-  brand: string;
+  brand?: {
+    title: string;
+  } | null;
 
   price: number;
 
-  oldPrice?: number;
-
-  discount?: number;
+  discountPrice?: number | null;
 }
-
-import Image from "next/image";
-import { ShoppingCart } from "lucide-react";
 
 type Props = {
   product: Product;
 };
 
 export default function ProductCard({ product }: Props) {
+  const discountPercent = product.discountPrice ?? 0;
+  const hasDiscount = discountPercent > 0 && discountPercent < 100;
+
+  const finalPrice = hasDiscount
+    ? Math.round(product.price - (product.price * discountPercent) / 100)
+    : product.price;
+
   return (
     <div
       className="
@@ -40,7 +48,7 @@ export default function ProductCard({ product }: Props) {
     "
     >
       <div className="relative aspect-square overflow-hidden">
-        {product.discount && (
+        {hasDiscount && (
           <span
             className="
             absolute
@@ -58,45 +66,49 @@ export default function ProductCard({ product }: Props) {
             text-white
           "
           >
-            {product.discount} %
+            {discountPercent}%
           </span>
         )}
-
-        <Image
-          src={product.image}
-          alt={product.title}
-          fill
-          className="
+        <Link href={`/products/${product.slug}`}>
+          <Image
+            src={product.thumbnail || "/placeholder-product.png"}
+            alt={product.title}
+            fill
+            className="
             object-contain
             p-6
             transition
             duration-300
             group-hover:scale-105
           "
-        />
+          />
+        </Link>
       </div>
 
       <div className="p-4">
-        <h3 className="line-clamp-2 text-[14px] md:text-[16px] font-medium">{product.title}</h3>
+        <h3 className="line-clamp-2 text-[14px] md:text-[16px] font-medium">
+          {product.title}
+        </h3>
 
-        <p className="mt-0.5 md:mt-2 text-gray-500 text-[12px] md:text-[14px]">{product.brand}</p>
+        <p className="mt-0.5 md:mt-2 text-gray-500 text-[12px] md:text-[14px]">
+          {product.brand?.title || "بدون برند"}
+        </p>
 
         <div className="mt-4">
           <div className="flex max-md:flex-col-reverse items-center gap-2">
-            <p className="font-bold text-[12px] md:text-[15px]">
-              {product.price.toLocaleString()} تومان
-            </p>
+            {hasDiscount ? (
+              <>
+                <p className="font-bold text-[12px] md:text-[15px] text-pink-600">
+                  {finalPrice.toLocaleString()} تومان
+                </p>
 
-            {product.oldPrice && (
-              <p
-                className="
-                text-gray-400
-                line-through
-                text-[10px]
-                md:text-sm
-              "
-              >
-                  {product.oldPrice.toLocaleString()}
+                <p className="text-[11px] md:text-[13px] text-gray-400 line-through">
+                  {product.price.toLocaleString()} تومان
+                </p>
+              </>
+            ) : (
+              <p className="font-bold text-[12px] md:text-[15px]">
+                {product.price.toLocaleString()} تومان
               </p>
             )}
           </div>

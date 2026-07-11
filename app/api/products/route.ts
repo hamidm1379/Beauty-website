@@ -1,13 +1,106 @@
 import { NextRequest, NextResponse } from "next/server";
-import { productService } from "@/lib/services/product.service";
+import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+import fs from "fs/promises";
+import path from "path";
+import { randomUUID } from "crypto";
+
+export async function POST(request: NextRequest) {
   try {
-    const products = await productService.getAll();
+    const formData = await request.formData();
+
+    const title = formData.get("title") as string;
+    const slug = formData.get("slug") as string;
+    const description = formData.get("description") as string;
+    const price = Number(formData.get("price"));
+    const stock = Number(formData.get("stock"));
+    const categoryId = Number(formData.get("categoryId"));
+    const brandId = Number(formData.get("brandId"));
+    const status = formData.get("status") as any;
+
+    const thumbnailFile = formData.get("thumbnail") as File | null;
+
+    const imageFiles = formData.getAll("images") as File[];
+
+    let thumbnail = "";
+
+    if (thumbnailFile && thumbnailFile.size > 0) {
+      const bytes = Buffer.from(await thumbnailFile.arrayBuffer());
+
+      const filename =
+        randomUUID() +
+        path.extname(thumbnailFile.name);
+
+      const uploadDir = path.join(
+        process.cwd(),
+        "public",
+        "uploads",
+        "products",
+      );
+
+      await fs.mkdir(uploadDir, {
+        recursive: true,
+      });
+
+      await fs.writeFile(
+        path.join(uploadDir, filename),
+        bytes,
+      );
+
+      thumbnail = "/uploads/products/" + filename;
+    }
+
+    const product = await prisma.product.create({
+      data: {
+        title,
+        slug,
+        description,
+        price,
+        stock,
+        thumbnail,
+        categoryId,
+        brandId,
+        status,
+      },
+    });
+
+    if (imageFiles.length > 0) {
+      for (const image of imageFiles) {
+        if (image.size === 0) continue;
+
+        const bytes = Buffer.from(
+          await image.arrayBuffer(),
+        );
+
+        const filename =
+          randomUUID() +
+          path.extname(image.name);
+
+        const uploadDir = path.join(
+          process.cwd(),
+          "public",
+          "uploads",
+          "products",
+        );
+
+        await fs.writeFile(
+          path.join(uploadDir, filename),
+          bytes,
+        );
+
+        await prisma.productImage.create({
+          data: {
+            productId: product.id,
+            image:
+              "/uploads/products/" + filename,
+          },
+        });
+      }
+    }
 
     return NextResponse.json({
       success: true,
-      data: products,
+      data: product,
     });
   } catch (error) {
     console.error(error);
@@ -15,52 +108,11 @@ export async function GET() {
     return NextResponse.json(
       {
         success: false,
-        message: "خطا در دریافت محصولات",
+        message: "خطا در ایجاد محصول",
       },
       {
         status: 500,
-      }
-    );
-  }
-}
-
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-
-    const product = await productService.create({
-      title: body.title,
-      slug: body.slug,
-      description: body.description,
-      price: Number(body.price),
-      stock: Number(body.stock),
-      image: body.image,
-      status: body.status,
-      categoryId: Number(body.categoryId),
-      brandId: Number(body.brandId),
-    });
-
-    return NextResponse.json(
-      {
-        success: true,
-        message: "محصول با موفقیت ایجاد شد.",
-        data: product,
       },
-      {
-        status: 201,
-      }
-    );
-  } catch (error: any) {
-    console.error(error);
-
-    return NextResponse.json(
-      {
-        success: false,
-        message: error.message || "خطا در ایجاد محصول",
-      },
-      {
-        status: 400,
-      }
     );
   }
 }

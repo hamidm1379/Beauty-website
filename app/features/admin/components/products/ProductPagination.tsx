@@ -201,7 +201,6 @@ export default function ProductPagination({
 
               focus:border-pink-500
             "
-            defaultValue={perPage}
           >
             <option value={10}>۱۰</option>
             <option value={20}>۲۰</option>

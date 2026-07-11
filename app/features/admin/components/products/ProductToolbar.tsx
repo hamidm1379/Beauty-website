@@ -308,23 +308,6 @@ export default function ProductToolbar({
             حذف گروهی
           </button>
         </div>
-
-        <div
-          className="
-            flex
-            items-center
-            gap-2
-
-            text-sm
-
-            text-gray-500
-          "
-        >
-          <Filter size={17} />
-          در حال نمایش
-          <span className="font-bold text-pink-600">۲۴۵</span>
-          محصول
-        </div>
       </div>
     </motion.section>
   );

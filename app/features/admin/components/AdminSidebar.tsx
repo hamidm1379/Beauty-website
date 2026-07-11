@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 
 import SidebarItem from "@/app/features/admin/components/SidebarItem";
+import LogoutButton from "@/app/features/admin/components/LogoutButton";
 
 const menu = [
   {
@@ -65,7 +66,7 @@ const menu = [
     title: "مقالات",
     icon: Newspaper,
     href: "/admin/articles",
-     children: [
+    children: [
       {
         title: "مقالات",
         href: "/admin/articles",
@@ -110,15 +111,11 @@ const menu = [
 ];
 
 export default function AdminSidebar() {
-  const [openMenus, setOpenMenus] = useState<string[]>([
-    "محصولات",
-  ]);
+  const [openMenus, setOpenMenus] = useState<string[]>(["محصولات"]);
 
   const toggleMenu = (title: string) => {
     if (openMenus.includes(title)) {
-      setOpenMenus(
-        openMenus.filter((item) => item !== title)
-      );
+      setOpenMenus(openMenus.filter((item) => item !== title));
     } else {
       setOpenMenus([...openMenus, title]);
     }
@@ -187,13 +184,9 @@ export default function AdminSidebar() {
           </div>
 
           <div>
-            <h2 className="text-xl font-black">
-              زیبارو
-            </h2>
+            <h2 className="text-xl font-black">زیبارو</h2>
 
-            <p className="text-sm text-gray-500">
-              Admin Dashboard
-            </p>
+            <p className="text-sm text-gray-500">Admin Dashboard</p>
           </div>
         </div>
       </div>
@@ -216,9 +209,7 @@ export default function AdminSidebar() {
               <SidebarItem
                 item={item}
                 open={openMenus.includes(item.title)}
-                onToggle={() =>
-                  toggleMenu(item.title)
-                }
+                onToggle={() => toggleMenu(item.title)}
               />
             </div>
           ))}
@@ -235,8 +226,9 @@ export default function AdminSidebar() {
           p-4
         "
       >
-        <button
-          className="
+        <form action="action={logoutAction}">
+          <button
+            className="
             mt-4
 
             flex
@@ -260,11 +252,11 @@ export default function AdminSidebar() {
 
             hover:bg-red-50
           "
-        >
-          <LogOut size={18} />
-
-          خروج از حساب
-        </button>
+          >
+            <LogOut size={18} />
+            خروج از حساب
+          </button>
+        </form>
       </div>
     </motion.aside>
   );

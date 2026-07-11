@@ -23,6 +23,7 @@ interface ProductCreateInput {
   status?: any;
   categoryId: number;
   brandId: number;
+  discountPrice?: number | null;
 }
 
 interface ProductUpdateInput {
@@ -36,9 +37,52 @@ interface ProductUpdateInput {
   status?: any;
   categoryId?: number;
   brandId?: number;
+  discountPrice?: number | null;
 }
 
 export class ProductRepository {
+  async findBestSellers(limit = 12) {
+  return prisma.product.findMany({
+    where: {
+      status: "ACTIVE",
+    },
+    orderBy: {
+      soldCount: "desc",
+    },
+    take: limit,
+    include: {
+      brand: {
+        select: {
+          title: true,
+        },
+      },
+    },
+  });
+}
+  async findLatestProducts(limit = 10) {
+    return prisma.product.findMany({
+      where: {
+        status: "ACTIVE",
+      },
+
+      include: {
+        category: true,
+        brand: true,
+        images: {
+          take: 1,
+          orderBy: {
+            sortOrder: "asc",
+          },
+        },
+      },
+
+      orderBy: {
+        createdAt: "desc",
+      },
+
+      take: limit,
+    });
+  }
   async findAll() {
     return prisma.product.findMany({
       include: {
@@ -111,10 +155,12 @@ export class ProductRepository {
       where: { id },
       data: {
         ...productData,
-        ...(images && images.length > 0
+        ...(images
           ? {
               images: {
-                create: images.map((image) => ({ image })),
+                create: images.map((image) => ({
+                  image,
+                })),
               },
             }
           : {}),
@@ -216,6 +262,11 @@ export class ProductRepository {
         include: {
           category: true,
           brand: true,
+          images: {
+            orderBy: {
+              sortOrder: "asc",
+            },
+          },
         },
       }),
 
@@ -254,8 +305,44 @@ export class ProductRepository {
       include: {
         category: true,
         brand: true,
+        images: {
+          orderBy: {
+            sortOrder: "asc",
+          },
+        },
       },
     });
+  }
+  async getStatistics() {
+    const [totalProducts, activeProducts, inactiveProducts, draftProducts] =
+      await Promise.all([
+        prisma.product.count(),
+
+        prisma.product.count({
+          where: {
+            status: "ACTIVE",
+          },
+        }),
+
+        prisma.product.count({
+          where: {
+            status: "INACTIVE",
+          },
+        }),
+
+        prisma.product.count({
+          where: {
+            status: "DRAFT",
+          },
+        }),
+      ]);
+
+    return {
+      totalProducts,
+      activeProducts,
+      inactiveProducts,
+      draftProducts,
+    };
   }
 }
 

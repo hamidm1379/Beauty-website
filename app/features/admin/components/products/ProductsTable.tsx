@@ -1,175 +1,165 @@
-"use client";
+import Image from "next/image";
+import Link from "next/link";
 
-import { useState } from "react";
-import { ChevronDown, ArrowUpDown } from "lucide-react";
-import ProductRow from "./ProductRow";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { Product, ProductStatus, Category, Brand } from "@prisma/client";
+import { Pencil } from "lucide-react";
+
+import DeleteProductModal from "@/app/features/admin/components/products/DeleteProductModal";
+
+type ProductWithRelations = Product & {
+  category: Category;
+  brand: Brand | null;
+};
 
 interface ProductsTableProps {
-  products: any[];
-  onDelete?: (id: number) => void;
-  onBulkDelete?: (ids: number[]) => void;
+  products: ProductWithRelations[];
 }
 
-export default function ProductsTable({
-  products,
-  onDelete,
-  onBulkDelete,
-}: ProductsTableProps) {
-  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
-  const router = useRouter();
-  const toggleProduct = (id: number) => {
-    setSelectedProducts((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
-    );
+function StatusBadge({ status }: { status: ProductStatus }) {
+  const colors = {
+    ACTIVE: "bg-green-100 text-green-700",
+    INACTIVE: "bg-red-100 text-red-700",
+    DRAFT: "bg-yellow-100 text-yellow-700",
   };
 
-  const toggleAll = () => {
-    if (selectedProducts.length === products.length) {
-      setSelectedProducts([]);
-      return;
-    }
-    setSelectedProducts(products.map((item) => item.id));
+  const labels = {
+    ACTIVE: "فعال",
+    INACTIVE: "غیرفعال",
+    DRAFT: "پیش نویس",
   };
 
-  const handleBulkDelete = () => {
-    if (selectedProducts.length === 0) return;
-    onBulkDelete?.(selectedProducts);
-    setSelectedProducts([]);
-  };
-  async function handleDelete(id: number) {
-    if (!confirm("از حذف این محصول مطمئن هستید؟")) {
-      return;
-    }
-
-    try {
-      const res = await fetch(`/api/products/${id}`, {
-        method: "DELETE",
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message);
-      }
-
-      toast.success("محصول حذف شد.");
-
-      router.refresh();
-    } catch (err: any) {
-      toast.error(err.message);
-    }
-  }
   return (
-    <section className="w-full">
-      <div className="overflow-x-auto">
-        <table className="min-w-full">
-          <thead className="border-b border-gray-100 bg-gray-50">
-            <tr className="text-sm text-gray-600">
-              <th className="w-14 px-5 py-4">
-                <input
-                  type="checkbox"
-                  checked={
-                    products.length > 0 &&
-                    selectedProducts.length === products.length
-                  }
-                  onChange={toggleAll}
-                  className="h-5 w-5 rounded border-gray-300 accent-pink-500"
-                />
-              </th>
-              <th className="px-5 py-4 text-right">محصول</th>
-              <th className="px-5 py-4 text-right">دسته‌بندی</th>
-              <th className="px-5 py-4 text-right">برند</th>
-              <th className="px-5 py-4 text-right">
-                <button className="flex items-center gap-2 font-semibold">
-                  قیمت
-                  <ArrowUpDown size={15} />
-                </button>
-              </th>
-              <th className="px-5 py-4 text-right">موجودی</th>
-              <th className="px-5 py-4 text-right">وضعیت</th>
-              <th className="w-24 px-5 py-4 text-center">عملیات</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.length > 0 ? (
-              products.map((product) => (
-                <ProductRow
-                  key={product.id}
-                  product={product}
-                  checked={selectedProducts.includes(product.id)}
-                  onSelect={() => toggleProduct(product.id)}
-                  onDelete={() => handleDelete(product.id)}
-                />
-              ))
-            ) : (
-              <tr>
-                <td colSpan={8} className="py-16 text-center text-gray-400">
-                  محصولی یافت نشد.
+    <span
+      className={`rounded-xl px-3 py-1 text-sm font-medium ${colors[status]}`}
+    >
+      {labels[status]}
+    </span>
+  );
+}
+
+export default function ProductsTable({ products }: ProductsTableProps) {
+  if (!products.length) {
+    return (
+      <div className="rounded-3xl bg-white p-20 text-center text-gray-500 shadow-sm">
+        هیچ محصولی یافت نشد.
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
+      <table className="w-full">
+        <thead className="border-b bg-gray-50">
+          <tr>
+            <th className="px-6 py-4 text-right">محصول</th>
+
+            <th className="px-6 py-4 text-center">دسته بندی</th>
+
+            <th className="px-6 py-4 text-center">برند</th>
+
+            <th className="px-6 py-4 text-center">قیمت</th>
+
+            <th className="px-6 py-4 text-center">موجودی</th>
+
+            <th className="px-6 py-4 text-center">وضعیت</th>
+
+            <th className="px-6 py-4 text-center">عملیات</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {products.map((product) => {
+            const discountPercent = product.discountPrice ?? 0;
+
+            const hasDiscount = discountPercent > 0 && discountPercent < 100;
+
+            const finalPrice = hasDiscount
+              ? Math.round(
+                  product.price - (product.price * discountPercent) / 100,
+                )
+              : product.price;
+
+            return (
+              <tr
+                key={product.id}
+                className="border-b transition hover:bg-gray-50"
+              >
+                <td className="px-6 py-5">
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src={product.thumbnail || "/images/no-image.png"}
+                      alt={product.title}
+                      width={120}
+                      height={80}
+                      className="h-16 w-20 rounded-xl border object-cover"
+                    />
+
+                    <div>
+                      <h3 className="font-semibold">{product.title}</h3>
+
+                      <p className="mt-1 text-xs text-gray-500">
+                        {product.slug}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+
+                <td className="px-6 py-5 text-center">
+                  {product.category.title}
+                </td>
+
+                <td className="px-6 py-5 text-center">
+                  {product.brand?.title ?? "-"}
+                </td>
+
+                <td className="px-6 py-5 text-center">
+                  {hasDiscount ? (
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-lg font-bold text-pink-600">
+                        {finalPrice.toLocaleString()} تومان
+                      </span>
+
+                      <span className="text-sm text-gray-400 line-through">
+                        {product.price.toLocaleString()} تومان
+                      </span>
+
+                      <span className="rounded-full bg-red-100 px-2 py-1 text-xs font-bold text-red-600">
+                        {discountPercent}% تخفیف
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="font-semibold">
+                      {product.price.toLocaleString()} تومان
+                    </span>
+                  )}
+                </td>
+
+                <td className="px-6 py-5 text-center">{product.stock}</td>
+
+                <td className="px-6 py-5 text-center">
+                  <StatusBadge status={product.status} />
+                </td>
+
+                <td className="px-6 py-5">
+                  <div className="flex justify-center gap-3">
+                    <Link
+                      href={`/admin/products/${product.id}/edit`}
+                      className="rounded-xl bg-blue-50 p-2 text-blue-600 transition hover:bg-blue-100"
+                    >
+                      <Pencil size={18} />
+                    </Link>
+
+                    <DeleteProductModal
+                      productId={product.id}
+                      productTitle={product.title}
+                    />
+                  </div>
                 </td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      <div
-        className="
-          flex
-          flex-col
-          gap-4
-          border-t
-          border-gray-100
-          bg-gray-50
-          px-6
-          py-4
-          lg:flex-row
-          lg:items-center
-          lg:justify-between
-        "
-      >
-        {/* Left */}
-        <div className="flex items-center gap-4">
-          <p className="text-sm text-gray-500">
-            تعداد محصولات
-            <span className="mx-1 font-bold text-pink-600">
-              {products.length.toLocaleString("fa-IR")}
-            </span>
-          </p>
-
-          {selectedProducts.length > 0 && (
-            <p className="text-sm text-gray-500">
-              انتخاب شده
-              <span className="mx-1 font-bold text-pink-600">
-                {selectedProducts.length.toLocaleString("fa-IR")}
-              </span>
-            </p>
-          )}
-        </div>
-
-        {/* Right */}
-        <div className="flex items-center gap-3">
-          {selectedProducts.length > 0 && (
-            <button
-              onClick={handleBulkDelete}
-              className="
-                rounded-2xl
-                bg-red-600
-                px-5
-                py-2.5
-                text-sm
-                font-semibold
-                text-white
-                transition
-                hover:bg-red-700
-              "
-            >
-              حذف {selectedProducts.length.toLocaleString("fa-IR")} محصول
-            </button>
-          )}
-        </div>
-      </div>
-    </section>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }

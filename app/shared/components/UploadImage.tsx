@@ -57,7 +57,9 @@ export default function ImageUploader({
       };
     }
 
-    setLocalPreviews(previews ?? []);
+    setLocalPreviews(
+      (previews ?? []).filter((item) => item && item.trim() !== ""),
+    );
   }, [value, multiple]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -123,17 +125,19 @@ export default function ImageUploader({
 
       {multiple && localPreviews.length > 0 && (
         <div className="grid grid-cols-4 gap-4">
-          {localPreviews.map((image, index) => (
-            <div key={index} className="relative">
-              <Image
-                src={image}
-                alt=""
-                width={180}
-                height={180}
-                className="aspect-square rounded-xl border object-cover"
-              />
-            </div>
-          ))}
+          {localPreviews
+            .filter((image) => image && image.trim() !== "")
+            .map((image, index) => (
+              <div key={index} className="relative">
+                <Image
+                  src={image}
+                  alt=""
+                  width={180}
+                  height={180}
+                  className="aspect-square rounded-xl border object-cover"
+                />
+              </div>
+            ))}
         </div>
       )}
 

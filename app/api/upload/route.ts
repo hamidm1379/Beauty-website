@@ -5,12 +5,7 @@ import path from "path";
 
 export const runtime = "nodejs";
 
-const ALLOWED_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/jpg",
-];
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
 
 const MAX_SIZE = 5 * 1024 * 1024;
 
@@ -21,6 +16,7 @@ const ALLOWED_FOLDERS = [
   "banners",
   "users",
   "article-categories",
+  "articles",
 ];
 
 export async function POST(request: NextRequest) {
@@ -29,8 +25,7 @@ export async function POST(request: NextRequest) {
 
     const file = formData.get("file") as File | null;
 
-    const folder =
-      (formData.get("folder") as string) || "products";
+    const folder = (formData.get("folder") as string) || "products";
 
     if (!file) {
       return NextResponse.json(
@@ -84,12 +79,7 @@ export async function POST(request: NextRequest) {
 
     const buffer = Buffer.from(bytes);
 
-    const uploadDir = path.join(
-      process.cwd(),
-      "public",
-      "uploads",
-      folder,
-    );
+    const uploadDir = path.join(process.cwd(), "public", "uploads", folder);
 
     await fs.mkdir(uploadDir, {
       recursive: true,
@@ -97,10 +87,9 @@ export async function POST(request: NextRequest) {
 
     const extension = file.name.split(".").pop();
 
-    const filename =
-      `${Date.now()}-${Math.random()
-        .toString(36)
-        .substring(2, 10)}.${extension}`;
+    const filename = `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2, 10)}.${extension}`;
 
     const filepath = path.join(uploadDir, filename);
 

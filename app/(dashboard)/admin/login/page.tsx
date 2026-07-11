@@ -4,7 +4,7 @@ import LoginForm from "./LoginForm";
 export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-[#f8f8fb] flex items-center justify-center p-6">
-      <div className="w-full max-w-6xl overflow-hidden rounded-[32px] bg-white shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+      <div className="w-full max-w-6xl overflow-hidden rounded-4xl bg-white shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
         <div className="grid lg:grid-cols-2">
           
           {/* Right Side Form */}
@@ -27,12 +27,12 @@ export default function AdminLoginPage() {
           </div>
 
           {/* Left Side */}
-          <div className="relative hidden lg:flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-pink-50 to-white p-12">
+          <div className="relative hidden lg:flex flex-col items-center justify-center overflow-hidden bg-linear-to-br from-pink-50 to-white p-12">
             
             <div className="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-pink-100 blur-3xl" />
             <div className="absolute -top-24 -right-24 h-80 w-80 rounded-full bg-pink-200/50 blur-3xl" />
 
-            <div className="relative z-10 mb-8 flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-r from-pink-500 to-pink-600 text-white shadow-xl shadow-pink-200">
+            <div className="relative z-10 mb-8 flex h-20 w-20 items-center justify-center rounded-3xl bg-linear-to-r from-pink-500 to-pink-600 text-white shadow-xl shadow-pink-200">
               <Crown size={40} />
             </div>
 
@@ -46,7 +46,7 @@ export default function AdminLoginPage() {
             </p>
 
             {/* Fake Dashboard Preview */}
-            <div className="w-full max-w-md rounded-[32px] border border-white bg-white/80 p-6 backdrop-blur">
+            <div className="w-full max-w-md rounded-4xl border border-white bg-white/80 p-6 backdrop-blur">
               <div className="mb-6 flex gap-3">
                 <div className="h-3 w-3 rounded-full bg-red-400" />
                 <div className="h-3 w-3 rounded-full bg-yellow-400" />

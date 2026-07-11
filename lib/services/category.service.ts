@@ -4,6 +4,9 @@ import path from "path";
 import { prisma } from "@/lib/prisma";
 
 class CategoryService {
+  async findHomeCategories() {
+    return categoryRepository.findHomeCategories();
+  }
   async getAll() {
     return categoryRepository.findAll();
   }

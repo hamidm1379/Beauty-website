@@ -4,19 +4,49 @@ import ProductGallery from "@/app/features/product-detail/components/ProductGall
 import ProductInfo from "@/app/features/product-detail/components/ProductInfo";
 import ProductTabs from "@/app/features/product-detail/components/ProductTabs";
 import RelatedProducts from "@/app/features/product-detail/components/RelatedProducts";
+import { siteConfig } from "@/lib/seo/metadata";
+import { productService } from "@/lib/services/product.service";
+import { buildMetadata } from "@/lib/seo/metadata-builder";
+import { productSchema } from "@/lib/seo/schema";
 
+type Props = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
 
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+
+  const product = await productService.getBySlug(slug);
+
+  return buildMetadata({
+    title: product.seoTitle ?? product.title,
+    description: product.seoDescription ?? siteConfig.description,
+
+    image: product.thumbnail ?? undefined,
+
+    url: `${siteConfig.url}/products/${product.slug}`,
+  });
+}
 
 export default function ProductDetailPage() {
   return (
-    <main className="bg-[#fcfcfc]">
-      <div className="mx-auto w-full max-w-7xl px-4 py-8 xl:px-0">
-        {/* Breadcrumb */}
-        <Breadcrumb />
+    <>
+    {/* <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productSchema(product)),
+        }}
+      /> */}
+      <main className="bg-[#fcfcfc]">
+        <div className="mx-auto w-full max-w-7xl px-4 py-8 xl:px-0">
+          {/* Breadcrumb */}
+          <Breadcrumb />
 
-        {/* Top Section */}
-        <section
-          className="
+          {/* Top Section */}
+          <section
+            className="
             mt-6
 
             rounded-3xl
@@ -30,34 +60,36 @@ export default function ProductDetailPage() {
 
             shadow-sm
           "
-        >
-          <div
-            className="
+          >
+            <div
+              className="
               grid
 
               gap-8
 
               lg:grid-cols-2
             "
-          >
-            <ProductGallery />
+            >
+              <ProductGallery />
 
-            <ProductInfo />
-          </div>
+              <ProductInfo />
+            </div>
 
-          <ProductFeatures />
-        </section>
+            <ProductFeatures />
+          </section>
 
-        {/* Tabs */}
-        <section className="mt-8">
-          <ProductTabs />
-        </section>
+          {/* Tabs */}
+          <section className="mt-8">
+            <ProductTabs />
+          </section>
 
-        {/* Related Products */}
-        <section className="mt-10">
-          <RelatedProducts />
-        </section>
-      </div>
-    </main>
+          {/* Related Products */}
+          <section className="mt-10">
+            <RelatedProducts />
+          </section>
+        </div>
+      </main>
+      
+    </>
   );
 }

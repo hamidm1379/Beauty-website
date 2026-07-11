@@ -21,11 +21,12 @@ interface ProductData {
   thumbnail?: string;
   images: {
     id: number;
-    url: string;
+    image: string;
   }[];
   categoryId: number;
   brandId: number;
   status: "ACTIVE" | "DRAFT" | "INACTIVE";
+  discountPrice: number;
 }
 
 interface Category {
@@ -51,6 +52,7 @@ interface FormState {
   categoryId: string;
   brandId: string;
   status: "ACTIVE" | "DRAFT" | "INACTIVE";
+  discountPrice: string;
 }
 
 const INITIAL_FORM_STATE: FormState = {
@@ -66,6 +68,7 @@ const INITIAL_FORM_STATE: FormState = {
   categoryId: "",
   brandId: "",
   status: "ACTIVE",
+  discountPrice: "",
 };
 
 export default function ProductForm({ mode, initialData }: ProductFormProps) {
@@ -87,10 +90,12 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       thumbnailFile: null,
       imageFiles: [],
       thumbnail: initialData.thumbnail ?? "",
-      imageUrls: initialData.images?.map((img) => img.url) ?? [],
+      imageUrls:
+        initialData.images?.map((img) => img.image).filter(Boolean) ?? [],
       categoryId: initialData.categoryId.toString(),
       brandId: initialData.brandId.toString(),
       status: initialData.status,
+      discountPrice: initialData.discountPrice?.toString() ?? "",
     });
   }, [initialData]);
 
@@ -122,7 +127,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
   function handleChange(
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) {
     const { name, value } = e.target;
 
@@ -155,60 +160,39 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
     }));
   }
 
-  async function uploadSingleImage(file: File, folder: string): Promise<string> {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("folder", folder);
-
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-
-    return result.url;
-  }
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
       setLoading(true);
 
-      let thumbnail = form.thumbnail;
-      let gallery = [...form.imageUrls];
+      const formData = new FormData();
 
-      // Upload thumbnail
+      formData.append("title", form.title);
+      formData.append("slug", form.slug);
+      formData.append("description", form.description);
+      formData.append("price", form.price);
+      formData.append("stock", form.stock);
+      formData.append("categoryId", form.categoryId);
+      formData.append("brandId", form.brandId);
+      formData.append("status", form.status);
+      formData.append("discountPrice", form.discountPrice);
+      // تصاویر قبلی
+      formData.append("oldThumbnail", form.thumbnail);
+
+      form.imageUrls.forEach((image) => {
+        formData.append("oldImages", image);
+      });
+
+      // تصویر اصلی جدید
       if (form.thumbnailFile) {
-        thumbnail = await uploadSingleImage(form.thumbnailFile, "products");
+        formData.append("thumbnail", form.thumbnailFile);
       }
 
-      // Upload gallery
-      if (form.imageFiles.length > 0) {
-        gallery = [];
-        for (const file of form.imageFiles) {
-          const url = await uploadSingleImage(file, "products");
-          gallery.push(url);
-        }
-      }
-
-      const payload = {
-        title: form.title,
-        slug: form.slug,
-        description: form.description,
-        price: Number(form.price),
-        stock: Number(form.stock),
-        thumbnail,
-        images: gallery,
-        categoryId: Number(form.categoryId),
-        brandId: Number(form.brandId),
-        status: form.status,
-      };
+      // گالری جدید
+      form.imageFiles.forEach((file) => {
+        formData.append("images", file);
+      });
 
       const response = await fetch(
         mode === "create"
@@ -216,11 +200,8 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           : `/api/products/${initialData?.id}`,
         {
           method: mode === "create" ? "POST" : "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
+          body: formData,
+        },
       );
 
       const result = await response.json();
@@ -232,7 +213,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       toast.success(
         mode === "create"
           ? "محصول با موفقیت ایجاد شد."
-          : "محصول با موفقیت بروزرسانی شد."
+          : "محصول با موفقیت بروزرسانی شد.",
       );
 
       router.push("/admin/products");
@@ -296,7 +277,19 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
             className="w-full rounded-xl border px-4 py-3"
           />
         </div>
+        <div>
+          <label className="mb-2 block text-sm font-medium">تخفیف (%)</label>
 
+          <input
+            type="number"
+            name="discountPrice"
+            min={0}
+            max={100}
+            value={form.discountPrice}
+            onChange={handleChange}
+            className="w-full rounded-xl border px-4 py-3"
+          />
+        </div>
         <div>
           <label className="mb-2 block text-sm font-medium">موجودی</label>
           <input
@@ -401,7 +394,11 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           className="flex items-center gap-2 rounded-xl bg-pink-600 px-8 py-3 font-semibold text-white transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading && (
-            <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+            <svg
+              className="h-5 w-5 animate-spin"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
               <circle
                 cx="12"
                 cy="12"

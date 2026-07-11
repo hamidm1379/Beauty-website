@@ -1,5 +1,6 @@
 "use server";
 
+import { AuthError } from "next-auth";
 import { signIn } from "@/lib/auth";
 
 export async function loginAction(formData: FormData) {
@@ -7,19 +8,33 @@ export async function loginAction(formData: FormData) {
     await signIn("admin-login", {
       username: formData.get("username"),
       password: formData.get("password"),
-      redirectTo: "/admin",
+      redirect:false
     });
 
-    return {};
-  } catch (error: any) {
-    if (error?.type === "CredentialsSignin") {
+    return { success: true };
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return {
+            error: "نام کاربری یا رمز عبور اشتباه است.",
+          };
+
+        default:
+          return {
+            error: "خطایی در ورود رخ داده است.",
+          };
+      }
+    }
+
+    if (error instanceof Error) {
       return {
-        error: "نام کاربری یا رمز عبور اشتباه است.",
+        error: error.message,
       };
     }
 
     return {
-      error: "خطایی در ورود رخ داده است.",
+      error: "خطای ناشناخته.",
     };
   }
 }

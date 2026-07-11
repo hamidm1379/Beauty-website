@@ -1,18 +1,15 @@
-// Removed unused CategoryFilter import
 import FilterSidebar from "@/app/features/products/components/FilterSidebar";
 import SortDropdown from "@/app/features/products/components/SortDropdown";
 import ProductsContent from "@/app/features/products/sections/ProductsContent";
 import ProductsHeader from "@/app/features/products/sections/ProductsHeader";
-import ProductsPagination from "@/app/features/products/sections/ProductsPagination";
 
 
 export default function ProductsPage() {
   return (
     <main className="bg-gray-50">
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
-
         {/* Title */}
-        <ProductsHeader/>
+        <ProductsHeader />
 
         {/* Layout */}
         <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
@@ -35,22 +32,28 @@ export default function ProductsPage() {
               shadow-sm
             "
           >
-            <FilterSidebar/>
+            <FilterSidebar />
           </aside>
 
           {/* Content */}
           <section>
             {/* Toolbar */}
-            <SortDropdown/>
+            <SortDropdown />
 
             {/* Products */}
-            <ProductsContent/>
+            <ProductsContent />
 
             {/* Pagination */}
-            <ProductsPagination totalPages={8}/>
+            {/* <ProductsPagination
+              page={products.page}
+              totalPages={products.totalPages}
+              totalItems={products.total}
+              perPage={products.limit}
+            /> */}
           </section>
         </div>
       </div>
+      
     </main>
   );
 }

@@ -447,14 +447,6 @@ model Coupon {
   orders Order[]
 }
 
-enum BannerPosition {
-  HOME_HERO
-  HOME_TOP
-  HOME_MIDDLE
-  HOME_BOTTOM
-  CATEGORY
-}
-
 model Banner {
   id Int @id @default(autoincrement())
 
@@ -468,17 +460,17 @@ model Banner {
 
   buttonText String?
 
-  buttonLink String?
+  link String?
 
   position BannerPosition
 
-  sortOrder Int @default(0)
+  order Int @default(0)
 
-  isActive Boolean @default(true)
+  status BannerStatus @default(ACTIVE)
 
-  startsAt DateTime?
+  startDate DateTime?
 
-  expiresAt DateTime?
+  endDate DateTime?
 
   createdAt DateTime @default(now())
 
@@ -489,6 +481,20 @@ model Banner {
 
   productId Int?
   product   Product? @relation(fields: [productId], references: [id])
+}
+
+enum BannerPosition {
+  HOME_HERO
+  HOME_TOP
+  HOME_MIDDLE
+  HOME_BOTTOM
+  SIDEBAR
+  CATEGORY
+}
+
+enum BannerStatus {
+  ACTIVE
+  INACTIVE
 }
 
 enum NotificationType {
@@ -560,44 +566,41 @@ enum OtpType {
 }
 
 model ArticleCategory {
-  id Int @id @default(autoincrement())
-  title String
-  slug String @unique
-  image String?
-  seoTitle String?
+  id             Int       @id @default(autoincrement())
+  title          String
+  slug           String    @unique
+  image          String?
+  seoTitle       String?
   seoDescription String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  articles Article[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  articles       Article[]
 }
 
 model Article {
-  id          Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  
-  title       String
-  slug        String   @unique
-  excerpt     String?  
-  content  String
+  title   String
+  slug    String  @unique
+  excerpt String?
+  content String
 
-  
-  thumbnail   String?
+  thumbnail String?
 
- 
   seoTitle       String?
   seoDescription String?
   seoKeywords    String?
 
-  status      ArticleStatus @default(DRAFT)
+  status ArticleStatus @default(DRAFT)
 
-  categoryId  Int
-  category    ArticleCategory @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  category   ArticleCategory @relation(fields: [categoryId], references: [id])
 
-  views       Int @default(0)
+  views Int @default(0)
 
   publishedAt DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 enum ArticleStatus {

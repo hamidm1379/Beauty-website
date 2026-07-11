@@ -1,20 +1,36 @@
 import { prisma } from "@/lib/prisma";
 
 export class CategoryRepository {
- async findAll() {
-  return prisma.category.findMany({
-    include: {
-      _count: {
-        select: {
-          products: true,
+  async findHomeCategories() {
+    return prisma.category.findMany({
+      where: {
+        parentId: null,
+      },
+      orderBy: {
+        title: "asc",
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        image: true,
+      },
+    });
+  }
+  async findAll() {
+    return prisma.category.findMany({
+      include: {
+        _count: {
+          select: {
+            products: true,
+          },
         },
       },
-    },
-    orderBy: {
-      title: "asc",
-    },
-  });
-}
+      orderBy: {
+        title: "asc",
+      },
+    });
+  }
 
   async findById(id: number) {
     return prisma.category.findUnique({
@@ -24,11 +40,7 @@ export class CategoryRepository {
     });
   }
 
-  async create(data: {
-    title: string;
-    slug: string;
-    image?: string;
-  }) {
+  async create(data: { title: string; slug: string; image?: string }) {
     return prisma.category.create({
       data,
     });
@@ -40,7 +52,7 @@ export class CategoryRepository {
       title: string;
       slug: string;
       image: string;
-    }>
+    }>,
   ) {
     return prisma.category.update({
       where: {

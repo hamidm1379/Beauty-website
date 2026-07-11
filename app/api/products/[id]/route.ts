@@ -1,118 +1,262 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-import { productService } from "@/lib/services/product.service";
+import fs from "fs/promises";
+import path from "path";
+import { randomUUID } from "crypto";
 
-interface RouteParams {
+interface RouteContext {
   params: Promise<{
     id: string;
   }>;
 }
 
-/*
-|--------------------------------------------------------------------------
-| GET Product By Id
-|--------------------------------------------------------------------------
-*/
+// =======================
+// GET
+// =======================
 
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams
-) {
+export async function GET(request: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params;
 
-    const product = await productService.getById(Number(id));
+    const product = await prisma.product.findUnique({
+      where: {
+        id: Number(id),
+      },
+      include: {
+        images: true,
+      },
+    });
+
+    if (!product) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "محصول پیدا نشد.",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
 
     return NextResponse.json({
       success: true,
       data: product,
     });
-  } catch (error: any) {
+  } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
       },
       {
-        status: 404,
-      }
+        status: 500,
+      },
     );
   }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Update Product
-|--------------------------------------------------------------------------
-*/
+// =======================
+// UPDATE
+// =======================
 
-export async function PUT(
-  request: NextRequest,
-  { params }: RouteParams
-) {
+export async function PUT(request: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params;
 
-    const body = await request.json();
+    const productId = Number(id);
 
-    const product = await productService.update(Number(id), {
-      title: body.title,
-      slug: body.slug,
-      description: body.description,
-      price: Number(body.price),
-      stock: Number(body.stock),
-      image: body.image,
-      status: body.status,
-      categoryId: Number(body.categoryId),
-      brandId: Number(body.brandId),
+    const formData = await request.formData();
+
+    const product = await prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+      include: {
+        images: true,
+      },
     });
+
+    if (!product) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "محصول پیدا نشد.",
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    let thumbnail = product.thumbnail ?? "";
+
+    const thumbnailFile = formData.get("thumbnail") as File | null;
+
+    if (thumbnailFile && thumbnailFile.size > 0) {
+      if (product.thumbnail) {
+        try {
+          await fs.unlink(
+            path.join(process.cwd(), "public", product.thumbnail),
+          );
+        } catch {}
+      }
+
+      const filename = randomUUID() + path.extname(thumbnailFile.name);
+
+      const bytes = Buffer.from(await thumbnailFile.arrayBuffer());
+
+      const uploadDir = path.join(
+        process.cwd(),
+        "public",
+        "uploads",
+        "products",
+      );
+
+      await fs.mkdir(uploadDir, {
+        recursive: true,
+      });
+
+      await fs.writeFile(path.join(uploadDir, filename), bytes);
+
+      thumbnail = "/uploads/products/" + filename;
+    }
+
+    await prisma.product.update({
+      where: {
+        id: productId,
+      },
+      data: {
+        title: formData.get("title") as string,
+        slug: formData.get("slug") as string,
+        description: (formData.get("description") as string) ?? "",
+        price: Number(formData.get("price")),
+        stock: Number(formData.get("stock")),
+        categoryId: Number(formData.get("categoryId")),
+        brandId: Number(formData.get("brandId")),
+        status: formData.get("status") as any,
+        thumbnail,
+        discountPrice: formData.get("discountPrice")
+          ? Number(formData.get("discountPrice"))
+          : null,
+      },
+    });
+
+    const newImages = formData.getAll("images") as File[];
+
+    if (newImages.length > 0) {
+      for (const image of product.images) {
+        try {
+          await fs.unlink(path.join(process.cwd(), "public", image.image));
+        } catch {}
+      }
+
+      await prisma.productImage.deleteMany({
+        where: {
+          productId,
+        },
+      });
+
+      for (const image of newImages) {
+        if (image.size === 0) continue;
+
+        const filename = randomUUID() + path.extname(image.name);
+
+        const bytes = Buffer.from(await image.arrayBuffer());
+
+        await fs.writeFile(
+          path.join(process.cwd(), "public", "uploads", "products", filename),
+          bytes,
+        );
+
+        await prisma.productImage.create({
+          data: {
+            productId,
+            image: "/uploads/products/" + filename,
+          },
+        });
+      }
+    }
 
     return NextResponse.json({
       success: true,
-      message: "محصول با موفقیت بروزرسانی شد.",
-      data: product,
     });
-  } catch (error: any) {
+  } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message: "خطا در بروزرسانی محصول",
       },
       {
-        status: 400,
-      }
+        status: 500,
+      },
     );
   }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Delete Product
-|--------------------------------------------------------------------------
-*/
+// =======================
+// DELETE
+// =======================
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params;
 
-    await productService.delete(Number(id));
+    const product = await prisma.product.findUnique({
+      where: {
+        id: Number(id),
+      },
+      include: {
+        images: true,
+      },
+    });
+
+    if (!product) {
+      return NextResponse.json(
+        {
+          success: false,
+        },
+        {
+          status: 404,
+        },
+      );
+    }
+
+    if (product.thumbnail) {
+      try {
+        await fs.unlink(path.join(process.cwd(), "public", product.thumbnail));
+      } catch {}
+    }
+
+    for (const image of product.images) {
+      try {
+        await fs.unlink(path.join(process.cwd(), "public", image.image));
+      } catch {}
+    }
+
+    await prisma.product.delete({
+      where: {
+        id: Number(id),
+      },
+    });
 
     return NextResponse.json({
       success: true,
-      message: "محصول حذف شد.",
     });
-  } catch (error: any) {
+  } catch (error) {
+    console.error(error);
+
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
       },
       {
-        status: 400,
-      }
+        status: 500,
+      },
     );
   }
 }

@@ -5,6 +5,7 @@ import path from "path";
 import { prisma } from "@/lib/prisma";
 
 class ProductService {
+  private productRepository = productRepository;
   async getFilteredProducts(filters: {
     search?: string;
     category?: string;
@@ -15,6 +16,12 @@ class ProductService {
     limit?: number;
   }) {
     return productRepository.filter(filters);
+  }
+  async findBestSellers(limit = 12) {
+    return productRepository.findBestSellers(limit);
+  }
+  async findLatestProducts(limit = 10) {
+    return this.productRepository.findLatestProducts(limit);
   }
   async getAll() {
     return productRepository.findAll();
@@ -55,6 +62,7 @@ class ProductService {
     status?: ProductStatus;
     categoryId: number;
     brandId: number;
+    discountPrice?: number;
   }) {
     if (!data.title.trim()) {
       throw new Error("عنوان محصول الزامی است.");
@@ -99,6 +107,7 @@ class ProductService {
       status?: ProductStatus;
       categoryId?: number;
       brandId?: number;
+      discountPrice?: number;
     },
   ) {
     await this.getById(id);
