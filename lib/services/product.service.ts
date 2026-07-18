@@ -3,9 +3,34 @@ import { productRepository } from "@/lib/repositories/product.repository";
 import fs from "fs/promises";
 import path from "path";
 import { prisma } from "@/lib/prisma";
-
+import { productVariantService } from "./product-variant.service";
 class ProductService {
   private productRepository = productRepository;
+
+  // -------------------------
+  // Product Detail
+  // -------------------------
+
+  async getRelatedProducts(categoryId: number, productId: number, limit = 4) {
+    return this.productRepository.findRelated(categoryId, productId, limit);
+  }
+
+  async getSuggestedProducts(productId: number, limit = 8) {
+    return this.productRepository.findRandomPublished(productId, limit);
+  }
+
+  // -------------------------
+  // Products
+  // -------------------------
+
+  async getPublishedProducts(page = 1, limit = 12) {
+    return productRepository.filter({
+      page,
+      limit,
+      status: ProductStatus.ACTIVE,
+    });
+  }
+
   async getFilteredProducts(filters: {
     search?: string;
     category?: string;
@@ -15,14 +40,17 @@ class ProductService {
     page?: number;
     limit?: number;
   }) {
-    return productRepository.filter(filters);
+    return this.productRepository.filter(filters);
   }
+
   async findBestSellers(limit = 12) {
     return productRepository.findBestSellers(limit);
   }
+
   async findLatestProducts(limit = 10) {
     return this.productRepository.findLatestProducts(limit);
   }
+
   async getAll() {
     return productRepository.findAll();
   }
@@ -63,6 +91,15 @@ class ProductService {
     categoryId: number;
     brandId: number;
     discountPrice?: number;
+    shortDescription?: string;
+    variants?: {
+      title: string;
+      price?: number;
+      stock: number;
+      colorName: string;
+      colorCode: string;
+      size?: string;
+    }[];
   }) {
     if (!data.title.trim()) {
       throw new Error("عنوان محصول الزامی است.");
@@ -87,11 +124,19 @@ class ProductService {
       throw new Error("Slug قبلاً استفاده شده است.");
     }
 
-    return productRepository.create({
-      ...data,
+    const { variants, ...productData } = data;
+
+    const product = await productRepository.create({
+      ...productData,
       slug,
       status: data.status ?? ProductStatus.ACTIVE,
     });
+
+    if (variants && variants.length) {
+      await productVariantService.createMany(product.id, variants);
+    }
+
+    return product;
   }
 
   async update(
@@ -108,6 +153,7 @@ class ProductService {
       categoryId?: number;
       brandId?: number;
       discountPrice?: number;
+      shortDescription?: string;
     },
   ) {
     await this.getById(id);
@@ -125,7 +171,9 @@ class ProductService {
 
   async delete(id: number) {
     const product = await prisma.product.findUnique({
-      where: { id },
+      where: {
+        id,
+      },
       include: {
         images: true,
       },
@@ -135,24 +183,20 @@ class ProductService {
       throw new Error("محصول پیدا نشد.");
     }
 
-    // حذف Thumbnail
     if (product.thumbnail) {
       await this.deleteFileIfExists(product.thumbnail, "Thumbnail");
     }
 
-    // حذف تصاویر گالری
     for (const image of product.images) {
       await this.deleteFileIfExists(image.image, "Gallery image");
     }
 
-    // حذف رکوردهای تصاویر
     await prisma.productImage.deleteMany({
       where: {
         productId: id,
       },
     });
 
-    // حذف محصول
     await prisma.product.delete({
       where: {
         id,
@@ -165,6 +209,7 @@ class ProductService {
   async count() {
     return productRepository.count();
   }
+
   async getStatistics() {
     const [totalProducts, activeProducts, outOfStockProducts] =
       await Promise.all([
@@ -201,26 +246,13 @@ class ProductService {
       .replace(/[^\w-]/g, "");
   }
 
-  /**
-   * مسیر ذخیره‌شده در دیتابیس (که معمولاً برای نمایش در مرورگر است،
-   * مثل "/uploads/products/abc.jpg") را به مسیر فیزیکی درست روی دیسک
-   * (داخل پوشه public) تبدیل می‌کند.
-   *
-   * پشتیبانی از حالت‌های مختلف:
-   * - "/uploads/products/abc.jpg"
-   * - "uploads/products/abc.jpg"
-   * - "/public/uploads/products/abc.jpg"
-   * - "public/uploads/products/abc.jpg"
-   */
   private resolveUploadPath(storedPath: string): string {
     let cleaned = storedPath.trim();
 
-    // حذف اسلش ابتدایی
     if (cleaned.startsWith("/")) {
       cleaned = cleaned.slice(1);
     }
 
-    // اگر از قبل با public شروع نشده، اضافه‌اش کن
     if (!cleaned.startsWith("public/") && cleaned !== "public") {
       cleaned = path.join("public", cleaned);
     }
@@ -228,11 +260,6 @@ class ProductService {
     return path.join(process.cwd(), cleaned);
   }
 
-  /**
-   * فایل را در صورت وجود از روی دیسک پاک می‌کند.
-   * اگر فایل پیدا نشد یا خطای دیگری رخ داد، فقط لاگ می‌کند
-   * تا حذف محصول متوقف نشود.
-   */
   private async deleteFileIfExists(storedPath: string, label: string) {
     if (!storedPath) return;
 
@@ -240,7 +267,9 @@ class ProductService {
 
     try {
       await fs.access(filePath);
+
       await fs.unlink(filePath);
+
       console.log(`${label} deleted:`, filePath);
     } catch (err: any) {
       if (err?.code === "ENOENT") {

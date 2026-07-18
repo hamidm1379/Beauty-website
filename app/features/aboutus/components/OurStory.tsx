@@ -63,33 +63,6 @@ export default function OurStory() {
 
         {/* Floating Card */}
 
-        <div
-          className="
-            absolute
-
-            -bottom-8
-            right-8
-
-            rounded-3xl
-
-            bg-white/95
-
-            px-6
-            py-5
-
-            shadow-2xl
-
-            backdrop-blur
-          "
-        >
-          <p className="text-3xl font-black text-pink-500">
-            +12K
-          </p>
-
-          <span className="text-gray-500">
-            مشتری وفادار
-          </span>
-        </div>
       </div>
 
       {/* Content */}
@@ -170,7 +143,7 @@ export default function OurStory() {
             {
               icon: HeartHandshake,
               title: "اعتماد مشتریان",
-              desc: "بیش از ۱۲ هزار مشتری وفادار همراه ما هستند.",
+              desc: "بیش از هزاران مشتری وفادار همراه ما هستند.",
             },
           ].map((item, index) => {
             const Icon = item.icon;

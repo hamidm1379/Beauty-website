@@ -7,50 +7,15 @@ import ProductCard, {
   Product,
 } from "@/app/features/home/components/ProductCard";
 
-const products: Product[] = [
-  {
-    id: "1",
-    slug: "estee-lauder-foundation",
-    title: "کرم پودر دابل ور استی لادر",
-    brand: "ESTEE LAUDER",
-    image: "/products/product-1.png",
-    price: 2450000,
-    oldPrice: 2990000,
-    discount: 18,
-  },
-  {
-    id: "2",
-    slug: "cerave-cleanser",
-    title: "ژل شستشوی سراوی",
-    brand: "CeraVe",
-    image: "/products/product-2.png",
-    price: 980000,
-    oldPrice: 1190000,
-    discount: 15,
-  },
-  {
-    id: "3",
-    slug: "ordinary-serum",
-    title: "سرم هیالورونیک اسید اوردینری",
-    brand: "The Ordinary",
-    image: "/products/product-3.png",
-    price: 1280000,
-    oldPrice: 1490000,
-    discount: 14,
-  },
-  {
-    id: "4",
-    slug: "laroche-spf50",
-    title: "ضد آفتاب لاروش پوزای SPF50",
-    brand: "La Roche Posay",
-    image: "/products/product-4.png",
-    price: 1650000,
-    oldPrice: 1890000,
-    discount: 12,
-  },
-];
+interface Props {
+  products: Product[];
+}
 
-export default function RecommendedProducts() {
+export default function RecommendedProducts({ products }: Props) {
+  if (!products || products.length === 0) {
+    return null;
+  }
+
   return (
     <section>
       {/* Header */}

@@ -1,34 +1,107 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  Search,
-  SlidersHorizontal,
-  ChevronDown,
-} from "lucide-react";
+import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-const categories = [
-  "همه",
-  "مراقبت پوست",
-  "آرایش",
-  "مراقبت مو",
-  "عطر",
-  "برندها",
-  "سلامت",
-];
+interface Props {
+  categories: {
+    id: number;
+    title: string;
+    slug: string;
+  }[];
+}
 
 const sorts = [
-  "جدیدترین",
-  "محبوب‌ترین",
-  "پربازدید",
-  "قدیمی‌ترین",
+  {
+    value: "newest",
+    label: "جدیدترین",
+  },
+  {
+    value: "oldest",
+    label: "قدیمی‌ترین",
+  },
+  {
+    value: "views",
+    label: "پربازدید",
+  },
 ];
 
-export default function ArticlesFilter() {
-  const [active, setActive] = useState("همه");
-  const [sort, setSort] = useState("جدیدترین");
-  const [search, setSearch] = useState("");
+export default function ArticlesFilter({ categories }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [sort, setSort] = useState(searchParams.get("sort") ?? "newest");
+  const [active, setActive] = useState(searchParams.get("category") ?? "همه");
+  const [search, setSearch] = useState(searchParams.get("search") ?? "");
+  useEffect(() => {
+    setSearch(searchParams.get("search") ?? "");
+    setActive(searchParams.get("category") ?? "همه");
+    setSort(searchParams.get("sort") ?? "newest");
+  }, [searchParams]);
+  const handleSearch = () => {
+    const value = search.trim();
+
+    if (!value) {
+      router.replace("/articles?page=1", {
+        scroll: false,
+      });
+      return;
+    }
+    const params = new URLSearchParams(searchParams);
+
+    params.set("page", "1");
+
+    if (search.trim()) {
+      params.set("search", search.trim());
+    } else {
+      params.delete("search");
+    }
+
+    router.replace(
+      params.toString() ? `/articles?${params.toString()}` : "/articles",
+      {
+        scroll: false,
+      },
+    );
+  };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+  const handleCategory = (slug: string) => {
+    setActive(slug);
+
+    const params = new URLSearchParams(searchParams);
+
+    params.set("page", "1");
+
+    if (slug === "همه") {
+      params.delete("category");
+    } else {
+      params.set("category", slug);
+    }
+
+    router.replace(
+      params.toString() ? `/articles?${params.toString()}` : "/articles",
+      {
+        scroll: false,
+      },
+    );
+  };
+  const handleSort = (value: string) => {
+    setSort(value);
+
+    const params = new URLSearchParams(searchParams);
+
+    params.set("page", "1");
+    params.set("sort", value);
+
+    router.replace(`/articles?${params.toString()}`, {
+      scroll: false,
+    });
+  };
 
   return (
     <motion.section
@@ -74,7 +147,13 @@ export default function ArticlesFilter() {
       >
         {/* Search */}
 
-        <div className="relative flex-1">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSearch();
+          }}
+          className="relative flex-1"
+        >
           <Search
             className="
               absolute
@@ -91,7 +170,28 @@ export default function ArticlesFilter() {
 
           <input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+
+              setSearch(value);
+
+              if (value === "") {
+                const params = new URLSearchParams(searchParams);
+
+                params.delete("search");
+                params.set("page", "1");
+
+                router.replace(
+                  params.toString()
+                    ? `/articles?${params.toString()}`
+                    : "/articles",
+                  {
+                    scroll: false,
+                  },
+                );
+              }
+            }}
+            onKeyDown={handleKeyDown}
             placeholder="جستجوی مقاله..."
             className="
               h-14
@@ -117,7 +217,13 @@ export default function ArticlesFilter() {
               focus:ring-pink-100
             "
           />
-        </div>
+          <button
+            type="submit"
+            className="absolute left-2 top-2 rounded-xl bg-pink-500 px-5 py-2 text-white cursor-pointer"
+          >
+            جستجو
+          </button>
+        </form>
 
         {/* Sort */}
 
@@ -146,10 +252,10 @@ export default function ArticlesFilter() {
 
           <select
             value={sort}
-            onChange={(e) => setSort(e.target.value)}
+            onChange={(e) => handleSort(e.target.value)}
             className="
               h-14
-
+              cursor-pointer
               min-w-55
 
               appearance-none
@@ -174,11 +280,8 @@ export default function ArticlesFilter() {
             "
           >
             {sorts.map((item) => (
-              <option
-                key={item}
-                value={item}
-              >
-                {item}
+              <option key={item.value} value={item.value}>
+                {item.label}
               </option>
             ))}
           </select>
@@ -198,9 +301,22 @@ export default function ArticlesFilter() {
           gap-3
         "
       >
+        <motion.button
+          layout
+          whileHover={{ y: -2, scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => handleCategory("همه")}
+          className={`cursor-pointer rounded-full px-5 py-3 text-sm font-medium transition-all ${
+            active === "همه"
+              ? "bg-pink-500 text-white shadow-lg"
+              : "bg-pink-50 text-gray-700 hover:bg-pink-100"
+          }`}
+        >
+          همه
+        </motion.button>
         {categories.map((item) => (
           <motion.button
-            key={item}
+            key={item.id}
             layout
             whileHover={{
               y: -2,
@@ -209,10 +325,10 @@ export default function ArticlesFilter() {
             whileTap={{
               scale: 0.95,
             }}
-            onClick={() => setActive(item)}
+            onClick={() => handleCategory(item.slug)}
             className={`
               rounded-full
-
+              cursor-pointer    
               px-5
               py-3
 
@@ -222,13 +338,13 @@ export default function ArticlesFilter() {
               transition-all
 
               ${
-                active === item
+                active === item.slug
                   ? "bg-pink-500 text-white shadow-lg"
                   : "bg-pink-50 text-gray-700 hover:bg-pink-100"
               }
             `}
           >
-            {item}
+            {item.title}
           </motion.button>
         ))}
       </div>

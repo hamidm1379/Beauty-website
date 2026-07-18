@@ -240,9 +240,7 @@ function HeroContent({
         className="mt-10 flex flex-wrap gap-4"
       >
         <ActionButton link={link} buttonText={buttonText} />
-        <button className="rounded-full border border-gray-300 bg-white/80 px-8 py-4 font-semibold backdrop-blur transition hover:border-pink-200 hover:bg-white hover:shadow-md">
-          مشاهده بیشتر
-        </button>
+        
       </motion.div>
     </motion.div>
   );

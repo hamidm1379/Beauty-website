@@ -20,10 +20,6 @@ const contactItems = [
     title: "support@ziba.com",
     href: "mailto:support@ziba.com",
   },
-  {
-    icon: MapPin,
-    title: "تهران، خیابان ولیعصر، کوچه ششم، پلاک ۱۴",
-  },
 ];
 
 const socials = [

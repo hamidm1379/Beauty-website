@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-
+import Link from "next/link";
 import {
   Crown,
   LayoutDashboard,
@@ -184,8 +184,11 @@ export default function AdminSidebar() {
           </div>
 
           <div>
-            <h2 className="text-xl font-black">زیبارو</h2>
-
+            <Link href="/" className="flex items-center gap-2">
+              <h2 className="text-xl font-black">
+                {process.env.NEXT_PUBLIC_APP_NAME}
+              </h2>
+            </Link>
             <p className="text-sm text-gray-500">Admin Dashboard</p>
           </div>
         </div>
@@ -222,41 +225,11 @@ export default function AdminSidebar() {
         className="
           border-t
           border-gray-100
-
+          
           p-4
         "
       >
-        <form action="action={logoutAction}">
-          <button
-            className="
-            mt-4
-
-            flex
-            w-full
-            items-center
-            justify-center
-            gap-3
-
-            rounded-2xl
-
-            border
-            border-red-100
-
-            py-3
-
-            font-semibold
-
-            text-red-500
-
-            transition
-
-            hover:bg-red-50
-          "
-          >
-            <LogOut size={18} />
-            خروج از حساب
-          </button>
-        </form>
+        <LogoutButton />
       </div>
     </motion.aside>
   );

@@ -1,7 +1,7 @@
 import ContactForm from "@/app/features/contactus/components/ContactForm";
 import ContactImage from "@/app/features/contactus/components/ContactImage";
 import ContactInfo from "@/app/features/contactus/components/ContactInfo";
-import ContactMap from "@/app/features/contactus/components/ContactMap";
+// import ContactMap from "@/app/features/contactus/components/ContactMap";
 
 
 
@@ -38,9 +38,9 @@ export default function ContactPage() {
           <ContactImage />
         </section>
 
-        <section className="mx-auto mt-12 max-w-5xl">
+        {/* <section className="mx-auto mt-12 max-w-5xl">
           <ContactMap />
-        </section>
+        </section> */}
       </div>
     </main>
   );

@@ -15,7 +15,7 @@ export default function CategoryBaseCard({
 }: Props) {
   return (
     <Link
-      href={`/category/${slug}`}
+      href={`/products?category=${slug}`}
       className="mx-auto flex flex-col items-center gap-4 transition hover:scale-105"
     >
       <div className="flex h-24 w-24 items-center justify-center rounded-full bg-pink-50 overflow-hidden">

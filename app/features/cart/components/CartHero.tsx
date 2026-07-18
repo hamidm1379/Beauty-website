@@ -4,15 +4,15 @@ import { motion } from "framer-motion";
 import { ShoppingBag, Truck, ShieldCheck, CreditCard } from "lucide-react";
 
 const cards = [
-  {
-    icon: ShoppingBag,
-    value: "۳",
-    title: "محصول",
-  },
+  // {
+  //   icon: ShoppingBag,
+  //   value: "۳",
+  //   title: "محصول",
+  // },
   {
     icon: Truck,
-    value: "رایگان",
-    title: "ارسال",
+    value: "ارسال",
+    title: "سریع",
   },
   {
     icon: ShieldCheck,
@@ -21,8 +21,8 @@ const cards = [
   },
   {
     icon: CreditCard,
-    value: "امن",
-    title: "پرداخت",
+    value: "پرداخت",
+    title: "مطمئن",
   },
 ];
 

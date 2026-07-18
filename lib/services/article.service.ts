@@ -2,15 +2,64 @@ import { articleRepository } from "@/lib/repositories/article.repository";
 import { prisma } from "../prisma";
 
 class ArticleService {
-  async getBySlug(slug: string) {
-  const article = await articleRepository.findBySlug(slug);
-
-  if (!article) {
-    throw new Error("مقاله پیدا نشد.");
+   async getRelatedBrands(
+    articleId: number,
+    limit = 4,
+  ) {
+    return articleRepository.findRelatedBrands(
+      articleId,
+      limit,
+    );
+  }
+  async getPublishedBrands({
+    page = 1,
+    limit = 12,
+    search,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) {
+    return articleRepository.findPublishedBrands({
+      page,
+      limit,
+      search,
+    });
+  }
+  async getCategories() {
+    return articleRepository.findCategories();
+  }
+  async getPublishedArticles(page = 1, limit = 9) {
+    return articleRepository.findPublished({
+      page,
+      limit,
+    });
   }
 
-  return article;
-}
+  async getRelatedArticles(categoryId: number, articleId: number) {
+    return articleRepository.findRelated(categoryId, articleId);
+  }
+
+  async getSuggestedArticles(articleId: number, limit = 8) {
+    return articleRepository.findRandomPublished(articleId, limit);
+  }
+
+  async increaseViews(id: number) {
+    return articleRepository.increaseViews(id);
+  }
+
+  async findRelated(categoryId: number, articleId: number) {
+    return articleRepository.findRelated(categoryId, articleId);
+  }
+  async findHomeArticles(limit = 9) {
+    return articleRepository.findHomeArticles(limit);
+  }
+  async getBySlug(slug: string) {
+    const article = await articleRepository.findBySlug(slug);
+
+    return article;
+  }
+
   async getAll() {
     return articleRepository.findAll();
   }

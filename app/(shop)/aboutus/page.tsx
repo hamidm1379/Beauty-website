@@ -1,12 +1,20 @@
+import { Metadata } from "next";
 import AboutHero from "@/app/features/aboutus/components/AboutHero";
 import OurStory from "@/app/features/aboutus/components/OurStory";
-import Statistics from "@/app/features/aboutus/components/Statistics";
 import WhyChooseUs from "@/app/features/aboutus/components/WhyChooseUs";
 import OurValues from "@/app/features/aboutus/components/OurValues";
-import Timeline from "@/app/features/aboutus/components/Timeline";
-import Testimonials from "@/app/features/aboutus/components/Testimonials";
-import CallToAction from "@/app/features/aboutus/components/CallToAction";
-import Newsletter from "@/app/features/aboutus/components/Newsletter";
+import { env } from "process";
+
+// این صفحه به‌صورت استاتیک (SSG) موقع build ساخته می‌شه
+export const dynamic = "force-static";
+
+// چون محتوای این صفحه تغییر نمی‌کنه، نیازی به revalidate دوره‌ای نیست
+export const revalidate = false;
+
+export const metadata: Metadata = {
+  title: process.env.NEXT_PUBLIC_APP_NAME || "درباره ما",
+  description:process.env.NEXT_PUBLIC_APP_DESCRIPTION,
+};
 
 export default function AboutPage() {
   return (
@@ -22,11 +30,6 @@ export default function AboutPage() {
           <OurStory />
         </section>
 
-        {/* Statistics */}
-        <section className="mt-16">
-          <Statistics />
-        </section>
-
         {/* Why Choose Us */}
         <section className="mt-20">
           <WhyChooseUs />
@@ -35,37 +38,6 @@ export default function AboutPage() {
         {/* Our Values */}
         <section className="mt-20">
           <OurValues />
-        </section>
-
-        {/* Timeline */}
-        <section className="mt-20">
-          <Timeline />
-        </section>
-
-        {/* Brand Partners
-        <section className="mt-20">
-          <BrandPartners />
-        </section> */}
-
-        {/* Testimonials */}
-        <section className="mt-20">
-          <Testimonials />
-        </section>
-
-        <section
-          className="
-    mt-24
-
-    grid
-    gap-8
-
-    lg:grid-cols-2
-    lg:items-stretch
-  "
-        >
-          <CallToAction />
-
-          <Newsletter />
         </section>
       </div>
     </main>

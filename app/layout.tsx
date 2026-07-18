@@ -4,7 +4,7 @@ import { generateOpenGraph } from "@/lib/seo/openGraph";
 import { generateTwitter } from "@/lib/seo/twitter";
 import { Vazirmatn } from "next/font/google";
 import { Toaster } from "sonner";
-import { organizationSchema,websiteSchema } from "@/lib/seo/schema";
+import { organizationSchema, websiteSchema } from "@/lib/seo/schema";
 import "leaflet/dist/leaflet.css";
 
 import LayoutProvider from "@/app/shared/components/LayoutProvider";
@@ -90,7 +90,17 @@ export default function RootLayout({
       <body className={`mx-auto ${vazir.className}`}>
         <LayoutProvider>{children}</LayoutProvider>
 
-        <Toaster richColors position="top-center" closeButton />
+        <Toaster
+          richColors
+          position="top-center"
+          closeButton
+          toastOptions={{
+            className: vazir.className,
+            style: {
+              fontFamily: vazir.style.fontFamily,
+            },
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

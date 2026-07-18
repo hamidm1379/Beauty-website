@@ -17,9 +17,9 @@ export async function POST(request: NextRequest) {
     const categoryId = Number(formData.get("categoryId"));
     const brandId = Number(formData.get("brandId"));
     const status = formData.get("status") as any;
-
+    const shortDescription = formData.get("shortDescription") as string;
     const thumbnailFile = formData.get("thumbnail") as File | null;
-
+    const variantsRaw = formData.get("variants") as string | null;
     const imageFiles = formData.getAll("images") as File[];
 
     let thumbnail = "";
@@ -27,9 +27,7 @@ export async function POST(request: NextRequest) {
     if (thumbnailFile && thumbnailFile.size > 0) {
       const bytes = Buffer.from(await thumbnailFile.arrayBuffer());
 
-      const filename =
-        randomUUID() +
-        path.extname(thumbnailFile.name);
+      const filename = randomUUID() + path.extname(thumbnailFile.name);
 
       const uploadDir = path.join(
         process.cwd(),
@@ -42,10 +40,7 @@ export async function POST(request: NextRequest) {
         recursive: true,
       });
 
-      await fs.writeFile(
-        path.join(uploadDir, filename),
-        bytes,
-      );
+      await fs.writeFile(path.join(uploadDir, filename), bytes);
 
       thumbnail = "/uploads/products/" + filename;
     }
@@ -61,20 +56,44 @@ export async function POST(request: NextRequest) {
         categoryId,
         brandId,
         status,
+        shortDescription,
       },
     });
+    if (variantsRaw) {
+      try {
+        const variants = JSON.parse(variantsRaw) as {
+          colorName: string;
+          colorCode: string;
+          stock: number;
+        }[];
+
+        const validVariants = variants.filter(
+          (v) => v.colorName && v.colorName.trim(),
+        );
+
+        if (validVariants.length > 0) {
+          await prisma.productVariant.createMany({
+            data: validVariants.map((v) => ({
+              productId: product.id,
+              title: v.colorName,
+              colorName: v.colorName,
+              colorCode: v.colorCode || "#000000",
+              stock: Number(v.stock) || 0,
+            })),
+          });
+        }
+      } catch (err) {
+        console.error("خطا در پردازش variants:", err);
+      }
+    }
 
     if (imageFiles.length > 0) {
       for (const image of imageFiles) {
         if (image.size === 0) continue;
 
-        const bytes = Buffer.from(
-          await image.arrayBuffer(),
-        );
+        const bytes = Buffer.from(await image.arrayBuffer());
 
-        const filename =
-          randomUUID() +
-          path.extname(image.name);
+        const filename = randomUUID() + path.extname(image.name);
 
         const uploadDir = path.join(
           process.cwd(),
@@ -83,16 +102,12 @@ export async function POST(request: NextRequest) {
           "products",
         );
 
-        await fs.writeFile(
-          path.join(uploadDir, filename),
-          bytes,
-        );
+        await fs.writeFile(path.join(uploadDir, filename), bytes);
 
         await prisma.productImage.create({
           data: {
             productId: product.id,
-            image:
-              "/uploads/products/" + filename,
+            image: "/uploads/products/" + filename,
           },
         });
       }

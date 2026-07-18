@@ -1,13 +1,18 @@
+import { notFound } from "next/navigation";
+
 import Breadcrumb from "@/app/features/product-detail/components/Breadcrumb";
 import ProductFeatures from "@/app/features/product-detail/components/ProductFeatures";
 import ProductGallery from "@/app/features/product-detail/components/ProductGallery";
 import ProductInfo from "@/app/features/product-detail/components/ProductInfo";
 import ProductTabs from "@/app/features/product-detail/components/ProductTabs";
 import RelatedProducts from "@/app/features/product-detail/components/RelatedProducts";
-import { siteConfig } from "@/lib/seo/metadata";
-import { productService } from "@/lib/services/product.service";
+
 import { buildMetadata } from "@/lib/seo/metadata-builder";
-import { productSchema } from "@/lib/seo/schema";
+import { siteConfig } from "@/lib/seo/metadata";
+
+import { productSchema, breadcrumbSchema } from "@/lib/seo/schema";
+
+import { productService } from "@/lib/services/product.service";
 
 type Props = {
   params: Promise<{
@@ -18,78 +23,157 @@ type Props = {
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
 
-  const product = await productService.getBySlug(slug);
+  try {
+    const product = await productService.getBySlug(slug);
 
-  return buildMetadata({
-    title: product.seoTitle ?? product.title,
-    description: product.seoDescription ?? siteConfig.description,
+    return buildMetadata({
+      title: product.seoTitle ?? product.title,
 
-    image: product.thumbnail ?? undefined,
+      description:
+        product.seoDescription ?? product.shortDescription ?? product.title,
 
-    url: `${siteConfig.url}/products/${product.slug}`,
-  });
+      image: product.thumbnail ?? undefined,
+
+      url: `${siteConfig.url}/products/${product.slug}`,
+    });
+  } catch {
+    return {};
+  }
 }
 
-export default function ProductDetailPage() {
-  return (
-    <>
-    {/* <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productSchema(product)),
-        }}
-      /> */}
-      <main className="bg-[#fcfcfc]">
-        <div className="mx-auto w-full max-w-7xl px-4 py-8 xl:px-0">
-          {/* Breadcrumb */}
-          <Breadcrumb />
+export default async function ProductDetailPage({ params }: Props) {
+  const { slug } = await params;
 
-          {/* Top Section */}
-          <section
-            className="
-            mt-6
+  try {
+    const product = await productService.getBySlug(slug);
 
-            rounded-3xl
+    if (!product) {
+      notFound();
+    }
 
-            border
-            border-gray-100
+    // محصولات مرتبط
 
-            bg-white
+    const relatedProducts = await productService.getRelatedProducts(
+      product.categoryId,
+      product.id,
+    );
 
-            p-6
+    // تبدیل برای ProductCard
 
-            shadow-sm
-          "
-          >
-            <div
+    const relatedProductsForCard = relatedProducts.map((item) => ({
+      id: item.id,
+
+      title: item.title,
+
+      slug: item.slug,
+
+      thumbnail: item.thumbnail ?? item.images?.[0]?.image ?? null,
+
+      brand: item.brand
+        ? {
+            title: item.brand.title,
+          }
+        : null,
+
+      price: item.price,
+
+      discountPrice: item.discountPrice,
+    }));
+
+    // Product Schema
+
+    const jsonLd = productSchema(product);
+
+    // Breadcrumb Schema
+
+    const breadcrumbJsonLd = breadcrumbSchema([
+      {
+        name: "خانه",
+        url: siteConfig.url,
+      },
+      {
+        name: "محصولات",
+        url: `${siteConfig.url}/products`,
+      },
+      {
+        name: product.category.title,
+
+        url: `${siteConfig.url}/products?category=${product.category.slug}`,
+      },
+      {
+        name: product.title,
+
+        url: `${siteConfig.url}/products/${product.slug}`,
+      },
+    ]);
+
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd),
+          }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbJsonLd),
+          }}
+        />
+
+        <main className="bg-[#fcfcfc] ">
+          <div className="mx-auto w-full max-w-7xl px-4 py-8 xl:px-0">
+            {/* Breadcrumb */}
+
+            <Breadcrumb product={product} />
+
+            {/* Product */}
+
+            <section
               className="
-              grid
-
-              gap-8
-
-              lg:grid-cols-2
+              mt-6
+              rounded-3xl
+              border
+              border-gray-100
+              bg-white
+              p-6
+              shadow-sm
             "
             >
-              <ProductGallery />
+              <div
+                className="
+                grid
+                gap-8
+                lg:grid-cols-2
+              "
+              >
+                <ProductGallery product={product} />
 
-              <ProductInfo />
-            </div>
+                <ProductInfo product={product} />
+              </div>
 
-            <ProductFeatures />
-          </section>
+             
+            </section>
 
-          {/* Tabs */}
-          <section className="mt-8">
-            <ProductTabs />
-          </section>
+            {/* Tabs */}
 
-          {/* Related Products */}
-          <section className="mt-10">
-            <RelatedProducts />
-          </section>
-        </div>
-      </main>
-      
-    </>
-  );
+            <section className="mt-8">
+              <ProductTabs product={product} />
+            </section>
+
+            {/* Related Products */}
+
+            <section className="mt-10">
+              <RelatedProducts products={relatedProductsForCard} />
+            </section>
+             <ProductFeatures />
+          </div>
+        </main>
+      </>
+    );
+  } catch {
+    notFound();
+  }
 }

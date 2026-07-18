@@ -1,6 +1,13 @@
 import { prisma } from "@/lib/prisma";
 
 export class ArticleCategoryRepository {
+  async findCategories() {
+  return prisma.articleCategory.findMany({
+    orderBy: {
+      title: "asc",
+    },
+  });
+}
   async findAll() {
     return prisma.articleCategory.findMany({
       include: {

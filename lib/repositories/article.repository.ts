@@ -2,18 +2,172 @@ import { prisma } from "@/lib/prisma";
 import { Prisma, ArticleStatus } from "@prisma/client";
 
 export class ArticleRepository {
+  async findCategories() {
+    return prisma.articleCategory.findMany({
+      where: {
+        slug: {
+          not: "brands",
+        },
+      },
+      orderBy: {
+        title: "asc",
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+      },
+    });
+  }
+  // Home
+  async findHomeArticles(limit = 6) {
+    return prisma.article.findMany({
+      where: {
+        status: "PUBLISHED",
+
+        category: {
+          is: {
+            slug: {
+              not: "brands",
+            },
+          },
+        },
+      },
+
+      include: {
+        category: true,
+      },
+
+      orderBy: {
+        publishedAt: "desc",
+      },
+
+      take: limit,
+    });
+  }
+
+  // Blog + Pagination
+  async findPublished({
+    page = 1,
+    limit = 9,
+  }: {
+    page?: number;
+    limit?: number;
+  }) {
+    const where: Prisma.ArticleWhereInput = {
+      status: "PUBLISHED",
+
+      category: {
+        is: {
+          slug: {
+            not: "brands",
+          },
+        },
+      },
+    };
+
+    const total = await prisma.article.count({
+      where,
+    });
+
+    const items = await prisma.article.findMany({
+      where,
+
+      include: {
+        category: true,
+      },
+
+      orderBy: {
+        publishedAt: "desc",
+      },
+
+      skip: (page - 1) * limit,
+
+      take: limit,
+    });
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
   async findBySlug(slug: string) {
     return prisma.article.findUnique({
       where: {
         slug,
       },
+
+      include: {
+        category: true,
+      },
     });
   }
+
+  async findRelated(categoryId: number, articleId: number) {
+    return prisma.article.findMany({
+      where: {
+        status: "PUBLISHED",
+
+        categoryId,
+
+        NOT: {
+          id: articleId,
+        },
+      },
+
+      include: {
+        category: true,
+      },
+
+      orderBy: {
+        publishedAt: "desc",
+      },
+
+      take: 3,
+    });
+  }
+
+  async findRandomPublished(excludeId: number, limit = 8) {
+    const articles = await prisma.article.findMany({
+      where: {
+        status: "PUBLISHED",
+
+        NOT: {
+          id: excludeId,
+        },
+
+        category: {
+          is: {
+            slug: {
+              not: "brands",
+            },
+          },
+        },
+      },
+
+      include: {
+        category: true,
+      },
+    });
+
+    for (let i = articles.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [articles[i], articles[j]] = [articles[j], articles[i]];
+    }
+
+    return articles.slice(0, limit);
+  }
+
   async findAll() {
     return prisma.article.findMany({
       include: {
         category: true,
       },
+
       orderBy: {
         createdAt: "desc",
       },
@@ -22,7 +176,10 @@ export class ArticleRepository {
 
   async findById(id: number) {
     return prisma.article.findUnique({
-      where: { id },
+      where: {
+        id,
+      },
+
       include: {
         category: true,
       },
@@ -40,43 +197,73 @@ export class ArticleRepository {
     const page = filters.page ?? 1;
     const limit = filters.limit ?? 10;
 
-    const where: Prisma.ArticleWhereInput = {};
+    const where: Prisma.ArticleWhereInput = {
+      category: {
+        is: {
+          slug: {
+            not: "brands",
+          },
+        },
+      },
+    };
 
-    // Search
-    if (filters.search) {
+    if (filters.search?.trim()) {
       where.OR = [
         {
           title: {
-            contains: filters.search,
+            contains: filters.search.trim(),
           },
         },
         {
-          slug: {
-            contains: filters.search,
+          excerpt: {
+            contains: filters.search.trim(),
+          },
+        },
+        {
+          content: {
+            contains: filters.search.trim(),
+          },
+        },
+        {
+          seoKeywords: {
+            contains: filters.search.trim(),
           },
         },
       ];
     }
 
-    // Category
     if (filters.category) {
-      where.categoryId = Number(filters.category);
+      where.category = {
+        is: {
+          slug: filters.category,
+        },
+      };
+    } else {
+      where.category = {
+        is: {
+          slug: {
+            not: "brands",
+          },
+        },
+      };
     }
 
-    // Status
     if (filters.status && filters.status !== "ALL") {
       where.status = filters.status as ArticleStatus;
     }
 
-    // Sort
-    let orderBy: Prisma.ArticleOrderByWithRelationInput = {
-      createdAt: "desc",
-    };
+    let orderBy: Prisma.ArticleOrderByWithRelationInput;
 
     switch (filters.sort) {
       case "oldest":
         orderBy = {
-          createdAt: "asc",
+          publishedAt: "asc",
+        };
+        break;
+
+      case "views":
+        orderBy = {
+          views: "desc",
         };
         break;
 
@@ -86,11 +273,10 @@ export class ArticleRepository {
         };
         break;
 
-      case "views":
+      default:
         orderBy = {
-          views: "desc",
+          publishedAt: "desc",
         };
-        break;
     }
 
     const total = await prisma.article.count({
@@ -113,13 +299,9 @@ export class ArticleRepository {
 
     return {
       items,
-
       total,
-
       page,
-
       limit,
-
       totalPages: Math.ceil(total / limit),
     };
   }
@@ -150,11 +332,8 @@ export class ArticleRepository {
 
     return {
       totalArticles,
-
       publishedArticles,
-
       draftArticles,
-
       totalViews: views._sum.views ?? 0,
     };
   }
@@ -170,6 +349,7 @@ export class ArticleRepository {
       where: {
         id,
       },
+
       data,
     });
   }
@@ -191,11 +371,113 @@ export class ArticleRepository {
       where: {
         id,
       },
+
       data: {
         views: {
           increment: 1,
         },
       },
+    });
+  }
+  // Brands + Pagination
+
+  async findPublishedBrands({
+    page = 1,
+    limit = 12,
+    search,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }) {
+    const where: Prisma.ArticleWhereInput = {
+      status: "PUBLISHED",
+
+      category: {
+        is: {
+          slug: "brands",
+        },
+      },
+    };
+
+    if (search?.trim()) {
+      where.OR = [
+        {
+          title: {
+            contains: search.trim(),
+          },
+        },
+        {
+          excerpt: {
+            contains: search.trim(),
+          },
+        },
+        {
+          content: {
+            contains: search.trim(),
+          },
+        },
+        {
+          seoKeywords: {
+            contains: search.trim(),
+          },
+        },
+      ];
+    }
+
+    const total = await prisma.article.count({
+      where,
+    });
+
+    const items = await prisma.article.findMany({
+      where,
+
+      include: {
+        category: true,
+      },
+
+      orderBy: {
+        publishedAt: "desc",
+      },
+
+      skip: (page - 1) * limit,
+
+      take: limit,
+    });
+
+    return {
+      items,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+  async findRelatedBrands(articleId: number, limit = 4) {
+    return prisma.article.findMany({
+      where: {
+        status: "PUBLISHED",
+
+        category: {
+          is: {
+            slug: "brands",
+          },
+        },
+
+        NOT: {
+          id: articleId,
+        },
+      },
+
+      include: {
+        category: true,
+      },
+
+      orderBy: {
+        publishedAt: "desc",
+      },
+
+      take: limit,
     });
   }
 }

@@ -1,17 +1,308 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import {  Send, MessageCircle } from "lucide-react";
-import enamad from "@/public/images.png"
+import { motion } from "framer-motion";
+import { Send, MessageCircle, Mail, ArrowLeft, Star } from "lucide-react";
+import enamad from "@/public/images.png";
+
+const quickLinks = [
+  { href: "/", label: "صفحه اصلی" },
+  { href: "/shop", label: "فروشگاه" },
+  { href: "/products", label: "محصولات" },
+  { href: "/brands", label: "برندها" },
+  { href: "/contact", label: "تماس با ما" },
+];
+
+const serviceLinks = [
+  { href: "#", label: "پیگیری سفارش" },
+  { href: "#", label: "روش‌های پرداخت" },
+  { href: "#", label: "ارسال و تحویل" },
+  { href: "#", label: "مرجوعی کالا" },
+];
+
+const infoLinks = [
+  { href: "/aboutus", label: "درباره ما" },
+  { href: "/articles", label: "مقالات" },
+  { href: "/faq", label: "سوالات متداول" },
+];
+
+const socials = [
+  // { icon: Instagram, href: "#", label: "اینستاگرام" },
+  { icon: Send, href: "#", label: "تلگرام" },
+  { icon: MessageCircle, href: "#", label: "واتساپ" },
+];
+
+function FooterLinkGroup({
+  title,
+  links,
+  delay,
+}: {
+  title: string;
+  links: { href: string; label: string }[];
+  delay: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay }}
+    >
+      <h4 className="mb-6 text-lg font-bold text-gray-900">{title}</h4>
+
+      <ul className="space-y-3">
+        {links.map((link) => (
+          <li key={link.label}>
+            <Link
+              href={link.href}
+              className="
+                group
+                relative
+                inline-flex
+                items-center
+                text-gray-500
+                transition-colors
+                duration-300
+                hover:text-pink-500
+              "
+            >
+              <span>{link.label}</span>
+              <span
+                className="
+                  absolute
+                  -bottom-1
+                  right-0
+                  h-px
+                  w-0
+                  bg-pink-500
+                  transition-all
+                  duration-300
+                  group-hover:w-full
+                "
+              />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+}
+
+const bubbles = [
+  { size: 46, top: "8%", left: "6%", duration: 7, delay: 0 },
+  { size: 24, top: "22%", left: "17%", duration: 5.5, delay: 0.6 },
+  { size: 64, top: "58%", left: "3%", duration: 8.5, delay: 1.2 },
+  { size: 30, top: "80%", left: "13%", duration: 6, delay: 0.3 },
+  { size: 50, top: "10%", left: "90%", duration: 7.5, delay: 0.9 },
+  { size: 26, top: "40%", left: "95%", duration: 5, delay: 0.2 },
+  { size: 56, top: "72%", left: "88%", duration: 9, delay: 1.5 },
+  { size: 20, top: "90%", left: "78%", duration: 6.5, delay: 0.8 },
+  { size: 34, top: "46%", left: "50%", duration: 8, delay: 1.8 },
+  { size: 22, top: "4%", left: "42%", duration: 6.2, delay: 1.1 },
+  { size: 40, top: "62%", left: "35%", duration: 7.2, delay: 0.4 },
+  { size: 18, top: "30%", left: "70%", duration: 5.8, delay: 1.4 },
+];
+
+function FloatingBubbles() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {bubbles.map((b, i) => (
+        <motion.span
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width: b.size,
+            height: b.size,
+            top: b.top,
+            left: b.left,
+            background:
+              "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.55) 14%, rgba(244,114,182,0.35) 45%, rgba(236,72,153,0.18) 75%, rgba(236,72,153,0.06) 100%)",
+            boxShadow:
+              "inset -4px -4px 10px rgba(219,39,119,0.15), inset 3px 3px 6px rgba(255,255,255,0.8), 0 6px 16px rgba(236,72,153,0.15)",
+            border: "1px solid rgba(255,255,255,0.6)",
+          }}
+          animate={{
+            y: [0, -26, 0],
+            x: [0, 10, 0],
+            opacity: [0.55, 1, 0.55],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: b.duration,
+            delay: b.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+const stars = [
+  { size: 16, top: "14%", left: "28%", duration: 2.2, delay: 0 },
+  { size: 10, top: "34%", left: "8%", duration: 2.8, delay: 0.5 },
+  { size: 14, top: "6%", left: "62%", duration: 2.4, delay: 1 },
+  { size: 9, top: "50%", left: "22%", duration: 3, delay: 0.3 },
+  { size: 18, top: "66%", left: "58%", duration: 2.6, delay: 1.4 },
+  { size: 11, top: "26%", left: "80%", duration: 2.3, delay: 0.8 },
+  { size: 13, top: "84%", left: "36%", duration: 2.9, delay: 0.2 },
+  { size: 10, top: "48%", left: "84%", duration: 2.5, delay: 1.1 },
+  { size: 15, top: "75%", left: "68%", duration: 2.7, delay: 0.6 },
+];
+
+function TwinklingStars() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {stars.map((s, i) => (
+        <motion.span
+          key={i}
+          className="absolute"
+          style={{ top: s.top, left: s.left }}
+          animate={{ opacity: [0.15, 1, 0.15], scale: [0.7, 1.15, 0.7] }}
+          transition={{
+            duration: s.duration,
+            delay: s.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Star
+            size={s.size}
+            className="fill-pink-300 text-pink-300 drop-shadow-[0_0_4px_rgba(244,114,182,0.8)]"
+          />
+        </motion.span>
+      ))}
+    </div>
+  );
+}
+
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-100 bg-white">
-      <div className="mx-auto max-w-7xl px-4 pt-14 pb-6 lg:px-8">
+    <footer className="relative overflow-hidden border-t border-gray-100 bg-linear-to-b from-pink-50/60 via-white to-white">
+      {/* Decorative glow */}
+      <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-pink-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-pink-100/40 blur-3xl" />
+
+      {/* Floating bubbles */}
+      <FloatingBubbles />
+
+      {/* Twinkling stars */}
+      <TwinklingStars />
+
+      <div className="relative mx-auto max-w-7xl px-4 pt-16 pb-6 lg:px-8">
+        {/* Newsletter — signature element */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.6 }}
+          className="
+            mb-16
+            flex
+            flex-col
+            items-center
+            justify-between
+            gap-6
+            rounded-4xl
+            bg-linear-to-l
+            from-pink-500
+            to-rose-400
+            p-8
+            text-center
+            shadow-lg
+            shadow-pink-200/50
+            md:flex-row
+            md:text-right
+          "
+        >
+          <div>
+            <h3 className="text-2xl font-bold text-white">
+              عضو خبرنامه زیبارو شو
+            </h3>
+            <p className="mt-2 text-pink-50">
+              جدیدترین تخفیف‌ها و نکات آرایشی رو زودتر از همه دریافت کن
+            </p>
+          </div>
+
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className="
+              flex
+              w-full
+              max-w-sm
+              items-center
+              gap-2
+              rounded-full
+              bg-white/95
+              p-1.5
+              pr-5
+              shadow-inner
+            "
+          >
+            <Mail size={18} className="shrink-0 text-gray-400" />
+
+            <input
+              type="email"
+              placeholder="ایمیل شما"
+              className="
+                w-full
+                bg-transparent
+                text-sm
+                text-gray-700
+
+                outline-none
+
+                placeholder:text-gray-400
+              "
+            />
+
+            <motion.button
+              whileHover={{ gap: "10px", scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              type="submit"
+              className="
+                flex
+                shrink-0
+                items-center
+                gap-1.5
+                rounded-full
+                bg-pink-500
+                px-5
+                py-2.5
+                text-sm
+                font-bold
+                text-white
+                transition-colors
+                hover:bg-pink-600
+              "
+            >
+              عضویت
+              <ArrowLeft size={14} />
+            </motion.button>
+          </form>
+        </motion.div>
+
+        {/* Main grid */}
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="mb-6 flex items-center gap-2">
-              <div className="h-10 w-10 rounded-full bg-pink-500" />
-
+              <motion.div
+                animate={{ scale: [1, 1.12, 1] }}
+                transition={{
+                  duration: 2.6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="h-10 w-10 rounded-full bg-linear-to-br from-pink-500 to-rose-400"
+              />
               <h3 className="text-2xl font-bold text-gray-800">زیبارو</h3>
             </div>
 
@@ -20,133 +311,78 @@ export default function Footer() {
               اصل با بهترین قیمت و ارسال سریع.
             </p>
 
-            <div className="mt-6 flex items-center gap-4">
-              <a
-                href="#"
-                className="text-gray-500 transition hover:text-pink-500"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+            <div className="mt-6 flex items-center gap-3">
+              {socials.map(({ icon: Icon, href, label }, i) => (
+                <motion.a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{
+                    duration: 2.4,
+                    delay: i * 0.25,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  whileHover={{
+                    scale: 1.15,
+                    rotate: -8,
+                    boxShadow: "0 8px 20px -4px rgba(236, 72, 153, 0.45)",
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  className="
+                    relative
+
+                    flex
+                    h-11
+                    w-11
+                    items-center
+                    justify-center
+                    rounded-full
+                    border
+                    border-gray-200
+                    bg-white
+                    text-gray-500
+                    transition-colors
+                    duration-300
+                    hover:border-pink-500
+                    hover:bg-pink-500
+                    hover:text-white
+                  "
                 >
-                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                </svg>
-              </a>
-
-              <a
-                href="#"
-                className="text-gray-500 transition hover:text-pink-500"
-              >
-                <Send size={22} />
-              </a>
-
-              <a
-                href="#"
-                className="text-gray-500 transition hover:text-pink-500"
-              >
-                <MessageCircle size={22} />
-              </a>
+                  <Icon size={18} />
+                </motion.a>
+              ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Quick Access */}
-          <div>
-            <h4 className="mb-5 text-lg font-semibold">دسترسی سریع</h4>
-
-            <ul className="space-y-3 text-gray-500">
-              <li>
-                <Link href="/">صفحه اصلی</Link>
-              </li>
-
-              <li>
-                <Link href="/shop">فروشگاه</Link>
-              </li>
-
-              <li>
-                <Link href="/products">محصولات</Link>
-              </li>
-
-              <li>
-                <Link href="/brands">برندها</Link>
-              </li>
-
-              <li>
-                <Link href="/contact">تماس با ما</Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Customer Services */}
-          <div>
-            <h4 className="mb-5 text-lg font-semibold">خدمات مشتریان</h4>
-
-            <ul className="space-y-3 text-gray-500">
-              <li>
-                <Link href="#">پیگیری سفارش</Link>
-              </li>
-
-              <li>
-                <Link href="#">روش‌های پرداخت</Link>
-              </li>
-
-              <li>
-                <Link href="#">ارسال و تحویل</Link>
-              </li>
-
-              <li>
-                <Link href="#">مرجوعی کالا</Link>
-              </li>
-
-              <li>
-                <Link href="#">سوالات متداول</Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Information */}
-          <div>
-            <h4 className="mb-5 text-lg font-semibold">اطلاعات</h4>
-
-            <ul className="space-y-3 text-gray-500">
-              <li>
-                <Link href="/about">درباره ما</Link>
-              </li>
-
-              <li>
-                <Link href="#">وبلاگ</Link>
-              </li>
-
-              <li>
-                <Link href="#">قوانین و مقررات</Link>
-              </li>
-
-              <li>
-                <Link href="#">حریم خصوصی</Link>
-              </li>
-            </ul>
-          </div>
+          <FooterLinkGroup
+            title="دسترسی سریع"
+            links={quickLinks}
+            delay={0.05}
+          />
+          <FooterLinkGroup
+            title="خدمات مشتریان"
+            links={serviceLinks}
+            delay={0.1}
+          />
+          <FooterLinkGroup title="اطلاعات" links={infoLinks} delay={0.15} />
         </div>
 
         {/* Divider */}
-
         <div className="my-10 border-t border-gray-100" />
 
-        {/* Bottom Footer */}
-
+        {/* Bottom footer */}
         <div className="flex flex-col-reverse items-center justify-between gap-4 text-center text-sm text-gray-400 md:flex-row">
           <p>© 2026 تمامی حقوق این وب‌سایت محفوظ است.</p>
 
           <p>
-            <Image width={220} height={200} src={enamad} alt=""/>
+            <Image
+              width={220}
+              height={200}
+              src={enamad}
+              alt="نماد اعتماد الکترونیکی"
+            />
           </p>
         </div>
       </div>

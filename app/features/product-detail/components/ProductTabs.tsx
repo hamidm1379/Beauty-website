@@ -1,11 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import {
-  FileText,
-  List,
-  MessageCircle,
-} from "lucide-react";
+
+import { FileText, MessageCircle, Star } from "lucide-react";
+
+interface Props {
+  product: {
+    description: string | null;
+
+    review: {
+      id: number;
+
+      title: string | null;
+
+      comment: string | null;
+
+      rating: number;
+
+      createdAt: Date;
+
+      user: {
+        username: string | null;
+      };
+    }[];
+  };
+}
 
 const tabs = [
   {
@@ -13,11 +32,7 @@ const tabs = [
     title: "توضیحات",
     icon: FileText,
   },
-  {
-    id: "specifications",
-    title: "مشخصات",
-    icon: List,
-  },
+
   {
     id: "reviews",
     title: "نظرات",
@@ -25,7 +40,7 @@ const tabs = [
   },
 ];
 
-export default function ProductTabs() {
+export default function ProductTabs({ product }: Props) {
   const [activeTab, setActiveTab] = useState("description");
 
   return (
@@ -44,7 +59,6 @@ export default function ProductTabs() {
         className="
           flex
           overflow-x-auto
-
           border-b
           border-gray-100
         "
@@ -58,7 +72,7 @@ export default function ProductTabs() {
               onClick={() => setActiveTab(tab.id)}
               className={`
                 relative
-
+                cursor-pointer
                 flex
                 flex-1
                 items-center
@@ -79,7 +93,7 @@ export default function ProductTabs() {
                 ${
                   activeTab === tab.id
                     ? "text-pink-500"
-                    : "text-gray-500 hover:text-pink-500"
+                    : "text-gray-500 hover:bg-pink-50/60 hover:text-pink-500"
                 }
               `}
             >
@@ -97,6 +111,7 @@ export default function ProductTabs() {
                     w-full
                     rounded-full
                     bg-pink-500
+                    
                   "
                 />
               )}
@@ -107,88 +122,168 @@ export default function ProductTabs() {
 
       {/* Content */}
 
-      <div className="p-8 leading-8 text-gray-600">
+      <div className="p-8">
+        {/* Description */}
+
         {activeTab === "description" && (
           <div>
-            <h3 className="mb-4 text-xl font-bold text-gray-900">
+            <h3
+              className="
+              mb-5
+              text-2xl
+              font-bold
+              text-gray-900
+            "
+            >
               معرفی محصول
             </h3>
 
-            <p>
-              کرم پودر دابل ور استی لادر با پوشش بالا و ماندگاری
-              ۲۴ ساعته، انتخابی مناسب برای استفاده روزانه و
-              حرفه‌ای است. این محصول بافتی سبک داشته و بدون
-              ایجاد حس سنگینی، جلوه‌ای طبیعی روی پوست ایجاد
-              می‌کند.
-            </p>
+            <div
+              className="
+                leading-9
+                text-gray-600
+              "
+            >
+              {product.description ? (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: product.description,
+                  }}
+                />
+              ) : (
+                <p>توضیحاتی برای این محصول ثبت نشده است.</p>
+              )}
+            </div>
           </div>
         )}
 
-        {activeTab === "specifications" && (
-          <div className="grid gap-4 md:grid-cols-2">
-            {[
-              ["برند", "Estée Lauder"],
-              ["حجم", "30ml"],
-              ["نوع پوست", "انواع پوست"],
-              ["کشور سازنده", "آمریکا"],
-              ["ماندگاری", "24 ساعت"],
-              ["SPF", "ندارد"],
-            ].map(([title, value]) => (
-              <div
-                key={title}
-                className="
-                  flex
-                  items-center
-                  justify-between
-
-                  rounded-2xl
-
-                  bg-gray-50
-
-                  px-5
-                  py-4
-                "
-              >
-                <span className="font-medium text-gray-500">
-                  {title}
-                </span>
-
-                <span className="font-bold text-gray-900">
-                  {value}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Reviews */}
 
         {activeTab === "reviews" && (
-          <div className="space-y-6">
-            {[1, 2].map((item) => (
+          <div>
+            <h3
+              className="
+              mb-8
+              text-2xl
+              font-bold
+              text-gray-900
+            "
+            >
+              نظرات کاربران
+            </h3>
+
+            {product.review.length === 0 ? (
               <div
-                key={item}
                 className="
-                  rounded-2xl
-                  border
-                  border-gray-100
-                  p-5
+                  rounded-3xl
+                  bg-gray-50
+                  py-16
+                  text-center
+                  text-gray-500
                 "
               >
-                <div className="flex items-center justify-between">
-                  <h4 className="font-bold">
-                    کاربر {item}
-                  </h4>
-
-                  <span className="text-yellow-500">
-                    ★★★★★
-                  </span>
-                </div>
-
-                <p className="mt-3 text-gray-500">
-                  کیفیت محصول بسیار خوب بود و بسته‌بندی مناسبی
-                  داشت. پیشنهاد می‌کنم.
-                </p>
+                هنوز نظری برای این محصول ثبت نشده است.
               </div>
-            ))}
+            ) : (
+              <div className="space-y-6">
+                {product.review.map((review) => (
+                  <div
+                    key={review.id}
+                    className="
+                        rounded-3xl
+                        border
+                        border-gray-100
+                        p-6
+                        shadow-sm
+                      "
+                  >
+                    {/* Header */}
+
+                    <div
+                      className="
+                          flex
+                          flex-wrap
+                          items-center
+                          justify-between
+                          gap-4
+                        "
+                    >
+                      <div>
+                        <h4
+                          className="
+                            font-bold
+                            text-gray-900
+                          "
+                        >
+                          {review.user.username}
+                        </h4>
+
+                        <p
+                          className="
+                              mt-1
+                              text-sm
+                              text-gray-400
+                            "
+                        >
+                          {new Date(review.createdAt).toLocaleDateString(
+                            "fa-IR",
+                          )}
+                        </p>
+                      </div>
+
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((item) => (
+                          <Star
+                            key={item}
+                            className={`
+
+                                h-5
+                                w-5
+
+                                ${
+                                  item <= review.rating
+                                    ? "fill-yellow-400 text-yellow-400"
+                                    : "text-gray-300"
+                                }
+
+                              `}
+                          />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Title */}
+
+                    {review.title && (
+                      <h5
+                        className="
+                            mt-5
+                            text-lg
+                            font-bold
+                            text-gray-900
+                          "
+                      >
+                        {review.title}
+                      </h5>
+                    )}
+
+                    {/* Comment */}
+
+                    {review.comment && (
+                      <p
+                        className="
+                            mt-4
+                            leading-8
+                            text-gray-600
+                          "
+                      >
+                        {review.comment}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>

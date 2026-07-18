@@ -1,6 +1,9 @@
 import { articleCategoryRepository } from "@/lib/repositories/article-category.repository";
 
 class ArticleCategoryService {
+  async getCategories() {
+    return articleCategoryRepository.findCategories();
+  }
   async getAll() {
     return articleCategoryRepository.findAll();
   }
@@ -54,7 +57,7 @@ class ArticleCategoryService {
       image?: string;
       seoTitle?: string;
       seoDescription?: string;
-    }
+    },
   ) {
     await this.getById(id);
 

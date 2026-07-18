@@ -7,11 +7,13 @@ import { Search, RefreshCcw, Trash2, Filter } from "lucide-react";
 interface Category {
   id: number;
   title: string;
+  slug: string;
 }
 
 interface Brand {
   id: number;
   title: string;
+  slug: string;
 }
 
 interface ToolbarFilters {
@@ -155,7 +157,7 @@ export default function ProductToolbar({
             <option value="">همه دسته‌بندی‌ها</option>
 
             {categories.map((category) => (
-              <option key={category.id} value={category.id}>
+              <option key={category.id} value={category.slug}>
                 {category.title}
               </option>
             ))}
@@ -179,7 +181,7 @@ export default function ProductToolbar({
             <option value="">همه برندها</option>
 
             {brands.map((brand) => (
-              <option key={brand.id} value={brand.id}>
+              <option key={brand.id} value={brand.slug}>
                 {brand.title}
               </option>
             ))}

@@ -27,6 +27,13 @@ interface ProductData {
   brandId: number;
   status: "ACTIVE" | "DRAFT" | "INACTIVE";
   discountPrice: number;
+  shortDescription: string | null;
+  variants?: {
+    id: number;
+    colorName: string;
+    colorCode: string;
+    stock: number;
+  }[];
 }
 
 interface Category {
@@ -53,6 +60,7 @@ interface FormState {
   brandId: string;
   status: "ACTIVE" | "DRAFT" | "INACTIVE";
   discountPrice: string;
+  shortDescription: string | null;
 }
 
 const INITIAL_FORM_STATE: FormState = {
@@ -69,6 +77,7 @@ const INITIAL_FORM_STATE: FormState = {
   brandId: "",
   status: "ACTIVE",
   discountPrice: "",
+  shortDescription: null,
 };
 
 export default function ProductForm({ mode, initialData }: ProductFormProps) {
@@ -77,7 +86,44 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [form, setForm] = useState<FormState>(INITIAL_FORM_STATE);
+  const [variants, setVariants] = useState([
+    {
+      colorName: "",
 
+      colorCode: "",
+
+      stock: 0,
+    },
+  ]);
+  const addColor = () => {
+    setVariants((prev) => [
+      ...prev,
+
+      {
+        colorName: "",
+
+        colorCode: "",
+
+        stock: 0,
+      },
+    ]);
+  };
+  const removeColor = (index: number) => {
+    setVariants(variants.filter((_, i) => i !== index));
+  };
+  const handleVariantChange = (
+    index: number,
+    field: "colorName" | "colorCode" | "stock",
+    value: string,
+  ) => {
+    setVariants((prev) =>
+      prev.map((variant, i) =>
+        i === index
+          ? { ...variant, [field]: field === "stock" ? Number(value) : value }
+          : variant,
+      ),
+    );
+  };
   useEffect(() => {
     if (!initialData) return;
 
@@ -96,7 +142,17 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       brandId: initialData.brandId.toString(),
       status: initialData.status,
       discountPrice: initialData.discountPrice?.toString() ?? "",
+      shortDescription: initialData.shortDescription ?? null,
     });
+    if (initialData.variants && initialData.variants.length > 0) {
+      setVariants(
+        initialData.variants.map((v) => ({
+          colorName: v.colorName,
+          colorCode: v.colorCode,
+          stock: v.stock,
+        })),
+      );
+    }
   }, [initialData]);
 
   useEffect(() => {
@@ -179,10 +235,12 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       formData.append("discountPrice", form.discountPrice);
       // تصاویر قبلی
       formData.append("oldThumbnail", form.thumbnail);
+      formData.append("variants", JSON.stringify(variants));
 
       form.imageUrls.forEach((image) => {
         formData.append("oldImages", image);
       });
+      formData.append("shortDescription", form.shortDescription ?? "");
 
       // تصویر اصلی جدید
       if (form.thumbnailFile) {
@@ -253,7 +311,27 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           className="w-full rounded-xl border px-4 py-3"
         />
       </div>
+      {/* Short Description */}
+      <div>
+        <label className="mb-2 block text-sm font-medium">
+          توضیح کوتاه محصول
+        </label>
 
+        <textarea
+          rows={3}
+          name="shortDescription"
+          value={form.shortDescription ?? ""}
+          onChange={handleChange}
+          placeholder="یک توضیح کوتاه برای نمایش در صفحه محصول..."
+          className="
+      w-full
+      rounded-xl
+      border
+      px-4
+      py-3
+    "
+        />
+      </div>
       {/* Description */}
       <div>
         <label className="mb-2 block text-sm font-medium">توضیحات</label>
@@ -337,7 +415,82 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           ))}
         </select>
       </div>
+      {/* Variants */}
+      <div>
+        <div className="mb-3 flex items-center justify-between">
+          <label className="block text-sm font-semibold">رنگ‌بندی محصول</label>
+          <button
+            type="button"
+            onClick={addColor}
+            className="rounded-lg bg-pink-50 px-4 py-2 text-sm font-medium text-pink-600 transition hover:bg-pink-100"
+          >
+            + افزودن رنگ
+          </button>
+        </div>
 
+        <div className="space-y-4">
+          {variants.map((variant, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-1 gap-3 rounded-xl border p-4 sm:grid-cols-4"
+            >
+              <div>
+                <label className="mb-1 block text-xs text-gray-500">
+                  نام رنگ
+                </label>
+                <input
+                  type="text"
+                  value={variant.colorName}
+                  onChange={(e) =>
+                    handleVariantChange(index, "colorName", e.target.value)
+                  }
+                  className="w-full rounded-lg border px-3 py-2 text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-xs text-gray-500">
+                  کد رنگ
+                </label>
+                <input
+                  type="color"
+                  value={variant.colorCode || "#000000"}
+                  onChange={(e) =>
+                    handleVariantChange(index, "colorCode", e.target.value)
+                  }
+                  className="h-9 w-full rounded-lg border px-1"
+                />
+              </div>
+
+              <div>
+                <label className="mb-1 block text-xs text-gray-500">
+                  موجودی
+                </label>
+                <input
+                  type="number"
+                  value={variant.stock}
+                  onChange={(e) =>
+                    handleVariantChange(index, "stock", e.target.value)
+                  }
+                  className="w-full rounded-lg border px-3 py-2 text-sm"
+                />
+              </div>
+
+              <div className="flex items-end">
+                {variants.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeColor(index)}
+                    className="text-sm font-medium text-red-500 hover:text-red-700"
+                  >
+                    حذف این رنگ
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
       {/* Status */}
       <div>
         <label className="mb-2 block text-sm font-medium">وضعیت</label>

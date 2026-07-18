@@ -1,8 +1,23 @@
 import ProductCard from "@/app/features/home/components/ProductCard";
-// Removed unused ProductsPagination import
-import { newProducts } from "@/app/features/home/data/products";
+import { Product } from "@prisma/client";
 
-export default function ProductsContent() {
+interface Props {
+  products: Product[];
+}
+
+export default function ProductsContent({
+  products,
+}: Props) {
+  if (products.length === 0) {
+    return (
+      <div className="flex h-72 items-center justify-center rounded-3xl border border-dashed border-gray-300 bg-white">
+        <p className="text-gray-500">
+          محصولی یافت نشد.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <section className="flex-1">
       <div
@@ -16,8 +31,11 @@ export default function ProductsContent() {
           xl:grid-cols-4
         "
       >
-        {newProducts.map((product) => (
-          <ProductCard product={product} key={product.id}/>
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+          />
         ))}
       </div>
     </section>

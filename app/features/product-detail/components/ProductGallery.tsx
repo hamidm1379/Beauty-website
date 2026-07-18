@@ -3,27 +3,59 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Heart, Share2, Maximize2 } from "lucide-react";
+import { toast } from "sonner";
 
-const images = [
-  "/hero2.png",
-  "/hero3.png",
-  "/hero4.png",
-  
-];
+interface Props {
+  product: {
+    title: string;
+    thumbnail: string | null;
+    images: {
+      id: number;
+      image: string;
+    }[];
+  };
+}
 
-export default function ProductGallery() {
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+export default function ProductGallery({ product }: Props) {
+  const images = [
+    ...(product.thumbnail ? [product.thumbnail] : []),
+    ...product.images.map((item) => item.image),
+  ];
+
+  const [selectedImage, setSelectedImage] = useState(images[0] ?? "");
 
   const visibleImages = images.slice(0, 4);
-  const remain = images.length - 4;
 
+  const remain = images.length > 4 ? images.length - 4 : 0;
+  const handleShare = async () => {
+    const url = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: product.title,
+          text: `مشاهده محصول ${product.title}`,
+          url,
+        });
+
+        return;
+      }
+
+      await navigator.clipboard.writeText(url);
+
+      toast.success("لینک محصول کپی شد.");
+    } catch {
+      toast.error("خطا در اشتراک گذاری محصول.");
+    }
+  };
   return (
     <section className="flex flex-col-reverse gap-5 lg:flex-row">
-      {/* Thumbnail */}
+      {/* Thumbnails */}
 
       <div className="flex gap-3 overflow-x-auto lg:w-24 lg:flex-col lg:overflow-visible">
         {visibleImages.map((image, index) => {
           const active = image === selectedImage;
+
           const isLast = index === 3 && remain > 0;
 
           return (
@@ -51,13 +83,26 @@ export default function ProductGallery() {
             >
               <Image
                 src={image}
-                alt=""
+                alt={product.title}
                 fill
                 className="object-contain p-2"
               />
 
               {isLast && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-xl font-bold text-white backdrop-blur-sm">
+                <div
+                  className="
+                  absolute
+                  inset-0
+                  flex
+                  items-center
+                  justify-center
+                  bg-black/40
+                  text-xl
+                  font-bold
+                  text-white
+                  backdrop-blur-sm
+                "
+                >
                   +{remain}
                 </div>
               )}
@@ -66,7 +111,7 @@ export default function ProductGallery() {
         })}
       </div>
 
-      {/* Main */}
+      {/* Main Image */}
 
       <div
         className="
@@ -83,7 +128,7 @@ export default function ProductGallery() {
         {/* Floating Buttons */}
 
         <div className="absolute left-5 top-5 z-20 flex flex-col gap-3">
-          <button
+          {/* <button
             className="
             rounded-2xl
             bg-white/90
@@ -95,9 +140,10 @@ export default function ProductGallery() {
           "
           >
             <Heart className="h-5 w-5 text-gray-600" />
-          </button>
+          </button> */}
 
           <button
+            onClick={handleShare}
             className="
             rounded-2xl
             bg-white/90
@@ -106,12 +152,13 @@ export default function ProductGallery() {
             backdrop-blur
             transition
             hover:scale-110
+            cursor-pointer
           "
           >
             <Share2 className="h-5 w-5 text-gray-600" />
           </button>
 
-          <button
+          {/* <button
             className="
             rounded-2xl
             bg-white/90
@@ -123,35 +170,71 @@ export default function ProductGallery() {
           "
           >
             <Maximize2 className="h-5 w-5 text-gray-600" />
-          </button>
+          </button> */}
         </div>
 
-        {/* Background */}
+        {/* Background Effects */}
 
-        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-pink-100 blur-3xl opacity-40" />
+        <div
+          className="
+          absolute
+          -left-24
+          -top-24
+          h-72
+          w-72
+          rounded-full
+          bg-pink-100
+          opacity-40
+          blur-3xl
+        "
+        />
 
-        <div className="absolute -bottom-28 -right-20 h-72 w-72 rounded-full bg-purple-100 blur-3xl opacity-40" />
+        <div
+          className="
+          absolute
+          -bottom-28
+          -right-20
+          h-72
+          w-72
+          rounded-full
+          bg-purple-100
+          opacity-40
+          blur-3xl
+        "
+        />
 
-        {/* Image */}
+        {/* Product Image */}
 
-        <div className="relative aspect-square">
-          <Image
-            key={selectedImage}
-            src={selectedImage}
-            alt="Product"
-            fill
-            priority
+        {selectedImage ? (
+          <div className="relative aspect-square">
+            <Image
+              key={selectedImage}
+              src={selectedImage}
+              alt={product.title}
+              fill
+              priority
+              className="
+                object-contain
+                p-14
+                transition-all
+                duration-500
+                hover:scale-110
+              "
+            />
+          </div>
+        ) : (
+          <div
             className="
-              object-contain
-              p-14
-
-              transition-all
-              duration-500
-
-              hover:scale-110
-            "
-          />
-        </div>
+            flex
+            aspect-square
+            items-center
+            justify-center
+            text-gray-400
+          "
+          >
+            تصویری برای محصول ثبت نشده است.
+          </div>
+        )}
       </div>
     </section>
   );

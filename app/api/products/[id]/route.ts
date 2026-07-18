@@ -25,6 +25,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
       },
       include: {
         images: true,
+        variants: true,
       },
     });
 
@@ -69,7 +70,7 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     const productId = Number(id);
 
     const formData = await request.formData();
-
+    const variantsRaw = formData.get("variants") as string | null;
     const product = await prisma.product.findUnique({
       where: {
         id: productId,
@@ -138,6 +139,7 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
         brandId: Number(formData.get("brandId")),
         status: formData.get("status") as any,
         thumbnail,
+        shortDescription: (formData.get("shortDescription") as string) ?? "",
         discountPrice: formData.get("discountPrice")
           ? Number(formData.get("discountPrice"))
           : null,
@@ -145,7 +147,38 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     });
 
     const newImages = formData.getAll("images") as File[];
+    if (variantsRaw) {
+      try {
+        const variants = JSON.parse(variantsRaw) as {
+          colorName: string;
+          colorCode: string;
+          stock: number;
+        }[];
 
+        const validVariants = variants.filter(
+          (v) => v.colorName && v.colorName.trim(),
+        );
+
+        // حذف variantهای قبلی و جایگزینی با نسخه جدید
+        await prisma.productVariant.deleteMany({
+          where: { productId },
+        });
+
+        if (validVariants.length > 0) {
+          await prisma.productVariant.createMany({
+            data: validVariants.map((v) => ({
+              productId,
+              title: v.colorName,
+              colorName: v.colorName,
+              colorCode: v.colorCode || "#000000",
+              stock: Number(v.stock) || 0,
+            })),
+          });
+        }
+      } catch (err) {
+        console.error("خطا در پردازش variants:", err);
+      }
+    }
     if (newImages.length > 0) {
       for (const image of product.images) {
         try {

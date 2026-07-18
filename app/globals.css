@@ -27,3 +27,10 @@ body {
   border-radius: 999px !important;
   background: #ec4899 !important;
 }
+[data-sonner-toaster] {
+  font-family: var(--font-vazirmatn, "Vazirmatn", sans-serif) !important;
+}
+
+[data-sonner-toast] {
+  font-family: inherit !important;
+}

@@ -1,50 +1,37 @@
 "use client";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import { Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/navigation";
-
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import ProductCard, {
   Product,
 } from "@/app/features/home/components/ProductCard";
 
-const products: Product[] = Array.from({ length: 8 }, (_, index) => ({
-  id: String(index + 1),
+interface Props {
+  products: Product[];
+}
 
-  slug: `product-${index + 1}`,
+export default function RelatedProducts({
+  products,
+}: Props) {
+  if (!products.length) {
+    return null;
+  }
 
-  title: "کرم آبرسان لورآل",
-
-  brand: "L'Oréal",
-
-  image: "/hero3.png",
-
-  price: 890000,
-
-  oldPrice: 1090000,
-
-  discount: 18,
-}));
-
-export default function RelatedProducts() {
   return (
     <section
       className="
         mt-12
-
         rounded-3xl
-
         border
         border-gray-100
-
         bg-white
-
         p-6
-
         shadow-sm
       "
     >
@@ -65,22 +52,16 @@ export default function RelatedProducts() {
           <button
             className="
               related-prev
-
               flex
               h-11
               w-11
-
               cursor-pointer
               items-center
               justify-center
-
               rounded-full
-
               border
               border-gray-200
-
               transition
-
               hover:border-pink-500
               hover:bg-pink-500
               hover:text-white
@@ -92,22 +73,16 @@ export default function RelatedProducts() {
           <button
             className="
               related-next
-
               flex
               h-11
               w-11
-
               cursor-pointer
               items-center
               justify-center
-
               rounded-full
-
               border
               border-gray-200
-
               transition
-
               hover:border-pink-500
               hover:bg-pink-500
               hover:text-white
@@ -147,7 +122,9 @@ export default function RelatedProducts() {
       >
         {products.map((product) => (
           <SwiperSlide key={product.id}>
-            <ProductCard product={product} />
+            <ProductCard
+              product={product}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

@@ -3,25 +3,42 @@
 import Link from "next/link";
 import { ChevronLeft, Home } from "lucide-react";
 
-const items = [
-  {
-    title: "خانه",
-    href: "/",
-  },
-  {
-    title: "محصولات",
-    href: "/products",
-  },
-  {
-    title: "آرایشی",
-    href: "/products?category=makeup",
-  },
-  {
-    title: "کرم پودر دابل ور استی لادر",
-  },
-];
+interface Props {
+  product: {
+    title: string;
 
-export default function Breadcrumb() {
+    category: {
+      title: string;
+      slug: string;
+    };
+  };
+}
+
+export default function Breadcrumb({
+  product,
+}: Props) {
+  const items = [
+    {
+      title: "خانه",
+      href: "/",
+    },
+
+    {
+      title: "محصولات",
+      href: "/products",
+    },
+
+    {
+      title: product.category.title,
+
+      href: `/products?category=${product.category.slug}`,
+    },
+
+    {
+      title: product.title,
+    },
+  ];
+
   return (
     <nav
       className="
@@ -45,19 +62,35 @@ export default function Breadcrumb() {
       "
     >
       {items.map((item, index) => {
-        const isLast = index === items.length - 1;
+        const isLast =
+          index === items.length - 1;
 
         return (
           <div
             key={index}
-            className="flex items-center gap-2"
+            className="
+              flex
+              items-center
+              gap-2
+            "
           >
             {index !== 0 && (
-              <ChevronLeft className="h-4 w-4 text-gray-300" />
+              <ChevronLeft
+                className="
+                  h-4
+                  w-4
+                  text-gray-300
+                "
+              />
             )}
 
             {isLast ? (
-              <span className="font-semibold text-gray-900">
+              <span
+                className="
+                  font-semibold
+                  text-gray-900
+                "
+              >
                 {item.title}
               </span>
             ) : (
@@ -76,7 +109,12 @@ export default function Breadcrumb() {
                 "
               >
                 {index === 0 && (
-                  <Home className="h-4 w-4" />
+                  <Home
+                    className="
+                      h-4
+                      w-4
+                    "
+                  />
                 )}
 
                 {item.title}
