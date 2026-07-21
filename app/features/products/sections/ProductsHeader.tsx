@@ -363,7 +363,7 @@ export default function ProductsHeader({
                 <motion.span
                   key={label}
                   whileHover={{ y: -2 }}
-                  className="flex items-center gap-1.5 rounded-full border border-gray-100 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600"
+                  className="cursor-default flex items-center gap-1.5 rounded-full border border-gray-100 bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600"
                 >
                   <Icon size={13} className="text-pink-500" />
                   {label}

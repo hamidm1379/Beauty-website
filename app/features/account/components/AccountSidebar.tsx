@@ -13,46 +13,49 @@ import {
 } from "lucide-react";
 
 interface AccountSidebarProps {
+  user: any;
   activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const menuItems = [
-//   {
-//     id: "dashboard",
-//     title: "داشبورد",
-//     icon: LayoutDashboard,
-//   },
+const menuItems = (user: any) => [
+  //   {
+  //     id: "dashboard",
+  //     title: "داشبورد",
+  //     icon: LayoutDashboard,
+  //   },
   {
     id: "orders",
     title: "سفارش‌های من",
     icon: ShoppingBag,
-    badge: "12",
+    badge: user._count.orders,
   },
   {
     id: "wishlist",
     title: "علاقه‌مندی‌ها",
     icon: Heart,
-    badge: "31",
+    badge: user._count.wishlist,
   },
   {
     id: "addresses",
     title: "آدرس‌ها",
     icon: MapPin,
+    badge: user._count.addresses,
   },
   {
     id: "profile",
     title: "اطلاعات حساب",
     icon: User,
   },
-  {
-    id: "settings",
-    title: "تنظیمات",
-    icon: Settings,
-  },
+  // {
+  //   id: "settings",
+  //   title: "تنظیمات",
+  //   icon: Settings,
+  // },
 ];
 
 export default function AccountSidebar({
+  user,
   activeTab,
   setActiveTab,
 }: AccountSidebarProps) {
@@ -74,47 +77,59 @@ export default function AccountSidebar({
       >
         {/* Header */}
 
-        <div className="relative bg-linear-to-br from-pink-500 via-rose-500 to-fuchsia-600 p-6 text-white">
-          <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-white/10 blur-2xl" />
+        <div
+          className="
+    relative
 
-          <div className="relative flex items-center gap-4">
-            <div
-              className="
-                flex
-                h-18
-                w-18
-                items-center
-                justify-center
+    flex
+    items-center
+    gap-4
 
-                rounded-full
+    rounded-3xl
 
-                border-4
-                border-white/20
+    bg-white/95
+    p-4
 
-                bg-white/15
+    shadow-xl
+    backdrop-blur
+  "
+        >
+          <div
+            className="
+      flex
+      h-16
+      w-16
+      items-center
+      justify-center
 
-                text-2xl
-                font-black
-              "
-            >
-              م
-            </div>
+      rounded-2xl
 
-            <div>
-              <h3 className="text-xl font-bold">
-                محمد احمدی
-              </h3>
+      bg-linear-to-br
+      from-pink-500
+      to-rose-500
 
-              <p className="mt-1 text-sm text-pink-100">
-                mohammad@gmail.com
-              </p>
-            </div>
+      text-xl
+      font-black
+      text-white
+    "
+          >
+            {(user.firstName?.[0] ?? user.email?.[0] ?? "U").toUpperCase()}
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <h3 className="truncate text-lg font-bold text-gray-900">
+              {user.firstName || user.lastName
+                ? `${user.firstName ?? ""} ${user.lastName ?? ""}`
+                : "کاربر"}
+            </h3>
+
+            <p className="truncate text-sm text-gray-500">{user.email}</p>
           </div>
         </div>
 
         {/* Membership */}
 
-        <div className="p-5">
+        {/* <div className="p-5">
           <div
             className="
               flex
@@ -150,13 +165,9 @@ export default function AccountSidebar({
               </div>
 
               <div>
-                <h4 className="font-bold text-gray-900">
-                  عضو طلایی
-                </h4>
+                <h4 className="font-bold text-gray-900">عضو طلایی</h4>
 
-                <p className="text-xs text-gray-500">
-                  +2850 امتیاز
-                </p>
+                <p className="text-xs text-gray-500">+2850 امتیاز</p>
               </div>
             </div>
 
@@ -174,7 +185,7 @@ export default function AccountSidebar({
               VIP
             </span>
           </div>
-        </div>
+        </div> */}
       </motion.div>
 
       {/* Menu */}
@@ -193,7 +204,7 @@ export default function AccountSidebar({
         "
       >
         <div className="space-y-2">
-          {menuItems.map((item) => {
+          {menuItems(user).map((item) => {
             const Icon = item.icon;
 
             const active = activeTab === item.id;
@@ -211,7 +222,7 @@ export default function AccountSidebar({
                 className={`
                   group
                   w-full
-
+                  cursor-pointer
                   flex
                   items-center
                   justify-between
@@ -249,19 +260,13 @@ export default function AccountSidebar({
 
                       rounded-xl
 
-                      ${
-                        active
-                          ? "bg-white/20"
-                          : "bg-pink-50 text-pink-500"
-                      }
+                      ${active ? "bg-white/20" : "bg-pink-50 text-pink-500"}
                     `}
                   >
                     <Icon size={20} />
                   </motion.div>
 
-                  <span className="font-semibold">
-                    {item.title}
-                  </span>
+                  <span className="font-semibold">{item.title}</span>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -292,11 +297,7 @@ export default function AccountSidebar({
                   >
                     <ChevronLeft
                       size={18}
-                      className={
-                        active
-                          ? "text-white"
-                          : "text-gray-400"
-                      }
+                      className={active ? "text-white" : "text-gray-400"}
                     />
                   </motion.div>
                 </div>
@@ -339,12 +340,11 @@ export default function AccountSidebar({
           shadow-sm
 
           transition-all
-
+          cursor-pointer
           hover:bg-red-50
         "
       >
         <LogOut size={20} />
-
         خروج از حساب کاربری
       </motion.button>
     </aside>

@@ -86,6 +86,7 @@ export default function LoginForm() {
       <button
         disabled={isSubmitting}
         className="
+        cursor-pointer
           flex h-14 w-full items-center justify-center gap-2
           rounded-2xl
           bg-linear-to-r

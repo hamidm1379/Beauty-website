@@ -10,8 +10,11 @@ import {
   BadgeCheck,
   ShieldCheck,
 } from "lucide-react";
+interface Props {
+  user: any;
+}
 
-export default function ProfileCard() {
+export default function ProfileCard({ user }: Props) {
   return (
     <motion.section
       initial={{
@@ -45,83 +48,86 @@ export default function ProfileCard() {
 
       <div
         className="
-          relative
+    relative
+    overflow-hidden
 
-          bg-linear-to-r
-          from-pink-500
-          via-rose-500
-          to-fuchsia-600
+    bg-white
 
-          p-8
+    p-8
 
-          text-white
-        "
+    border
+    border-gray-100
+
+    shadow-sm
+  "
       >
-        <div className="absolute -left-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
+        {/* Decoration */}
+        <div className="absolute -left-12 -top-12 h-44 w-44 rounded-full bg-pink-50 blur-3xl" />
+        <div className="absolute -right-12 bottom-0 h-36 w-36 rounded-full bg-rose-50 blur-3xl" />
 
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <span
               className="
-                inline-flex
+          inline-flex
 
-                rounded-full
+          rounded-full
 
-                bg-white/15
+          bg-pink-50
 
-                px-4
-                py-2
+          px-4
+          py-2
 
-                text-sm
-                font-semibold
+          text-sm
+          font-semibold
 
-                backdrop-blur
-              "
+          text-pink-600
+        "
             >
               اطلاعات حساب کاربری
             </span>
 
-            <h2 className="mt-5 text-4xl font-black">
-              محمد احمدی
-            </h2>
+            {/* <h2 className="mt-5 text-4xl font-black text-gray-900">
+        {user.firstName} {user.lastName}
+      </h2> */}
 
-            <div className="mt-4 flex items-center gap-2 text-pink-100">
-              <BadgeCheck size={18} />
-
-              <span>حساب کاربری تایید شده</span>
-            </div>
+            {/* <div className="mt-4 flex items-center gap-2 text-gray-500">
+        <BadgeCheck size={18} className="text-green-500" />
+        <span>حساب کاربری تایید شده</span>
+      </div> */}
           </div>
 
           <motion.button
-            whileHover={{
-              scale: 1.03,
-            }}
-            whileTap={{
-              scale: 0.97,
-            }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             className="
-              flex
-              items-center
-              gap-2
+        cursor-pointer
 
-              self-start
+        flex
+        items-center
+        gap-2
 
-              rounded-2xl
+        self-start
 
-              bg-white
+        rounded-2xl
 
-              px-6
-              py-3
+        bg-pink-500
 
-              font-bold
+        px-6
+        py-3
 
-              text-pink-600
+        font-bold
 
-              shadow-lg
-            "
+        text-white
+
+        shadow-lg
+
+        transition
+
+        hover:bg-pink-600
+      "
           >
             <Pencil size={18} />
-
             ویرایش اطلاعات
           </motion.button>
         </div>
@@ -132,24 +138,28 @@ export default function ProfileCard() {
       <div className="grid gap-6 p-8 md:grid-cols-2">
         {[
           {
+            icon: MapPin,
+            title: "شهر",
+            value:
+              user.addresses?.find((address: any) => address.isDefault)?.city ??
+              "ثبت نشده",
+          },
+          {
             icon: Mail,
             title: "ایمیل",
-            value: "mohammad@gmail.com",
+            value: user.email ?? "-",
           },
+
           {
             icon: Phone,
             title: "شماره موبایل",
-            value: "0912 345 6789",
+            value: user.phone,
           },
+
           {
             icon: Calendar,
             title: "عضویت",
-            value: "۱۴۰۳/۰۲/۲۱",
-          },
-          {
-            icon: MapPin,
-            title: "شهر",
-            value: "تهران",
+            value: new Date(user.createdAt).toLocaleDateString("fa-IR"),
           },
         ].map((item) => {
           const Icon = item.icon;
@@ -205,13 +215,9 @@ export default function ProfileCard() {
                 </div>
 
                 <div>
-                  <p className="text-sm text-gray-500">
-                    {item.title}
-                  </p>
+                  <p className="text-sm text-gray-500">{item.title}</p>
 
-                  <h3 className="mt-1 font-bold text-gray-900">
-                    {item.value}
-                  </h3>
+                  <h3 className="mt-1 font-bold text-gray-900">{item.value}</h3>
                 </div>
               </div>
             </motion.div>
@@ -242,39 +248,21 @@ export default function ProfileCard() {
 
           <div className="flex gap-3">
             <span
-              className="
-                rounded-full
-
-                bg-pink-100
-
-                px-4
-                py-2
-
-                text-sm
-                font-semibold
-
-                text-pink-600
-              "
+              className={`
+      rounded-full
+      px-4
+      py-2
+      text-sm
+      font-semibold
+      ${
+        user.isActive
+          ? "bg-green-100 text-green-600"
+          : "bg-red-100 text-red-600"
+      }
+    `}
             >
-              VIP
-            </span>
-
-            <span
-              className="
-                rounded-full
-
-                bg-green-100
-
-                px-4
-                py-2
-
-                text-sm
-                font-semibold
-
-                text-green-600
-              "
-            >
-              فعال
+              {user.isActive ? "فعال" : "غیرفعال"}
+              
             </span>
           </div>
         </div>

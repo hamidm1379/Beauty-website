@@ -239,6 +239,25 @@ class CartRepository {
 
     return cart.items.length;
   }
+  async clearCart(userId: number) {
+    const cart = await prisma.cart.findUnique({
+      where: {
+        userId,
+      },
+    });
+
+    if (!cart) {
+      return;
+    }
+
+    await prisma.cartItem.deleteMany({
+      where: {
+        cartId: cart.id,
+      },
+    });
+
+    return true;
+  }
 }
 
 export const cartRepository = new CartRepository();

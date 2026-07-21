@@ -79,7 +79,7 @@ export default function BrandsBanner() {
       >
         {brands.map((brand) => (
           <Link
-            href=""
+            href="/brands"
             key={brand.name}
             className="
             flex

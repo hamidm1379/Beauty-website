@@ -4,22 +4,35 @@ import { useState } from "react";
 import { Send } from "lucide-react";
 import { toast } from "sonner";
 
+import { submitContactAction } from "@/app/features/contactus/action";
+
 export default function ContactForm() {
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    // فرم رو قبل از await نگه می‌داریم تا بعد از تموم شدن درخواست بتونیم reset کنیم
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
     setLoading(true);
 
-    // شبیه‌سازی درخواست
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      const result = await submitContactAction(formData);
 
-    toast.success("پیام شما با موفقیت ارسال شد.");
+      if (!result.success) {
+        toast.error(result.error);
+        return;
+      }
 
-    e.currentTarget.reset();
-
-    setLoading(false);
+      toast.success("پیام شما با موفقیت ارسال شد.");
+      form.reset();
+    } catch {
+      toast.error("خطایی رخ داد. لطفاً دوباره تلاش کنید.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -48,15 +61,13 @@ export default function ContactForm() {
         سوال، پیشنهاد یا انتقاد خود را برای ما ارسال کنید.
       </p>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-5"
-      >
+      <form onSubmit={handleSubmit} className="space-y-5">
         {/* Name + Email */}
 
         <div className="grid gap-5 md:grid-cols-2">
           <input
             type="text"
+            name="name"
             placeholder="نام و نام خانوادگی"
             required
             className="
@@ -76,6 +87,7 @@ export default function ContactForm() {
 
           <input
             type="email"
+            name="email"
             placeholder="ایمیل"
             required
             className="
@@ -98,6 +110,7 @@ export default function ContactForm() {
 
         <input
           type="text"
+          name="subject"
           placeholder="موضوع"
           required
           className="
@@ -119,6 +132,7 @@ export default function ContactForm() {
         {/* Message */}
 
         <textarea
+          name="message"
           rows={7}
           placeholder="پیام شما..."
           required

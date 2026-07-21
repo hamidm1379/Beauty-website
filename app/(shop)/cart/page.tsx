@@ -3,7 +3,7 @@ import CartHero from "@/app/features/cart/components/CartHero";
 import CartList from "@/app/features/cart/components/CartList";
 import OrderSummary from "@/app/features/cart/components/OrderSummary";
 import RecommendedProducts from "@/app/features/cart/components/RecommendedProducts";
-
+import CartStepper from "@/app/features/cart/components/CartStepper";
 import { auth } from "@/lib/auth";
 import { cartService } from "@/lib/services/cart.service";
 import { productService } from "@/lib/services/product.service";
@@ -41,7 +41,9 @@ export default async function CartPage() {
         title: item.title,
         brand: item.brand ? { title: item.brand.title } : null,
         thumbnail:
-          item.thumbnail ?? item.images?.[0]?.image ?? "/placeholder-product.png",
+          item.thumbnail ??
+          item.images?.[0]?.image ??
+          "/placeholder-product.png",
         price: finalPrice,
         oldPrice: hasDiscount ? item.price : undefined,
         discount: hasDiscount ? discountPercent : undefined,
@@ -65,6 +67,10 @@ export default async function CartPage() {
         <div className="mt-8">
           <CartHero />
         </div>
+        {/* Stepper */}
+        <section className="mt-6">
+          <CartStepper currentStep={1} />
+        </section>
 
         {/* Cart */}
         <section className="mt-10 grid gap-8 lg:grid-cols-12 lg:items-start">

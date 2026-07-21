@@ -138,7 +138,7 @@ export default function ProductCard({ product }: Props) {
           )}
 
           {/* Wishlist button */}
-          <motion.button
+          {/* <motion.button
             onClick={handleWishlist}
             whileTap={{ scale: 0.85 }}
             aria-label="افزودن به علاقه‌مندی‌ها"
@@ -175,7 +175,7 @@ export default function ProductCard({ product }: Props) {
                   : "fill-transparent"
               }
             />
-          </motion.button>
+          </motion.button> */}
 
           <Image
             src={product.thumbnail || "/placeholder-product.png"}

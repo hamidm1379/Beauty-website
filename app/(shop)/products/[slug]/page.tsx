@@ -13,6 +13,8 @@ import { siteConfig } from "@/lib/seo/metadata";
 import { productSchema, breadcrumbSchema } from "@/lib/seo/schema";
 
 import { productService } from "@/lib/services/product.service";
+import { auth } from "@/lib/auth";
+import { wishlistService } from "@/lib/services/wishlist.service";
 
 type Props = {
   params: Promise<{
@@ -50,6 +52,16 @@ export default async function ProductDetailPage({ params }: Props) {
     if (!product) {
       notFound();
     }
+
+    // وضعیت اولیه‌ی علاقه‌مندی؛ اگه کاربر لاگین نباشه false در نظر گرفته میشه
+    const session = await auth();
+
+    const initialFavorite = session?.user?.id
+      ? await wishlistService.isInWishlist(
+          Number(session.user.id),
+          product.id,
+        )
+      : false;
 
     // محصولات مرتبط
 
@@ -151,7 +163,10 @@ export default async function ProductDetailPage({ params }: Props) {
               >
                 <ProductGallery product={product} />
 
-                <ProductInfo product={product} />
+                <ProductInfo
+                  product={product}
+                  initialFavorite={initialFavorite}
+                />
               </div>
 
              

@@ -82,7 +82,16 @@ const menu = [
     title: "دیدگاه ها",
     icon: MessageCircle,
     href: "/admin/comments",
-    badge: "7",
+    children: [
+       {
+        title: "پیام کاربران",
+        href: "/admin/articles",
+      },
+      {
+        title: "پیام های تماس با ما",
+        href: "/admin/contact",
+      },
+    ],
   },
 
   {

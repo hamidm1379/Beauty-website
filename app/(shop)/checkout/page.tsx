@@ -1,12 +1,48 @@
+import { redirect } from "next/navigation";
+
 import Breadcrumb from "@/app/features/checkout/components/Breadcrumb";
 import CheckoutHero from "@/app/features/checkout/components/CheckoutHero";
 import CheckoutStepper from "@/app/features/checkout/components/CheckoutStepper";
-import ShippingForm from "@/app/features/checkout/components/ShippingForm";
-import ShippingMethod from "@/app/features/checkout/components/ShippingMethod";
-import CouponBox from "@/app/features/checkout/components/CouponBox";
-import OrderSummary from "@/app/features/checkout/components/OrderSummary";
+import CheckoutClient from "@/app/features/checkout/components/CheckoutClient";
 
-export default function CheckoutPage() {
+import { auth } from "@/lib/auth";
+import { cartService } from "@/lib/services/cart.service";
+import { addressService } from "@/lib/services/address.service";
+
+type Props = {
+  searchParams: Promise<{ coupon?: string }>;
+};
+
+export default async function CheckoutPage({ searchParams }: Props) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    redirect("/account/login?redirect=/checkout");
+  }
+
+  const { coupon } = await searchParams;
+
+  const userId = Number(session.user.id);
+
+  const [cart, addresses] = await Promise.all([
+    cartService.getCart(userId),
+    addressService.getByUser(userId),
+  ]);
+
+  if (!cart.items.length) {
+    redirect("/cart");
+  }
+
+  const cartItems = cart.items.map((item) => ({
+    id: item.id,
+    quantity: item.quantity,
+    product: {
+      title: item.product.title,
+      price: item.product.price,
+      discountPrice: item.product.discountPrice,
+    },
+  }));
+
   return (
     <main className="bg-[#fcfcfc]">
       <div className="container mx-auto max-w-7xl px-4 py-8">
@@ -24,21 +60,11 @@ export default function CheckoutPage() {
         </section>
 
         {/* Checkout */}
-        <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_380px]">
-          {/* Left */}
-          <div className="space-y-8">
-            <ShippingForm />
-
-            <ShippingMethod />
-
-            <CouponBox />
-          </div>
-
-          {/* Right */}
-          <aside className="lg:sticky lg:top-6 h-fit">
-            <OrderSummary />
-          </aside>
-        </section>
+        <CheckoutClient
+          addresses={addresses}
+          cartItems={cartItems}
+          initialCouponCode={coupon}
+        />
       </div>
     </main>
   );

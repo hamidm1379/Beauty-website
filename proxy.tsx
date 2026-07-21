@@ -5,45 +5,132 @@ export default auth((req) => {
   const { nextUrl } = req;
   const session = req.auth;
 
-  // صفحه لاگین آزاد باشد
-  if (nextUrl.pathname === "/admin/login") {
-    if (req.auth?.user) {
-      return NextResponse.redirect(new URL("/admin", nextUrl));
+  const pathname = nextUrl.pathname;
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | Auth pages
+  |--------------------------------------------------------------------------
+  */
+
+  // صفحه ورود کاربر
+  if (pathname === "/account/login") {
+    // اگر لاگین بود دوباره صفحه ورود نبیند
+    if (session?.user) {
+      return NextResponse.redirect(
+        new URL("/account", nextUrl)
+      );
     }
 
     return NextResponse.next();
   }
 
-  const isAdminPage = nextUrl.pathname.startsWith("/admin");
-  const isAdminApi = nextUrl.pathname.startsWith("/api/admin");
 
-  if (!isAdminPage && !isAdminApi) {
+  /*
+  |--------------------------------------------------------------------------
+  | Admin Protection
+  |--------------------------------------------------------------------------
+  */
+
+  if (pathname === "/admin/login") {
+    if (session?.user) {
+      return NextResponse.redirect(
+        new URL("/admin", nextUrl)
+      );
+    }
+
     return NextResponse.next();
   }
 
-  // لاگین نکرده
-  if (!session?.user) {
-    if (isAdminApi) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  const isAdminPage =
+    pathname.startsWith("/admin");
+
+  const isAdminApi =
+    pathname.startsWith("/api/admin");
+
+
+  if (isAdminPage || isAdminApi) {
+
+    if (!session?.user) {
+
+      if (isAdminApi) {
+        return NextResponse.json(
+          {
+            message: "Unauthorized",
+          },
+          {
+            status: 401,
+          }
+        );
+      }
+
+
+      return NextResponse.redirect(
+        new URL("/admin/login", nextUrl)
+      );
     }
 
-    return NextResponse.redirect(new URL("/admin/login", nextUrl));
+
+    return NextResponse.next();
   }
 
-  // این دو شرط را فعلاً کامنت بگذار
-  // چون هنوز Session آنها را ندارد.
 
-  // if (!session.user.isActive) {
-  //   ...
-  // }
 
-  // if (session.user.role !== "ADMIN") {
-  //   ...
-  // }
+  /*
+  |--------------------------------------------------------------------------
+  | User Private Routes
+  |--------------------------------------------------------------------------
+  */
+
+  const privateRoutes = [
+    "/account",
+    "/cart",
+    "/checkout",
+    "/orders",
+    "/favorites",
+  ];
+
+
+  const needsAuth = privateRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+
+  if (needsAuth && !session?.user) {
+
+    const loginUrl = new URL(
+      "/account/login",
+      nextUrl
+    );
+
+
+    // بعد از ورود برگردد همان صفحه
+    loginUrl.searchParams.set(
+      "callbackUrl",
+      pathname
+    );
+
+
+    return NextResponse.redirect(loginUrl);
+  }
+
+
 
   return NextResponse.next();
 });
 
+
+
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: [
+    "/account/:path*",
+    "/cart/:path*",
+    "/checkout/:path*",
+    "/orders/:path*",
+    "/favorites/:path*",
+    "/admin/:path*",
+    "/api/admin/:path*",
+  ],
 };

@@ -132,6 +132,70 @@ class CouponService {
 
     return couponRepository.delete(id);
   }
+
+  /**
+   * بررسی معتبر بودن کد تخفیف نسبت به مبلغ سبد خرید و محاسبه‌ی مبلغ تخفیف نهایی.
+   * amount: مبلغی که تخفیف باید روی آن اعمال شود (معمولاً subtotal بعد از تخفیف محصولات)
+   */
+  async validate(code: string, amount: number) {
+    const normalizedCode = code.trim().toUpperCase();
+
+    if (!normalizedCode) {
+      throw new Error("کد تخفیف را وارد کنید.");
+    }
+
+    const coupon = await couponRepository.findByCode(normalizedCode);
+
+    if (!coupon) {
+      throw new Error("کد تخفیف معتبر نیست.");
+    }
+
+    if (!coupon.isActive) {
+      throw new Error("این کد تخفیف غیرفعال است.");
+    }
+
+    const now = new Date();
+
+    if (coupon.startsAt && coupon.startsAt > now) {
+      throw new Error("این کد تخفیف هنوز فعال نشده است.");
+    }
+
+    if (coupon.expiresAt && coupon.expiresAt < now) {
+      throw new Error("این کد تخفیف منقضی شده است.");
+    }
+
+    if (coupon.usageLimit !== null && coupon.usedCount >= coupon.usageLimit) {
+      throw new Error("ظرفیت استفاده از این کد تخفیف تکمیل شده است.");
+    }
+
+    if (coupon.minimumPurchase && amount < coupon.minimumPurchase) {
+      throw new Error(
+        `حداقل مبلغ خرید برای استفاده از این کد تخفیف ${coupon.minimumPurchase.toLocaleString(
+          "fa-IR",
+        )} تومان است.`,
+      );
+    }
+
+    let discountAmount =
+      coupon.type === "PERCENT"
+        ? Math.round((amount * coupon.value) / 100)
+        : coupon.value;
+
+    if (coupon.maximumDiscount && discountAmount > coupon.maximumDiscount) {
+      discountAmount = coupon.maximumDiscount;
+    }
+
+    // تخفیف هیچ‌وقت نباید از مبلغ قابل اعمال بیشتر بشه
+    discountAmount = Math.min(discountAmount, amount);
+
+    return {
+      id: coupon.id,
+      code: coupon.code,
+      type: coupon.type,
+      value: coupon.value,
+      discountAmount,
+    };
+  }
 }
 
 export const couponService = new CouponService();

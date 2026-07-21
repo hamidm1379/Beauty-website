@@ -172,6 +172,164 @@ class UserService {
   async getStats() {
     return userRepository.getStats();
   }
+
+  // -------------------------
+  // Admin: User Overview
+  // -------------------------
+
+  /**
+   * آمار و آدرس‌های یک کاربر برای نمایش در صفحه‌ی ویرایش کاربر (پنل ادمین)
+   */
+  async getUserOverview(id: number) {
+    const overview = await userRepository.getUserOverview(id);
+
+    if (!overview) {
+      throw new Error("کاربر پیدا نشد.");
+    }
+
+    return overview;
+  }
+
+  // -------------------------
+  // Account Profile
+  // -------------------------
+
+  /**
+   * دریافت کامل اطلاعات پنل کاربری: پروفایل، سفارش‌ها، علاقه‌مندی‌ها، آدرس‌ها و آمار
+   */
+  async getAccountProfile(userId: number) {
+    const profile = await userRepository.findAccountProfile(userId);
+
+    if (!profile) {
+      throw new Error("کاربر پیدا نشد.");
+    }
+
+    return profile;
+  }
+
+  // -------------------------
+  // Addresses
+  // -------------------------
+
+  /**
+   * لیست آدرس‌های یک کاربر
+   */
+  async getAddresses(userId: number) {
+    return userRepository.findAddressesByUser(userId);
+  }
+
+  /**
+   * دریافت یک آدرس مشخص (با بررسی مالکیت کاربر)
+   */
+  async getAddress(id: number, userId: number) {
+    const address = await userRepository.findAddressById(id, userId);
+
+    if (!address) {
+      throw new Error("آدرس پیدا نشد.");
+    }
+
+    return address;
+  }
+
+  /**
+   * ایجاد آدرس جدید برای کاربر
+   */
+  async createAddress(
+    userId: number,
+    data: {
+      title: string;
+      receiverName: string;
+      receiverPhone: string;
+      province: string;
+      city: string;
+      postalCode: string;
+      addressLine: string;
+      plaque?: string | null;
+      unit?: string | null;
+      isDefault?: boolean;
+    },
+  ) {
+    this.validateAddress(data);
+
+    const existingAddresses = await userRepository.findAddressesByUser(userId);
+
+    if (existingAddresses.length >= 4) {
+      throw new Error("حداکثر تعداد آدرس مجاز (۴ آدرس) ثبت شده است.");
+    }
+
+    return userRepository.createAddress(userId, data);
+  }
+
+  /**
+   * ویرایش آدرس (فقط اگر متعلق به همین کاربر باشد)
+   */
+  async updateAddress(
+    id: number,
+    userId: number,
+    data: {
+      title?: string;
+      receiverName?: string;
+      receiverPhone?: string;
+      province?: string;
+      city?: string;
+      postalCode?: string;
+      addressLine?: string;
+      plaque?: string | null;
+      unit?: string | null;
+      isDefault?: boolean;
+    },
+  ) {
+    await this.getAddress(id, userId);
+
+    return userRepository.updateAddress(id, userId, data);
+  }
+
+  /**
+   * حذف آدرس (فقط اگر متعلق به همین کاربر باشد)
+   */
+  async deleteAddress(id: number, userId: number) {
+    await this.getAddress(id, userId);
+
+    return userRepository.deleteAddress(id, userId);
+  }
+
+  /**
+   * تنظیم آدرس به‌عنوان پیش‌فرض
+   */
+  async setDefaultAddress(id: number, userId: number) {
+    await this.getAddress(id, userId);
+
+    return userRepository.setDefaultAddress(id, userId);
+  }
+
+  private validateAddress(data: {
+    receiverName: string;
+    receiverPhone: string;
+    province: string;
+    city: string;
+    addressLine: string;
+  }) {
+    if (!data.receiverName.trim()) {
+      throw new Error("نام گیرنده الزامی است.");
+    }
+
+    if (!data.receiverPhone.trim()) {
+      throw new Error("شماره موبایل گیرنده الزامی است.");
+    }
+
+    if (!data.province.trim()) {
+      throw new Error("استان الزامی است.");
+    }
+
+    if (!data.city.trim()) {
+      throw new Error("شهر الزامی است.");
+    }
+
+    if (!data.addressLine.trim()) {
+      throw new Error("آدرس کامل الزامی است.");
+    }
+  }
+  
 }
 
 export const userService = new UserService();

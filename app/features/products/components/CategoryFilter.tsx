@@ -61,7 +61,7 @@ export default function CategoryFilter({ categories, value, onChange }: Props) {
                       onChange(value.filter((item) => item !== category.slug));
                     }
                   }}
-                  className="h-4 w-4 accent-pink-500"
+                  className="cursor-pointer h-4 w-4 accent-pink-500"
                 />
 
                 <span className="text-sm text-gray-700 group-hover:text-pink-500">

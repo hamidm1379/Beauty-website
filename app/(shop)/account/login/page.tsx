@@ -13,43 +13,192 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <main className="min-h-screen bg-linear-to-br from-rose-50 via-white to-pink-50">
-      <div className="container mx-auto flex min-h-screen items-center justify-center px-4 py-10">
-        <div className="grid w-full max-w-6xl overflow-hidden rounded-[36px] border border-rose-100 bg-white shadow-2xl lg:grid-cols-2">
+    <main
+      className="
+        min-h-screen
+        bg-linear-to-br
+        from-rose-50
+        via-white
+        to-pink-50
+        py-8
+        md:py-12
+      "
+    >
+      <div
+        className="
+          container
+          mx-auto
+          flex
+          min-h-[calc(100vh-4rem)]
+          items-center
+          justify-center
+          px-4
+          sm:px-6
+          lg:px-8
+        "
+      >
+        <div
+          className="
+            grid
+            w-full
+            max-w-6xl
+            overflow-hidden
+            rounded-[36px]
+            border
+            border-rose-100
+            bg-white
+            shadow-2xl
+            lg:grid-cols-2
+          "
+        >
 
           {/* فرم */}
-          <section className="mx-2 flex items-center justify-center p-8 lg:p-14">
+          <section
+            className="
+              flex
+              items-center
+              justify-center
+              px-6
+              py-10
+              sm:px-10
+              lg:px-14
+              lg:py-16
+            "
+          >
             <div className="w-full max-w-md">
               <LoginForm />
             </div>
           </section>
 
+
           {/* سمت چپ */}
-          <section className="relative hidden overflow-hidden bg-linear-to-br from-pink-50 via-rose-50 to-white lg:flex">
+          <section
+            className="
+              relative
+              hidden
+              overflow-hidden
+              bg-linear-to-br
+              from-pink-50
+              via-rose-50
+              to-white
+              lg:flex
+            "
+          >
 
-            <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-pink-200/40 blur-3xl" />
-            <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-rose-200/40 blur-3xl" />
+            <div
+              className="
+                absolute
+                -left-20
+                -top-20
+                h-64
+                w-64
+                rounded-full
+                bg-pink-200/40
+                blur-3xl
+              "
+            />
 
-            <div className="relative z-10 flex w-full flex-col items-center justify-center px-16 text-center">
+            <div
+              className="
+                absolute
+                bottom-0
+                right-0
+                h-72
+                w-72
+                rounded-full
+                bg-rose-200/40
+                blur-3xl
+              "
+            />
 
-              <div className="mb-8 flex h-24 w-24 items-center justify-center rounded-3xl bg-linear-to-br from-pink-500 to-rose-500 text-white shadow-xl">
-                <Sparkles size={42} />
+
+            <div
+              className="
+                relative
+                z-10
+                flex
+                w-full
+                flex-col
+                items-center
+                justify-center
+                px-16
+                py-16
+                text-center
+              "
+            >
+
+              <div
+                className="
+                  mb-8
+                  flex
+                  h-24
+                  w-24
+                  items-center
+                  justify-center
+                  rounded-3xl
+                  bg-linear-to-br
+                  from-pink-500
+                  to-rose-500
+                  text-white
+                  shadow-xl
+                "
+              >
+                <Sparkles size={42}/>
               </div>
 
-              <h2 className="text-5xl font-black text-slate-900 leading-tight">
+
+              <h2
+                className="
+                  text-5xl
+                  font-black
+                  leading-tight
+                  text-slate-900
+                  cursor-default
+                "
+              >
                 زیبایی از
                 <br />
                 همینجا شروع می‌شود
               </h2>
 
-              <p className="mt-6 text-lg leading-9 text-slate-500">
+
+              <p
+                className="
+                  mt-6
+                  max-w-lg
+                  text-lg
+                  leading-9
+                  text-slate-500
+                  cursor-default
+                "
+              >
                 با ورود به حساب کاربری، سفارش‌ها، علاقه‌مندی‌ها و محصولات
                 مراقبتی خود را مدیریت کنید.
               </p>
 
-              <div className="mt-12 grid w-full grid-cols-2 gap-5">
 
-                <div className="rounded-3xl border border-pink-100 bg-white/80 p-6 shadow-lg backdrop-blur">
+              <div
+                className="
+                  mt-12
+                  grid
+                  w-full
+                  grid-cols-2
+                  gap-5
+                "
+              >
+
+                <div
+                  className="
+                    rounded-3xl
+                    border
+                    border-pink-100
+                    bg-white/80
+                    p-6
+                    shadow-lg
+                    backdrop-blur
+                    cursor-default
+                  "
+                >
                   <Heart
                     className="mx-auto mb-4 text-pink-500"
                     size={34}
@@ -64,7 +213,19 @@ export default function LoginPage() {
                   </p>
                 </div>
 
-                <div className="rounded-3xl border border-pink-100 bg-white/80 p-6 shadow-lg backdrop-blur">
+
+                <div
+                  className="
+                    rounded-3xl
+                    border
+                    border-pink-100
+                    bg-white/80
+                    p-6
+                    shadow-lg
+                    backdrop-blur
+                    cursor-default
+                  "
+                >
                   <ShieldCheck
                     className="mx-auto mb-4 text-pink-500"
                     size={34}
@@ -82,6 +243,7 @@ export default function LoginPage() {
               </div>
 
             </div>
+
           </section>
 
         </div>

@@ -218,6 +218,184 @@ class UserRepository {
       verifiedPhones,
     };
   }
+
+  // -------------------------
+  // Admin: User Overview (برای صفحه‌ی ویرایش کاربر در پنل ادمین)
+  // -------------------------
+
+  async getUserOverview(id: number) {
+    return prisma.user.findUnique({
+      where: { id },
+      select: {
+        addresses: {
+          orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
+        },
+        _count: {
+          select: {
+            orders: true,
+            wishlist: true,
+            reviews: true,
+            addresses: true,
+          },
+        },
+      },
+    });
+  }
+
+  // -------------------------
+  // Account Profile
+  // -------------------------
+
+  async findAccountProfile(id: number) {
+    return prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        username: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        avatar: true,
+        role: true,
+        isActive: true,
+        emailVerified: true,
+        phoneVerified: true,
+        createdAt: true,
+
+        addresses: {
+          orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
+        },
+
+        orders: {
+          orderBy: { createdAt: "desc" },
+          take: 10,
+          include: {
+            items: true,
+            address: true,
+          },
+        },
+
+        wishlist: {
+          orderBy: { createdAt: "desc" },
+          include: {
+            product: {
+              select: {
+                id: true,
+                title: true,
+                slug: true,
+                thumbnail: true,
+                price: true,
+                discountPrice: true,
+                stock: true,
+              },
+            },
+          },
+        },
+
+        _count: {
+          select: {
+            orders: true,
+            wishlist: true,
+            reviews: true,
+            addresses: true,
+          },
+        },
+      },
+    });
+  }
+
+  // -------------------------
+  // Addresses
+  // -------------------------
+
+  async findAddressesByUser(userId: number) {
+    return prisma.address.findMany({
+      where: { userId },
+      orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
+    });
+  }
+
+  async findAddressById(id: number, userId: number) {
+    return prisma.address.findFirst({
+      where: { id, userId },
+    });
+  }
+
+  async createAddress(userId: number, data: Prisma.AddressCreateWithoutUserInput) {
+    if (data.isDefault) {
+      await prisma.address.updateMany({
+        where: { userId },
+        data: { isDefault: false },
+      });
+    }
+
+    return prisma.address.create({
+      data: {
+        ...data,
+        user: {
+          connect: { id: userId },
+        },
+      },
+    });
+  }
+
+  async updateAddress(
+    id: number,
+    userId: number,
+    data: Prisma.AddressUpdateInput,
+  ) {
+    if (data.isDefault) {
+      await prisma.address.updateMany({
+        where: { userId, NOT: { id } },
+        data: { isDefault: false },
+      });
+    }
+
+    return prisma.address.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async deleteAddress(id: number, userId: number) {
+    const address = await this.findAddressById(id, userId);
+
+    if (!address) {
+      throw new Error("آدرس پیدا نشد.");
+    }
+
+    await prisma.address.delete({ where: { id } });
+
+    if (address.isDefault) {
+      const remaining = await prisma.address.findFirst({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (remaining) {
+        await prisma.address.update({
+          where: { id: remaining.id },
+          data: { isDefault: true },
+        });
+      }
+    }
+
+    return true;
+  }
+
+  async setDefaultAddress(id: number, userId: number) {
+    await prisma.address.updateMany({
+      where: { userId },
+      data: { isDefault: false },
+    });
+
+    return prisma.address.update({
+      where: { id },
+      data: { isDefault: true },
+    });
+  }
+  
 }
 
 export const userRepository = new UserRepository();

@@ -122,7 +122,7 @@ export default function ProductsPagination({
         {/* Info */}
 
         <div className="text-sm text-gray-500">
-          نمایش
+          {/* نمایش
           <span className="mx-1 font-bold text-pink-600">
             {start.toLocaleString("fa-IR")}
           </span>
@@ -134,7 +134,7 @@ export default function ProductsPagination({
           <span className="mx-1 font-bold text-gray-900">
             {totalItems.toLocaleString("fa-IR")}
           </span>
-          محصول
+          محصول */}
         </div>
 
         {/* Pagination */}
@@ -143,7 +143,7 @@ export default function ProductsPagination({
           <button
             onClick={() => changePage(page - 1)}
             disabled={page === 1}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl text-gray-500 transition hover:bg-pink-50 hover:text-pink-600 disabled:opacity-40"
+            className="cursor-pointer flex h-11 w-11 items-center justify-center rounded-2xl text-gray-500 transition hover:bg-pink-50 hover:text-pink-600 disabled:opacity-40"
           >
             <ChevronRight size={18} />
           </button>
@@ -164,7 +164,7 @@ export default function ProductsPagination({
               <button
                 key={item.value}
                 onClick={() => changePage(item.value)}
-                className={`flex h-11 w-11 items-center justify-center rounded-2xl font-semibold transition ${
+                className={`cursor-pointer flex h-11 w-11 items-center justify-center rounded-2xl font-semibold transition ${
                   page === item.value
                     ? "bg-pink-500 text-white shadow"
                     : "hover:bg-pink-50 hover:text-pink-600"
@@ -178,7 +178,7 @@ export default function ProductsPagination({
           <button
             onClick={() => changePage(page + 1)}
             disabled={page === totalPages}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl text-gray-500 transition hover:bg-pink-50 hover:text-pink-600 disabled:opacity-40"
+            className="cursor-pointer flex h-11 w-11 items-center justify-center rounded-2xl text-gray-500 transition hover:bg-pink-50 hover:text-pink-600 disabled:opacity-40"
           >
             <ChevronLeft size={18} />
           </button>
@@ -187,7 +187,7 @@ export default function ProductsPagination({
         {/* Per Page */}
 
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500">تعداد نمایش</span>
+          {/* <span className="text-sm text-gray-500">تعداد نمایش</span>
 
           <select
             value={perPage}
@@ -198,7 +198,7 @@ export default function ProductsPagination({
             <option value={20}>20</option>
             <option value={50}>50</option>
             <option value={100}>100</option>
-          </select>
+          </select> */}
         </div>
       </div>
     </div>

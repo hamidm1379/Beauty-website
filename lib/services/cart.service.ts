@@ -79,6 +79,10 @@ class CartService {
   async removeItem(cartItemId: number, userId: number) {
     return cartRepository.removeItem(cartItemId, userId);
   }
+
+  async clearCart(userId: number) {
+    return cartRepository.clearCart(userId);
+  }
 }
 
 export const cartService = new CartService();

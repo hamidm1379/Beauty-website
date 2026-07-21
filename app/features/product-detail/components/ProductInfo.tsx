@@ -5,6 +5,8 @@ import { Heart, Minus, Plus, ShoppingCart, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { addToCartAction } from "@/app/features/cart/actions";
+import { toggleWishlistAction } from "@/app/features/wishlist/actions";
+
 function calculateDiscount(
   price: number,
   discountPercent: number | null | undefined,
@@ -50,13 +52,20 @@ interface Props {
       stock: number;
     }[];
   };
+  // وضعیت اولیه علاقه‌مندی، باید از سرور (صفحه‌ی والد) با چک کردن session
+  // و wishlistService.isInWishlist محاسبه و پاس داده بشه. پیش‌فرض false.
+  initialFavorite?: boolean;
 }
 
 // ========== Component ==========
-export default function ProductInfo({ product }: Props) {
+export default function ProductInfo({
+  product,
+  initialFavorite = false,
+}: Props) {
   const [quantity, setQuantity] = useState(1);
 
-  const [favorite, setFavorite] = useState(false);
+  const [favorite, setFavorite] = useState(initialFavorite);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [selectedVariantId, setSelectedVariantId] = useState<number | null>(
     product.variants && product.variants.length > 0
       ? product.variants[0].id
@@ -133,12 +142,37 @@ export default function ProductInfo({ product }: Props) {
     }
   };
 
-  const toggleFavorite = () => {
-    setFavorite((prev) => !prev);
+  const toggleFavorite = async () => {
+    if (favoriteLoading) return;
 
-    toast.success(
-      !favorite ? "به علاقه‌مندی‌ها اضافه شد." : "از علاقه‌مندی‌ها حذف شد.",
-    );
+    // optimistic update: بلافاصله UI رو تغییر می‌دیم تا حس سریع بودن داشته باشه
+    const previous = favorite;
+    setFavorite(!previous);
+    setFavoriteLoading(true);
+
+    try {
+      const result = await toggleWishlistAction(product.id);
+
+      if (!result.success) {
+        // rollback در صورت خطا (مثلاً کاربر لاگین نیست)
+        setFavorite(previous);
+        toast.error(result.error ?? "خطا در بروزرسانی علاقه‌مندی‌ها.");
+        return;
+      }
+
+      setFavorite(result.isFavorite);
+
+      toast.success(
+        result.isFavorite
+          ? "به علاقه‌مندی‌ها اضافه شد."
+          : "از علاقه‌مندی‌ها حذف شد.",
+      );
+    } catch {
+      setFavorite(previous);
+      toast.error("خطایی رخ داده است.");
+    } finally {
+      setFavoriteLoading(false);
+    }
   };
 
   return (
@@ -170,25 +204,6 @@ export default function ProductInfo({ product }: Props) {
       >
         {product.title}
       </h1>
-      {/* Rating */}
-      {/* <div className="mt-5 flex items-center gap-3">
-        <div className="flex items-center gap-1">
-          {[1, 2, 3, 4, 5].map((item) => (
-            <Star
-              key={item}
-              className={`h-5 w-5 ${
-                item <= Math.round(Number(averageRating))
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "text-gray-300"
-              }`}
-            />
-          ))}
-        </div>
-
-        <span className="font-semibold text-gray-800">{averageRating}</span>
-
-        <span className="text-gray-400">({reviewsCount} نظر)</span>
-      </div> */}
 
       {/* Price */}
 
@@ -253,19 +268,7 @@ export default function ProductInfo({ product }: Props) {
       >
         {product.shortDescription ?? "توضیحاتی برای این محصول ثبت نشده است."}
       </p>
-      {/* Stock */}
-      <div className="mt-8 flex gap-6 text-sm">
-        {/* <span>
-          موجودی:
-          <b className="mr-1">{product.stock}</b>
-        </span>
 
-        <span>
-          تعداد فروش:
-          <b className="mr-1">{product.soldCount}</b>
-        </span> */}
-      </div>
-      {/* Quantity */}
       {/* Variants */}
       {product.variants && product.variants.length > 0 && (
         <div className="mt-8">
@@ -277,7 +280,6 @@ export default function ProductInfo({ product }: Props) {
                 key={variant.id}
                 type="button"
                 onClick={() => setSelectedVariantId(variant.id)}
-                // disabled={variant.stock === 0}
                 title={variant.colorName}
                 className={`
                   flex
@@ -352,6 +354,7 @@ export default function ProductInfo({ product }: Props) {
 
         <button
           onClick={toggleFavorite}
+          disabled={favoriteLoading}
           className="
         flex
         h-14
@@ -372,6 +375,8 @@ export default function ProductInfo({ product }: Props) {
 
         hover:border-pink-400
         hover:bg-pink-50
+        disabled:cursor-not-allowed
+        disabled:opacity-60
       "
         >
           <Heart

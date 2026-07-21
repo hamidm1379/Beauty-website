@@ -8,7 +8,6 @@ import { Menu, Search, ShoppingCart, User, X } from "lucide-react";
 const menuItems = [
   { title: "خانه", href: "/" },
   { title: "فروشگاه", href: "/products" },
-  // { title: "برندها", href: "/brands" },
   { title: "مقالات", href: "/articles" },
   { title: "درباره ما", href: "/aboutus" },
   { title: "تماس با ما", href: "/contactus" },
@@ -31,44 +30,117 @@ export default function HeaderClient({ cartCount, isLoggedIn }: Props) {
     setMobileOpen(false);
   }, [pathname]);
 
-  const accountHref = isLoggedIn ? "/account" : "/account/login";
-
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-4 lg:px-8">
-        <div className="flex h-18 items-center gap-4 lg:gap-8">
+    <header
+      className="
+sticky
+top-0
+z-50
+border-b
+border-gray-100
+bg-white/90
+backdrop-blur
+"
+    >
+      <div
+        className="
+mx-auto
+max-w-7xl
+px-4
+lg:px-8
+"
+      >
+        <div
+          className="
+flex
+items-center
+justify-between
+gap-5
+py-4
+"
+        >
+          {/* Mobile Menu */}
+
           <button
-            type="button"
-            onClick={() => setMobileOpen((open) => !open)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-gray-600 transition hover:bg-gray-50 hover:text-pink-500 lg:hidden"
-            aria-expanded={mobileOpen}
-            aria-label={mobileOpen ? "بستن منو" : "باز کردن منو"}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="
+flex
+h-11
+w-11
+items-center
+justify-center
+rounded-2xl
+bg-gray-50
+text-gray-700
+transition
+hover:bg-pink-50
+hover:text-pink-500
+lg:hidden
+"
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
 
-          <Link href="/" className="shrink-0">
-            <span className="text-2xl font-bold text-gray-800">برق لب</span>
+          {/* Logo */}
+
+          <Link href="/">
+            <span
+              className="
+text-2xl
+font-black
+text-gray-900
+"
+            >
+              برق لب
+            </span>
           </Link>
 
-          <nav className="hidden lg:block" aria-label="منوی اصلی">
-            <ul className="flex h-18 items-center gap-6 xl:gap-8">
+          {/* Desktop Menu */}
+
+          <nav
+            className="
+hidden
+lg:flex
+"
+          >
+            <ul
+              className="
+flex
+items-center
+gap-7
+"
+            >
               {menuItems.map((item) => {
-                const isActive = isActivePath(pathname, item.href);
+                const active = isActivePath(pathname, item.href);
 
                 return (
-                  <li key={item.href} className="flex h-full items-stretch">
+                  <li key={item.href}>
                     <Link
                       href={item.href}
-                      className={`relative flex items-center px-1 text-sm transition-colors ${
-                        isActive
-                          ? "font-semibold text-pink-500"
-                          : "text-gray-600 hover:text-pink-500"
-                      }`}
+                      className={`
+relative
+text-sm
+font-medium
+transition
+
+${active ? "text-pink-500 font-bold" : "text-gray-600 hover:text-pink-500"}
+
+`}
                     >
                       {item.title}
-                      {isActive && (
-                        <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-pink-500" />
+
+                      {active && (
+                        <span
+                          className="
+absolute
+right-0
+left-0
+-bottom-2
+h-0.5
+rounded-full
+bg-pink-500
+"
+                        />
                       )}
                     </Link>
                   </li>
@@ -77,80 +149,226 @@ export default function HeaderClient({ cartCount, isLoggedIn }: Props) {
             </ul>
           </nav>
 
-          <div className="hidden min-w-0 flex-1 lg:block lg:max-w-md">
-            <div className="relative w-full">
+          {/* Search */}
+
+          <div
+            className="
+hidden
+flex-1
+max-w-md
+lg:block
+"
+          >
+            <div
+              className="
+relative
+"
+            >
               <Search
                 size={18}
-                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+                className="
+absolute
+right-4
+top-1/2
+-translate-y-1/2
+text-gray-400
+"
               />
+
               <input
-                type="search"
                 placeholder="جستجو برای محصول..."
-                className="h-11 w-full rounded-full bg-gray-50 pr-11 pl-4 text-sm outline-none transition focus:ring-2 focus:ring-pink-200"
+                className="
+h-11
+w-full
+rounded-full
+bg-gray-50
+pr-11
+pl-4
+text-sm
+outline-none
+focus:ring-2
+focus:ring-pink-200
+"
               />
             </div>
           </div>
 
-          <div className="ms-auto flex items-center gap-3 sm:gap-4">
-            <Link
-              href="/cart"
-              className="relative text-gray-600 transition hover:text-pink-500"
-              aria-label="سبد خرید"
-            >
-              <ShoppingCart size={22} />
-              {cartCount > 0 && (
-                <span className="absolute -right-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-pink-500 px-1 text-[10px] font-bold text-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+          {/* Actions */}
 
-            <Link
-              href={accountHref}
-              className="text-gray-600 transition hover:text-pink-500"
-              aria-label={isLoggedIn ? "حساب کاربری" : "ورود"}
-            >
-              <User size={22} />
-            </Link>
+          <div
+            className="
+flex
+items-center
+gap-3
+"
+          >
+            {isLoggedIn ? (
+              <>
+                {/* Cart */}
+
+                <Link
+                  href="/cart"
+                  className="
+relative
+flex
+h-11
+w-11
+items-center
+justify-center
+rounded-2xl
+bg-pink-50
+text-pink-600
+transition
+hover:bg-pink-100
+"
+                >
+                  <ShoppingCart size={22} />
+
+                  {cartCount > 0 && (
+                    <span
+                      className="
+absolute
+-right-2
+-top-2
+flex
+h-5
+min-w-5
+items-center
+justify-center
+rounded-full
+bg-pink-500
+px-1
+text-xs
+font-bold
+text-white
+"
+                    >
+                      {cartCount.toLocaleString("fa-IR")}
+                    </span>
+                  )}
+                </Link>
+
+                {/* Account */}
+
+                <Link
+                  href="/account"
+                  className="
+flex
+h-11
+items-center
+gap-2
+rounded-2xl
+bg-gray-100
+px-3
+text-gray-700
+transition
+hover:bg-gray-200
+"
+                >
+                  <User size={21} />
+
+                  <span
+                    className="
+hidden
+text-sm
+font-medium
+md:block
+"
+                  >
+                    حساب کاربری
+                  </span>
+                </Link>
+              </>
+            ) : (
+              <Link
+                href="/account/login"
+                className="
+flex
+h-11
+items-center
+gap-2
+rounded-2xl
+bg-pink-500
+px-5
+font-bold
+text-white
+transition
+hover:bg-pink-600
+"
+              >
+                <User size={20} />
+
+                <span>ورود</span>
+              </Link>
+            )}
           </div>
         </div>
 
+        {/* Mobile Menu */}
+
         {mobileOpen && (
-          <div className="border-t border-gray-100 py-4 lg:hidden">
-            <div className="relative mb-4">
+          <div
+            className="
+border-t
+border-gray-100
+py-5
+lg:hidden
+"
+          >
+            <div
+              className="
+relative
+mb-5
+"
+            >
               <Search
+                className="
+absolute
+right-4
+top-1/2
+-translate-y-1/2
+text-gray-400
+"
                 size={18}
-                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
               />
+
               <input
-                type="search"
-                placeholder="جستجو برای محصول..."
-                className="h-11 w-full rounded-full bg-gray-50 pr-11 pl-4 text-sm outline-none transition focus:ring-2 focus:ring-pink-200"
+                placeholder="جستجو..."
+                className="
+h-11
+w-full
+rounded-full
+bg-gray-50
+pr-11
+outline-none
+"
               />
             </div>
 
-            <nav aria-label="منوی موبایل">
-              <ul className="space-y-1">
-                {menuItems.map((item) => {
-                  const isActive = isActivePath(pathname, item.href);
-
-                  return (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        className={`block rounded-xl px-3 py-2.5 text-sm transition-colors ${
-                          isActive
-                            ? "bg-pink-50 font-semibold text-pink-500"
-                            : "text-gray-600 hover:bg-gray-50 hover:text-pink-500"
-                        }`}
-                      >
-                        {item.title}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
+            <ul
+              className="
+space-y-2
+"
+            >
+              {menuItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="
+block
+rounded-xl
+px-4
+py-3
+text-gray-700
+hover:bg-pink-50
+hover:text-pink-500
+"
+                  >
+                    {item.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </div>

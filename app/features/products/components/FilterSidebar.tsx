@@ -6,7 +6,7 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 import CategoryFilter from "@/app/features/products/components/CategoryFilter";
 import BrandFilter from "@/app/features/products/components/BrandFilter";
-import PriceFilter from "@/app/features/products/components/PriceFilter";
+// import PriceFilter from "@/app/features/products/components/PriceFilter";
 import { brandRepository } from "@/lib/repositories/brand.repository";
 
 interface Category {
@@ -113,7 +113,7 @@ export default  function FilterSidebar({ categories, brands }: Props) {
 
         <button
           onClick={resetFilters}
-          className="flex items-center gap-1 text-sm text-pink-500"
+          className="cursor-pointer flex items-center gap-1 text-sm text-pink-500"
         >
           <RotateCcw size={15} />
           حذف
@@ -138,9 +138,9 @@ export default  function FilterSidebar({ categories, brands }: Props) {
         }}
       />
 
-      <PriceFilter />
+      {/* <PriceFilter /> */}
 
-      <div className="py-6">
+      {/* <div className="py-6">
         <label className="flex cursor-pointer items-center gap-3">
           <input
             checked={available}
@@ -151,7 +151,7 @@ export default  function FilterSidebar({ categories, brands }: Props) {
 
           <span className="text-sm">فقط کالاهای موجود</span>
         </label>
-      </div>
+      </div> */}
 
       {/* <button
         onClick={applyFilters}
