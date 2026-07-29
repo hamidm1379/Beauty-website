@@ -21,22 +21,22 @@ export default function AboutPage() {
     <main className="bg-[#fcfcfc]">
       <div className="container mx-auto max-w-7xl px-4 py-8">
         {/* Hero */}
-        <section className="mt-6">
+        <section className="sm:mt-6">
           <AboutHero />
         </section>
 
         {/* Story */}
-        <section className="mt-16">
+        <section className="mt-8 sm:mt-16">
           <OurStory />
         </section>
 
         {/* Why Choose Us */}
-        <section className="mt-20">
+        <section className="mt-10 sm:mt-20">
           <WhyChooseUs />
         </section>
 
         {/* Our Values */}
-        <section className="mt-20">
+        <section className="mt-10 sm:mt-20">
           <OurValues />
         </section>
       </div>

@@ -92,6 +92,7 @@ class ProductService {
     brandId: number;
     discountPrice?: number;
     shortDescription?: string;
+    purchasePrice: number;
     variants?: {
       title: string;
       price?: number;
@@ -112,7 +113,9 @@ class ProductService {
     if (data.stock < 0) {
       throw new Error("موجودی نامعتبر است.");
     }
-
+    if (data.purchasePrice < 0) {
+      throw new Error("قیمت خرید نامعتبر است.");
+    }
     const slug =
       data.slug && data.slug.length > 0
         ? data.slug
@@ -154,6 +157,7 @@ class ProductService {
       brandId?: number;
       discountPrice?: number;
       shortDescription?: string;
+      purchasePrice: number;
     },
   ) {
     await this.getById(id);
@@ -271,8 +275,12 @@ class ProductService {
       await fs.unlink(filePath);
 
       console.log(`${label} deleted:`, filePath);
-    } catch (err: any) {
-      if (err?.code === "ENOENT") {
+    } catch (err: unknown) {
+      const code =
+        typeof err === "object" && err !== null && "code" in err
+          ? (err as { code?: unknown }).code
+          : undefined;
+      if (code === "ENOENT") {
         console.warn(`${label} not found on disk, skipping:`, filePath);
       } else {
         console.error(`${label} delete error:`, err);

@@ -1,5 +1,7 @@
 "use client";
 
+import type { User } from "@prisma/client";
+
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -13,14 +15,14 @@ import WishlistCard from "./WishlistCard";
 import AddressList from "./Addresses";
 
 interface Props {
-  user: any;
+  user: User;
 }
 
 export default function AccountClient({ user }: Props) {
   const [activeTab, setActiveTab] = useState("orders");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
+
   return (
     <main className="bg-gray-50">
       <div className="container mx-auto max-w-7xl px-4 py-8">

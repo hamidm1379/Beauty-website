@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Edit, Eye, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface User {
   id: number;
@@ -47,8 +48,8 @@ export default function UsersTable({ users }: Props) {
 
       toast.success("کاربر با موفقیت حذف شد.");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message || "خطا در حذف کاربر");
+    } catch (error) {
+      toast.error(getErrorMessage(error) || "خطا در حذف کاربر");
     } finally {
       setDeletingId(null);
     }

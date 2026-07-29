@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { categoryService } from "@/lib/services/category.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface RouteParams {
   params: Promise<{
@@ -27,11 +28,11 @@ export async function GET(
       success: true,
       data: category,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 404,
@@ -69,11 +70,11 @@ export async function PUT(
       message: "دسته‌بندی با موفقیت بروزرسانی شد.",
       data: category,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 400,
@@ -101,11 +102,11 @@ export async function DELETE(
       success: true,
       message: "دسته‌بندی با موفقیت حذف شد.",
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 400,

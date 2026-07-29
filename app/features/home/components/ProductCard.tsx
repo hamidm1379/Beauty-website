@@ -184,7 +184,7 @@ export default function ProductCard({ product }: Props) {
             className="
               rounded-xl
               object-contain
-              p-2
+              p-1
               transition-transform
               duration-500
               group-hover:scale-110
@@ -195,21 +195,21 @@ export default function ProductCard({ product }: Props) {
         </div>
 
         {/* Content */}
-        <div className="p-4">
-          <p className="flex items-center gap-1 text-[11px] text-gray-400 md:text-[13px]">
+        <div className="p-3 md:p-4">
+          <p className="flex items-center gap-1 text-[10px] text-gray-400 md:text-[13px]">
             <Tag size={11} className="shrink-0" />
             {product.brand?.title || "بدون برند"}
           </p>
 
-          <h3 className="mt-1 line-clamp-2 min-h-[2.6em] text-[14px] font-medium leading-6 text-gray-800 md:text-[16px]">
+          <h3 className="mt-0.5 md:mt-1 line-clamp-2 min-h-[1.3em] md:min-h-[2.6em] text-[13px] font-medium leading-6 text-gray-800 md:text-[16px]">
             {product.title}
           </h3>
 
           {/* Price */}
-          <div className="mt-3 flex items-baseline gap-2">
+          <div className="mt-1 md:mt-3 flex items-baseline gap-2">
             {hasDiscount ? (
               <>
-                <p className="text-[13px] font-bold text-pink-600 md:text-[16px]">
+                <p className="text-[12px] font-bold text-pink-600 md:text-[16px]">
                   {finalPrice.toLocaleString("fa-IR")}
                   <span className="mr-1 text-[10px] font-normal text-gray-400 md:text-[12px]">
                     تومان
@@ -221,7 +221,7 @@ export default function ProductCard({ product }: Props) {
                 </p>
               </>
             ) : (
-              <p className="text-[13px] font-bold text-gray-800 md:text-[16px]">
+              <p className="text-[12px] font-bold text-gray-800 md:text-[16px]">
                 {product.price.toLocaleString("fa-IR")}
                 <span className="mr-1 text-[10px] font-normal text-gray-400 md:text-[12px]">
                   تومان
@@ -249,7 +249,7 @@ export default function ProductCard({ product }: Props) {
             from-pink-500
             to-rose-400
             py-1.5
-            text-[11px]
+            text-[9px]
             font-bold
             text-white
             shadow-md
@@ -261,10 +261,11 @@ export default function ProductCard({ product }: Props) {
             md:rounded-xl
             md:py-2
             md:text-[12.5px]
+            sm:text-[10px]
             cursor-pointer
           "
           >
-            <Eye size={13} />
+            <Eye size={12} />
             مشاهده محصول
           </motion.button>
         </Link>

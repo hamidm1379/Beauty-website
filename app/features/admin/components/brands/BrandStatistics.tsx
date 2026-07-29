@@ -24,22 +24,22 @@ export default function BrandStatistics() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    async function loadBrands() {
+      try {
+        const res = await fetch("/api/brands");
+    
+        const json = await res.json();
+    
+        setBrands(json.data ?? []);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
     loadBrands();
   }, []);
-
-  async function loadBrands() {
-    try {
-      const res = await fetch("/api/brands");
-
-      const json = await res.json();
-
-      setBrands(json.data ?? []);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const totalBrands = brands.length;
 

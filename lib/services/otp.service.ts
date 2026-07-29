@@ -1,80 +1,93 @@
-import bcrypt from "bcrypt";
 import { OtpType } from "@prisma/client";
 
-import * as otpRepository from "@/lib/repositories/otp.repository";
+import {
+  createOtp,
+  findLatestOtp,
+  markOtpAsUsed,
+  deletePhoneOtps,
+} from "@/lib/repositories/otp.repository";
+import { sendOtpSms } from "@/lib/sms/kavenegar";
 
-/**
- * تولید کد ۶ رقمی
- */
-function generateOtpCode(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+const OTP_LENGTH = 5;
+const OTP_EXPIRE_MINUTES = 2;
+const RESEND_COOLDOWN_SECONDS = 90;
+
+function generateCode() {
+  const min = 10 ** (OTP_LENGTH - 1);
+  const max = 10 ** OTP_LENGTH - 1;
+  return String(Math.floor(min + Math.random() * (max - min + 1)));
 }
 
-/**
- * ایجاد و ذخیره OTP
- */
-export async function sendOtp(
-  phone: string,
-  type: OtpType = OtpType.LOGIN,
-) {
-  // حذف OTPهای قبلی این شماره
-  await otpRepository.deletePhoneOtps(phone, type);
-
-  // تولید کد
-  const code = generateOtpCode();
-
-  // هش کردن کد
-  const hashedCode = await bcrypt.hash(code, 10);
-
-  // زمان انقضا (۲ دقیقه)
-  const expiresAt = new Date(Date.now() + 2 * 60 * 1000);
-
-  // ذخیره در دیتابیس
-  await otpRepository.createOtp({
-    phone,
-    code: hashedCode,
-    type,
-    expiresAt,
-  });
-
-  // فعلاً فقط برای تست
-  console.log("OTP:", code);
-
-  return {
-    success: true,
-    expiresAt,
-  };
+function normalizePhone(phone: string) {
+  return phone.trim();
 }
 
-/**
- * بررسی کد OTP
- */
-export async function verifyOtp(
-  phone: string,
-  code: string,
-  type: OtpType = OtpType.LOGIN,
-) {
-  const otp = await otpRepository.findLatestOtp(phone, type);
+class OtpService {
+  /**
+   * ارسال کد تایید به شماره موبایل (با محدودیت زمانی بین دو ارسال)
+   */
+  async sendOtp(phone: string, type: OtpType = OtpType.LOGIN) {
+    const normalizedPhone = normalizePhone(phone);
 
-  if (!otp) {
-    throw new Error("کد تأیید یافت نشد.");
+    const latest = await findLatestOtp(normalizedPhone, type);
+
+    if (latest) {
+      const secondsSinceLastSend =
+        (Date.now() - new Date(latest.createdAt).getTime()) / 1000;
+
+      if (secondsSinceLastSend < RESEND_COOLDOWN_SECONDS) {
+        const remaining = Math.ceil(
+          RESEND_COOLDOWN_SECONDS - secondsSinceLastSend,
+        );
+
+        throw new Error(
+          `لطفاً ${remaining} ثانیه دیگر مجدداً تلاش کنید.`,
+        );
+      }
+    }
+
+    const code = generateCode();
+    const expiresAt = new Date(Date.now() + OTP_EXPIRE_MINUTES * 60 * 1000);
+
+    // پاک کردن کدهای قبلی این شماره قبل از ساخت کد جدید
+    await deletePhoneOtps(normalizedPhone, type);
+
+    await createOtp({
+      phone: normalizedPhone,
+      code,
+      type,
+      expiresAt,
+    });
+
+    await sendOtpSms(normalizedPhone, code);
+
+    return { success: true };
   }
 
-  if (otp.used) {
-    throw new Error("این کد قبلاً استفاده شده است.");
+  /**
+   * اعتبارسنجی کد وارد شده (بدون مصرف کردن آن - برای استفاده در authorize)
+   */
+  async verifyOtp(phone: string, code: string, type: OtpType = OtpType.LOGIN) {
+    const normalizedPhone = normalizePhone(phone);
+
+    const otp = await findLatestOtp(normalizedPhone, type);
+
+    if (!otp) {
+      throw new Error("کد تایید یافت نشد. لطفاً دوباره درخواست دهید.");
+    }
+
+    if (otp.expiresAt < new Date()) {
+      throw new Error("کد تایید منقضی شده است.");
+    }
+
+    if (otp.code !== code.trim()) {
+      throw new Error("کد تایید نادرست است.");
+    }
+
+    await markOtpAsUsed(otp.id);
+
+    return true;
   }
-
-  if (otp.expiresAt < new Date()) {
-    throw new Error("کد تأیید منقضی شده است.");
-  }
-
-  const isValid = await bcrypt.compare(code, otp.code);
-
-  if (!isValid) {
-    throw new Error("کد تأیید نامعتبر است.");
-  }
-
-  await otpRepository.markOtpAsUsed(otp.id);
-
-  return true;
 }
+
+export const otpService = new OtpService();

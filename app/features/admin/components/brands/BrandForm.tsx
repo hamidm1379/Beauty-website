@@ -1,15 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
 import ImageUploader from "@/app/shared/components/UploadImage";
+import { getErrorMessage } from "@/lib/utils/errors";
+
+interface BrandFormInitialData {
+  id: number;
+  title: string;
+  slug: string;
+  logo?: string | null;
+}
 
 interface BrandFormProps {
   mode: "create" | "edit";
-  initialData?: any;
+  initialData?: BrandFormInitialData;
 }
 
 export default function BrandForm({ mode, initialData }: BrandFormProps) {
@@ -18,22 +26,11 @@ export default function BrandForm({ mode, initialData }: BrandFormProps) {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    title: "",
-    slug: "",
+    title: initialData?.title ?? "",
+    slug: initialData?.slug ?? "",
     logoFile: null as File | null,
-    logoUrl: "",
+    logoUrl: initialData?.logo ?? "",
   });
-
-  useEffect(() => {
-    if (!initialData) return;
-
-    setForm({
-      title: initialData.title ?? "",
-      slug: initialData.slug ?? "",
-      logoFile: null,
-      logoUrl: initialData.logo ?? "",
-    });
-  }, [initialData]);
 
   function generateSlug(text: string) {
     return text
@@ -121,8 +118,8 @@ export default function BrandForm({ mode, initialData }: BrandFormProps) {
 
       router.push("/admin/brands");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message ?? "خطایی رخ داده است.");
+    } catch (error) {
+      toast.error(getErrorMessage(error) ?? "خطایی رخ داده است.");
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { UserRole } from "@prisma/client";
 
 import { userService } from "@/lib/services/user.service";
 import { userSchema } from "@/lib/validations/user.schema";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,12 +39,12 @@ export async function POST(req: NextRequest) {
         status: 201,
       },
     );
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
 
-        message: error.message ?? "خطایی در ایجاد کاربر رخ داد.",
+        message: getErrorMessage(error) ?? "خطایی در ایجاد کاربر رخ داد.",
       },
       {
         status: 500,
@@ -68,7 +70,7 @@ export async function GET(req: NextRequest) {
     limit,
     search,
 
-    role: role as any,
+    role: role as UserRole | undefined,
 
     isActive: isActive === null ? undefined : isActive === "true",
   });

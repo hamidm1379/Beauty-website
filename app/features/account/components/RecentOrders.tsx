@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 interface Props {
-  orders: any[];
+  orders: { id: number; orderNumber: string; status: string; total: number; createdAt: string; items?: { id: number; productTitle: string; productImage: string | null; quantity: number; totalPrice: number }[] }[];
 }
 
 const statusMap = {
@@ -61,7 +61,7 @@ const statusMap = {
 };
 
 export default function RecentOrders({ orders }: Props) {
-  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<typeof orders[0] | null>(null);
 
   if (!orders.length) {
     return (
@@ -132,10 +132,12 @@ export default function RecentOrders({ orders }: Props) {
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-bold text-gray-900">
-                      سفارش #{order.orderNumber}
+                    <h3 className="text-xl font-bold text-gray-900 mb-1.5">
+                      پیگیری سفارش
                     </h3>
-
+                    <span className="text-[12px] text-gray-500">
+                      کد پیگیری:{order.orderNumber}
+                    </span>
                     <div className="mt-2 flex flex-wrap items-center gap-5 text-sm text-gray-500">
                       <span className="flex items-center gap-2">
                         <Calendar size={15} />
@@ -162,10 +164,10 @@ export default function RecentOrders({ orders }: Props) {
                       status.color === "green"
                         ? "bg-green-100 text-green-600"
                         : status.color === "amber"
-                        ? "bg-amber-100 text-amber-600"
-                        : status.color === "red"
-                        ? "bg-red-100 text-red-600"
-                        : "bg-blue-100 text-blue-600"
+                          ? "bg-amber-100 text-amber-600"
+                          : status.color === "red"
+                            ? "bg-red-100 text-red-600"
+                            : "bg-blue-100 text-blue-600"
                     }`}
                   >
                     <Icon size={16} />
@@ -174,7 +176,7 @@ export default function RecentOrders({ orders }: Props) {
 
                   <button
                     onClick={() => setSelectedOrder(order)}
-                    className="flex items-center gap-2 rounded-xl border border-gray-200 px-5 py-2.5 font-semibold text-gray-700 transition hover:border-pink-300 hover:text-pink-600"
+                    className="cursor-pointer flex items-center gap-2 rounded-xl border border-gray-200 px-5 py-2.5 font-semibold text-gray-700 transition hover:border-pink-300 hover:text-pink-600"
                   >
                     <Eye size={18} />
                     مشاهده جزئیات
@@ -194,10 +196,10 @@ export default function RecentOrders({ orders }: Props) {
                       status.color === "green"
                         ? "bg-green-500"
                         : status.color === "amber"
-                        ? "bg-amber-500"
-                        : status.color === "red"
-                        ? "bg-red-500"
-                        : "bg-blue-500"
+                          ? "bg-amber-500"
+                          : status.color === "red"
+                            ? "bg-red-500"
+                            : "bg-blue-500"
                     }`}
                   />
                 </div>
@@ -228,15 +230,6 @@ export default function RecentOrders({ orders }: Props) {
                     <span className="inline-flex rounded-full bg-pink-50 px-4 py-2 text-sm font-bold text-pink-600">
                       جزئیات سفارش
                     </span>
-                    <h2 className="mt-5 text-3xl font-black text-gray-900">
-                      #{selectedOrder.orderNumber}
-                    </h2>
-                    <p className="mt-2 text-gray-500">
-                      ثبت شده در{" "}
-                      {new Date(selectedOrder.createdAt).toLocaleDateString(
-                        "fa-IR"
-                      )}
-                    </p>
                   </div>
 
                   <button
@@ -253,17 +246,17 @@ export default function RecentOrders({ orders }: Props) {
                   {/* Order Number */}
                   <div className="rounded-3xl border border-gray-100 bg-gray-50 p-5">
                     <p className="text-sm text-gray-500">شماره سفارش</p>
-                    <h3 className="mt-2 text-xl font-black text-gray-900">
-                      #{selectedOrder.orderNumber}
+                    <h3 className="mt-2 text-md font-black text-gray-900">
+                      {selectedOrder.orderNumber}
                     </h3>
                   </div>
 
                   {/* Date */}
                   <div className="rounded-3xl border border-gray-100 bg-gray-50 p-5">
                     <p className="text-sm text-gray-500">تاریخ ثبت</p>
-                    <h3 className="mt-2 text-xl font-black text-gray-900">
+                    <h3 className="mt-2 text-md font-black text-gray-900">
                       {new Date(selectedOrder.createdAt).toLocaleDateString(
-                        "fa-IR"
+                        "fa-IR",
                       )}
                     </h3>
                   </div>
@@ -271,7 +264,7 @@ export default function RecentOrders({ orders }: Props) {
                   {/* Total */}
                   <div className="rounded-3xl border border-pink-100 bg-pink-50 p-5">
                     <p className="text-sm text-gray-500">مبلغ پرداختی</p>
-                    <h3 className="mt-2 text-xl font-black text-pink-600">
+                    <h3 className="mt-2 text-md font-black text-pink-600">
                       {selectedOrder.total.toLocaleString("fa-IR")}
                     </h3>
                     <span className="text-sm text-gray-500">تومان</span>
@@ -281,7 +274,7 @@ export default function RecentOrders({ orders }: Props) {
                 <div className="px-8 pb-8">
                   <div className="rounded-3xl border border-gray-100 bg-gray-50 p-6">
                     <div className="mb-5 flex items-center justify-between">
-                      <h3 className="text-xl font-black text-gray-900">
+                      <h3 className="text-md font-black text-gray-900">
                         آدرس ارسال
                       </h3>
 
@@ -344,7 +337,7 @@ export default function RecentOrders({ orders }: Props) {
                     </h3>
 
                     <div className="space-y-4">
-                      {selectedOrder.items.map((item: any) => (
+                      {selectedOrder.items.map((item: { id: number; productTitle: string; productImage: string | null; quantity: number; totalPrice: number }) => (
                         <div
                           key={item.id}
                           className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-4 md:flex-row md:items-center md:justify-between"
@@ -424,7 +417,7 @@ export default function RecentOrders({ orders }: Props) {
                           {selectedOrder.shippingCost === 0
                             ? "رایگان"
                             : selectedOrder.shippingCost.toLocaleString(
-                                "fa-IR"
+                                "fa-IR",
                               )}
                           {selectedOrder.shippingCost > 0 && (
                             <span className="mr-1 text-sm font-normal">
@@ -471,10 +464,10 @@ export default function RecentOrders({ orders }: Props) {
                             selectedOrder.status === "DELIVERED"
                               ? "bg-green-100 text-green-600"
                               : selectedOrder.status === "CANCELLED"
-                              ? "bg-red-100 text-red-600"
-                              : selectedOrder.status === "SHIPPED"
-                              ? "bg-blue-100 text-blue-600"
-                              : "bg-amber-100 text-amber-600"
+                                ? "bg-red-100 text-red-600"
+                                : selectedOrder.status === "SHIPPED"
+                                  ? "bg-blue-100 text-blue-600"
+                                  : "bg-amber-100 text-amber-600"
                           }
                         `}
                       >

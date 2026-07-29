@@ -17,6 +17,7 @@ import {
 import { toast } from "sonner";
 
 import { createAddressAction } from "@/app/features/checkout/actions";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export interface AddressData {
   id: number;
@@ -108,8 +109,8 @@ export default function ShippingForm({
       onAddressCreated(result.data as AddressData);
       setNewAddress(NEW_ADDRESS_INITIAL);
       setShowNewForm(false);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setSaving(false);
     }

@@ -13,7 +13,7 @@ import {
 } from "@/app/features/cart/actions";
 
 interface Props {
-  items: any[];
+  items: { id: number; productTitle: string; productImage: string | null; quantity: number; totalPrice: number }[];
 }
 
 export default function CartList({ items: initialItems }: Props) {

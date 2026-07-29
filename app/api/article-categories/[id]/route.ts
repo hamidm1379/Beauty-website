@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { articleCategoryRepository } from "@/lib/repositories/article-category.repository";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export async function GET(
   req: NextRequest,
@@ -18,9 +19,9 @@ export async function GET(
     }
 
     return NextResponse.json({ success: true, data: category });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { success: false, message: error.message ?? "خطایی رخ داده است." },
+      { success: false, message: getErrorMessage(error) ?? "خطایی رخ داده است." },
       { status: 500 }
     );
   }
@@ -56,9 +57,9 @@ export async function PUT(
     });
 
     return NextResponse.json({ success: true, data: category });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { success: false, message: error.message ?? "خطایی رخ داده است." },
+      { success: false, message: getErrorMessage(error) ?? "خطایی رخ داده است." },
       { status: 500 }
     );
   }
@@ -74,9 +75,9 @@ export async function DELETE(
     await articleCategoryRepository.delete(Number(id));
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { success: false, message: error.message ?? "خطایی رخ داده است." },
+      { success: false, message: getErrorMessage(error) ?? "خطایی رخ داده است." },
       { status: 500 }
     );
   }

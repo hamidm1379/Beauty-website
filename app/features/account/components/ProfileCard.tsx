@@ -1,5 +1,5 @@
 "use client";
-
+import type { User } from "@prisma/client";
 import { motion } from "framer-motion";
 import {
   Mail,
@@ -11,7 +11,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 interface Props {
-  user: any;
+  user: User;
 }
 
 export default function ProfileCard({ user }: Props) {
@@ -141,7 +141,7 @@ export default function ProfileCard({ user }: Props) {
             icon: MapPin,
             title: "شهر",
             value:
-              user.addresses?.find((address: any) => address.isDefault)?.city ??
+              user.addresses?.find((address: { isDefault: boolean; city?: string | null }) => address.isDefault)?.city ??
               "ثبت نشده",
           },
           {

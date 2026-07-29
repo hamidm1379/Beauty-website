@@ -1,8 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";
 
 import { orderService } from "@/lib/services/order.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export async function POST(req: Request) {
   try {
@@ -32,12 +33,12 @@ export async function POST(req: Request) {
 
       data: order,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
 
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 400,

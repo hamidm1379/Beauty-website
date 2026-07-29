@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X } from "lucide-react";
 
 interface ArticleToolbarProps {
-  categories: any[];
+  categories: { id: number; title: string; slug: string }[];
   filters: {
     search: string;
     category: string;

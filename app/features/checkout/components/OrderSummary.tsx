@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { ShoppingBag, Tag, Truck, ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface CartItem {
   id: number;
@@ -151,8 +152,8 @@ export default function OrderSummary({
       toast.success("سفارش شما با موفقیت ثبت شد");
 
       router.push(`/account`);
-    } catch (error: any) {
-      toast.error(error.message ?? "خطا در ثبت سفارش");
+    } catch (error) {
+      toast.error(getErrorMessage(error) ?? "خطا در ثبت سفارش");
     } finally {
       setSubmitting(false);
     }

@@ -13,14 +13,17 @@ export default function BrandsBanner() {
 
       overflow-hidden
 
-      rounded-4xl
+      rounded-2xl
+      md:rounded-4xl
 
       border
       border-pink-100
 
       bg-white
 
-      p-8
+      py-8
+      px-6
+      md:p-8
 
       shadow-sm
     "
@@ -43,7 +46,7 @@ export default function BrandsBanner() {
       "
       />
       <div className="flex justify-between">
-        <h3 className="text-2xl font-bold">برندهای محبوب</h3>
+        <h3 className="text-md md:text-2xl font-bold">برندهای محبوب</h3>
         <Link
           href="/brands"
           className="
@@ -51,14 +54,16 @@ export default function BrandsBanner() {
         flex
         items-center
         float-left
-        gap-2
+        gap-1
+        sm:gap-2
         font-medium
         text-pink-500
-        text-[14px]
+        text-[11px]
+        md:text-[14px]
       "
         >
           مشاهده همه برندها
-          <ArrowLeft size={14} />
+          <ArrowLeft size={12} />
         </Link>
       </div>
 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Pencil, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface Props {
   couponId: number;
@@ -37,8 +38,8 @@ export default function CouponRowActions({ couponId, couponCode }: Props) {
 
       toast.success(`کد تخفیف «${couponCode}» حذف شد.`);
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(false);
       setConfirming(false);

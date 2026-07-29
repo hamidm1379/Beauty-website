@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import authConfig from "./auth.config";
-import { credentialsProvider } from "./auth.provider";
+import { credentialsProvider, otpCredentialsProvider } from "./auth.provider";
 import { prisma } from "./prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -16,15 +16,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: "jwt",
   },
 
-  providers: [credentialsProvider],
+  providers: [credentialsProvider, otpCredentialsProvider],
 
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.username = (user as any).username;
-        token.role = (user as any).role;
-        token.isActive = (user as any).isActive;
+        token.username = user.username;
+        token.role = user.role;
+        token.isActive = user.isActive;
       }
 
       return token;

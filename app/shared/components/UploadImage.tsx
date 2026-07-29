@@ -15,7 +15,7 @@ interface ImageUploaderProps {
 
   previews?: string[];
 
-  onChange: (value: any) => void;
+  onChange: (value: File | File[] | null) => void;
 }
 
 export default function ImageUploader({

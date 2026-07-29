@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { CouponType, Prisma } from "@prisma/client";
+import { CouponType } from "@prisma/client";
 
 interface CouponCreateInput {
   code: string;

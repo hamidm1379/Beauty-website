@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { userService } from "@/lib/services/user.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -27,11 +28,11 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     );
 
     return NextResponse.json({ success: true, data: address });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return NextResponse.json(
-      { success: false, message: error.message ?? "خطا در ویرایش آدرس" },
+      { success: false, message: getErrorMessage(error) ?? "خطا در ویرایش آدرس" },
       { status: 400 },
     );
   }
@@ -53,11 +54,11 @@ export async function DELETE(request: NextRequest, { params }: RouteContext) {
     await userService.deleteAddress(Number(id), Number(session.user.id));
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return NextResponse.json(
-      { success: false, message: error.message ?? "خطا در حذف آدرس" },
+      { success: false, message: getErrorMessage(error) ?? "خطا در حذف آدرس" },
       { status: 400 },
     );
   }

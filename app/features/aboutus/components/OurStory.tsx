@@ -5,7 +5,7 @@ import { Award, HeartHandshake, ShieldCheck } from "lucide-react";
 
 export default function OurStory() {
   return (
-    <section className="grid items-center gap-16 lg:grid-cols-2">
+    <section className="grid items-center gap-8 md:gap-16 lg:grid-cols-2">
       {/* Image */}
 
       <div className="group relative">
@@ -23,7 +23,7 @@ export default function OurStory() {
             rounded-full
 
             bg-pink-200/40
-
+            max-md:hidden
             blur-3xl
           "
         />
@@ -31,8 +31,8 @@ export default function OurStory() {
         <div
           className="
             overflow-hidden
-
-            rounded-[36px]
+            rounded-xl
+            sm:rounded-[36px]
 
             border
             border-gray-100
@@ -79,7 +79,8 @@ export default function OurStory() {
             px-4
             py-2
 
-            text-sm
+            text-[12px]
+            sm:text-sm
             font-semibold
 
             text-pink-600
@@ -90,13 +91,15 @@ export default function OurStory() {
 
         <h2
           className="
-            mt-6
+            mt-3
+            sm:mt-6
 
-            text-4xl
             font-black
 
             leading-tight
-
+            text-2xl
+            sm:text-3xl
+            md:text-4xl
             text-gray-900
           "
         >
@@ -107,9 +110,11 @@ export default function OurStory() {
 
         <p
           className="
-            mt-8
-
-            leading-9
+            mt-6
+            sm:mt-8
+            leading-8
+            sm:leading-9
+            max-sm:text-justify
 
             text-gray-600
           "
@@ -119,7 +124,7 @@ export default function OurStory() {
           می‌کند که همراه با کیفیت، اصالت و اعتماد باشد.
 
           <br />
-          <br />
+          <br className="max-sm:hidden"/>
 
           به همین دلیل تمامی محصولات ما از برندهای معتبر جهانی تهیه
           شده و پیش از ارسال، از نظر اصالت و کیفیت بررسی می‌شوند تا
@@ -128,7 +133,7 @@ export default function OurStory() {
 
         {/* Features */}
 
-        <div className="mt-10 grid gap-5">
+        <div className="mt-5 sm:mt-10 grid gap-5">
           {[
             {
               icon: ShieldCheck,
@@ -157,15 +162,16 @@ export default function OurStory() {
                   flex
                   items-start
                   gap-5
-
-                  rounded-3xl
+                  rounded-xl
+                  sm:rounded-2xl
+                  md:rounded-3xl
 
                   border
                   border-gray-100
 
                   bg-white
-
-                  p-5
+                  p-3
+                  sm:p-5
 
                   shadow-sm
 
@@ -179,14 +185,16 @@ export default function OurStory() {
                 <div
                   className="
                     flex
-
-                    h-14
-                    w-14
+                    h-[32.15px]
+                    w-12
+                    sm:h-14
+                    sm:w-14
 
                     items-center
                     justify-center
-
-                    rounded-2xl
+                    rounded-lg
+                    sm:rounded-xl
+                    md:rounded-2xl
 
                     bg-pink-50
 
@@ -198,15 +206,15 @@ export default function OurStory() {
                     group-hover:scale-110
                   "
                 >
-                  <Icon size={26} />
+                  <Icon className="h-5 w-5 sm:h-6.5 sm:w-6.5" />
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900">
+                  <h3 className="text-md sm:text-lg font-bold text-gray-900">
                     {item.title}
                   </h3>
 
-                  <p className="mt-2 leading-7 text-gray-500">
+                  <p className="mt-1 sm:mt-2 leading-6 md:leading-7 max-sm:text-[15px] text-gray-500">
                     {item.desc}
                   </p>
                 </div>

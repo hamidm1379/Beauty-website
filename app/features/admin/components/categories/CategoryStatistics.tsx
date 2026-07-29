@@ -24,22 +24,22 @@ export default function CategoryStatistics() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    async function loadCategories() {
+      try {
+        const res = await fetch("/api/categories");
+    
+        const json = await res.json();
+    
+        setCategories(json.data ?? []);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
     loadCategories();
   }, []);
-
-  async function loadCategories() {
-    try {
-      const res = await fetch("/api/categories");
-
-      const json = await res.json();
-
-      setCategories(json.data ?? []);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const totalCategories = categories.length;
 

@@ -31,6 +31,7 @@ model Product {
   status           ProductStatus  @default(ACTIVE)
   seoTitle         String?
   seoDescription   String?
+  seoKeywords      String?
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   brandId          Int?
@@ -44,6 +45,7 @@ model Product {
   wishlist         Wishlist[]
   cartitem         CartItem[]
   variants         ProductVariant[]
+  purchasePrice Int @default(0)
 }
 
 model Category {
@@ -398,6 +400,7 @@ model OrderItem {
   variantId    Int?
   variantTitle String?   
   variantColor String?
+  purchasePrice Int
 }
 
 model Review {

@@ -7,6 +7,7 @@ import { Search, Loader2, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import DeleteArticleCategoryModal from "@/app/features/admin/components/article-categories/DeleteArticleCategoryModal";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface ArticleCategory {
   id: number;
@@ -62,8 +63,8 @@ export default function ArticleCategoriesTable({
       setCategories((prev) => prev.filter((item) => item.id !== deleteId));
 
       setDeleteId(null);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setDeleteLoading(false);
     }

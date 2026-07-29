@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { couponService } from "@/lib/services/coupon.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface RouteContext {
   params: Promise<{
@@ -17,11 +18,11 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
       success: true,
       data: coupon,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "کد تخفیف پیدا نشد.",
+        message: getErrorMessage(error) ?? "کد تخفیف پیدا نشد.",
       },
       { status: 404 },
     );
@@ -40,13 +41,13 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
       success: true,
       data: coupon,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "خطا در بروزرسانی کد تخفیف",
+        message: getErrorMessage(error) ?? "خطا در بروزرسانی کد تخفیف",
       },
       { status: 400 },
     );
@@ -62,13 +63,13 @@ export async function DELETE(request: NextRequest, { params }: RouteContext) {
     return NextResponse.json({
       success: true,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "خطا در حذف کد تخفیف",
+        message: getErrorMessage(error) ?? "خطا در حذف کد تخفیف",
       },
       { status: 400 },
     );

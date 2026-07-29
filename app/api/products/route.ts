@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ProductStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 import fs from "fs/promises";
@@ -14,10 +15,12 @@ export async function POST(request: NextRequest) {
     const description = formData.get("description") as string;
     const price = Number(formData.get("price"));
     const stock = Number(formData.get("stock"));
+    const purchasePrice = Number(formData.get("purchasePrice"));
     const categoryId = Number(formData.get("categoryId"));
     const brandId = Number(formData.get("brandId"));
-    const status = formData.get("status") as any;
+    const status = formData.get("status") as ProductStatus;
     const shortDescription = formData.get("shortDescription") as string;
+    const seoKeywords = formData.get("seoKeywords") as string;
     const thumbnailFile = formData.get("thumbnail") as File | null;
     const variantsRaw = formData.get("variants") as string | null;
     const imageFiles = formData.getAll("images") as File[];
@@ -57,6 +60,8 @@ export async function POST(request: NextRequest) {
         brandId,
         status,
         shortDescription,
+        seoKeywords,
+        purchasePrice,
       },
     });
     if (variantsRaw) {

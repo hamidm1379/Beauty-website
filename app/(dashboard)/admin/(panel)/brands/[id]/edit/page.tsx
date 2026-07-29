@@ -11,6 +11,7 @@ import { ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import BrandForm from "@/app/features/admin/components/brands/BrandForm";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface Brand {
   id: number;
@@ -27,26 +28,26 @@ export default function EditBrandPage() {
   const [brand, setBrand] = useState<Brand | null>(null);
 
   useEffect(() => {
-    loadBrand();
-  }, []);
+    async function loadBrand() {
+      try {
+        const response = await fetch(`/api/brands/${id}`);
 
-  async function loadBrand() {
-    try {
-      const response = await fetch(`/api/brands/${id}`);
+        const result = await response.json();
 
-      const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message);
+        }
 
-      if (!response.ok) {
-        throw new Error(result.message);
+        setBrand(result.data);
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      } finally {
+        setLoading(false);
       }
-
-      setBrand(result.data);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
     }
-  }
+
+    loadBrand();
+  }, [id]);
 
   if (loading) {
     return (

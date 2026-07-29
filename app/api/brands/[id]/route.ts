@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { brandService } from "@/lib/services/brand.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface RouteParams {
   params: Promise<{
@@ -25,11 +26,11 @@ export async function GET(
       success: true,
       data: brand,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 404,
@@ -62,11 +63,11 @@ export async function PUT(
       message: "برند با موفقیت بروزرسانی شد.",
       data: brand,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 400,
@@ -92,11 +93,11 @@ export async function DELETE(
       success: true,
       message: "برند با موفقیت حذف شد.",
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 400,

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { userService } from "@/lib/services/user.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export async function createAddressAction(data: {
   title: string;
@@ -37,10 +38,10 @@ export async function createAddressAction(data: {
       success: true,
       data: address,
     };
-  } catch (error: any) {
+  } catch (error) {
     return {
       success: false,
-      error: error.message ?? "خطا در ثبت آدرس.",
+      error: getErrorMessage(error) ?? "خطا در ثبت آدرس.",
     };
   }
 }

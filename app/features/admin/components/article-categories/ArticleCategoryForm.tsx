@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import ImageUploader from "@/app/shared/components/UploadImage";
+import { getErrorMessage } from "@/lib/utils/errors";
 
-interface ArticleCategoryInitialData {
+interface ArticleCategoryFormInitialData {
   id: number;
   title: string;
   slug: string;
@@ -17,7 +18,7 @@ interface ArticleCategoryInitialData {
 
 interface ArticleCategoryFormProps {
   mode: "create" | "edit";
-  initialData?: ArticleCategoryInitialData;
+  initialData?: ArticleCategoryFormInitialData;
 }
 
 export default function ArticleCategoryForm({
@@ -29,26 +30,13 @@ export default function ArticleCategoryForm({
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    title: "",
-    slug: "",
-    seoTitle: "",
-    seoDescription: "",
+    title: initialData?.title ?? "",
+    slug: initialData?.slug ?? "",
+    seoTitle: initialData?.seoTitle ?? "",
+    seoDescription: initialData?.seoDescription ?? "",
     imageFile: null as File | null,
-    imageUrl: "",
+    imageUrl: initialData?.image ?? "",
   });
-
-  useEffect(() => {
-    if (!initialData) return;
-
-    setForm({
-      title: initialData.title ?? "",
-      slug: initialData.slug ?? "",
-      seoTitle: initialData.seoTitle ?? "",
-      seoDescription: initialData.seoDescription ?? "",
-      imageFile: null,
-      imageUrl: initialData.image ?? "",
-    });
-  }, [initialData]);
 
   function generateSlug(text: string) {
     return text
@@ -139,8 +127,8 @@ export default function ArticleCategoryForm({
 
       router.push("/admin/article-categories");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message ?? "خطایی رخ داده است.");
+    } catch (error) {
+      toast.error(getErrorMessage(error) ?? "خطایی رخ داده است.");
     } finally {
       setLoading(false);
     }

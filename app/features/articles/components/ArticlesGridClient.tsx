@@ -6,7 +6,7 @@ import ArticleCard from "./ArticleCard";
 
 
 interface Props {
-  articles: any[];
+  articles: { id: number; title: string; slug: string; thumbnail?: string | null; excerpt?: string | null; category?: { title: string } | null; createdAt: string }[];
 }
 
 const container = {

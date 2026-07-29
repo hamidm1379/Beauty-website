@@ -1,24 +1,74 @@
-// lib/seo/schema.ts
-articleService;
-import { articleService } from "@/lib/services/article.service";
 import { siteConfig } from "./metadata";
+
+/** کمینه‌ی فیلدهای محصولی که برای ساخت schema محصول نیاز است. */
+export interface ProductSchemaInput {
+  id: number | string;
+  slug: string;
+  title: string;
+  description?: string | null;
+  thumbnail?: string | null;
+  sku?: string | null;
+  price: number;
+  discountPrice?: number | null;
+  stock: number;
+  brand?: { title?: string | null } | null;
+  category?: { title?: string | null } | null;
+}
+
+/** کمینه‌ی فیلدهای مقاله/برندی که برای ساخت schema مقاله نیاز است. */
+export interface ArticleSchemaInput {
+  slug: string;
+  title: string;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  excerpt?: string | null;
+  description?: string | null;
+  thumbnail?: string | null;
+  publishedAt?: string | Date | null;
+  updatedAt?: string | Date | null;
+  createdAt?: string | Date | null;
+  content?: string | null;
+  seoKeywords?: string | null;
+  category: { title?: string | null };
+}
 
 export function organizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
 
+    "@id": `${siteConfig.url}#organization`,
+
     name: siteConfig.name,
 
     url: siteConfig.url,
 
-    logo: `${siteConfig.url}/logo.png`,
+    logo: {
+      "@type": "ImageObject",
+      url: `${siteConfig.url}/logo.png`,
+      width: 512,
+      height: 512,
+    },
 
-    image: `${siteConfig.url}/logo.png`,
+    image: {
+      "@type": "ImageObject",
+      url: `${siteConfig.url}/logo.png`,
+      width: 512,
+      height: 512,
+    },
 
     email: "info@example.com",
 
     telephone: "+989121234567",
+
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: "+989121234567",
+      email: "info@example.com",
+      contactType: "customer service",
+      areaServed: "IR",
+      availableLanguage: ["Persian"],
+    },
 
     sameAs: ["https://instagram.com/yourpage", "https://t.me/yourpage"],
   };
@@ -66,26 +116,45 @@ export function breadcrumbSchema(
     })),
   };
 }
-export function productSchema(product: any) {
-  const price =
-    product.discountPrice &&
-    product.discountPrice > 0 &&
-    product.discountPrice < product.price
-      ? product.discountPrice
-      : product.price;
+
+// نرخ تبدیل تومان به ریال؛ چون priceCurrency طبق ISO 4217 باید IRR باشه
+// (تومان کد رسمی نداره)، هر عدد تومانی قبل از قرار گرفتن تو schema باید در ۱۰ ضرب بشه.
+const TOMAN_TO_RIAL = 10;
+
+export function productSchema(product: ProductSchemaInput) {
+  // ⚠️ discountPrice تو کل پروژه به‌عنوان «درصد تخفیف» (۰ تا ۱۰۰) ذخیره و
+  // استفاده میشه (دقیقاً مثل ProductInfo.tsx و WishlistCard.tsx)، نه قیمت نهایی.
+  // نسخه‌ی قبلی این فایل اشتباهاً discountPrice رو مستقیم به‌عنوان قیمت نهایی
+  // در نظر می‌گرفت که برای اعداد کوچیک (مثلاً ۲۰٪) باعث ارسال قیمت غلط به
+  // گوگل می‌شد.
+  const percent = product.discountPrice ?? 0;
+  const hasDiscount = percent > 0 && percent < 100;
+
+  const finalPriceToman = hasDiscount
+    ? Math.round(product.price - (product.price * percent) / 100)
+    : product.price;
 
   return {
     "@context": "https://schema.org",
 
     "@type": "Product",
 
+    "@id": `${siteConfig.url}/products/${product.slug}#product`,
+
     name: product.title,
 
-    image: [`${siteConfig.url}${product.thumbnail}`],
+    image: [
+      {
+        "@type": "ImageObject",
+        url: `${siteConfig.url}${product.thumbnail}`,
+        width: 800,
+        height: 800,
+      },
+    ],
 
     description: product.description,
 
-    sku: product.id.toString(),
+    sku: product.sku ?? product.id.toString(),
 
     brand: {
       "@type": "Brand",
@@ -98,9 +167,9 @@ export function productSchema(product: any) {
     offers: {
       "@type": "Offer",
 
-      url: `${siteConfig.url}/product/${product.slug}`,
+      url: `${siteConfig.url}/products/${product.slug}`,
 
-      price,
+      price: finalPriceToman * TOMAN_TO_RIAL,
 
       priceCurrency: "IRR",
 
@@ -113,7 +182,8 @@ export function productSchema(product: any) {
     },
   };
 }
-export function articleSchema(article: any) {
+
+export function articleSchema(article: ArticleSchemaInput) {
   return {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -139,11 +209,22 @@ export function articleSchema(article: any) {
 
             height: 630,
           },
-          article.thumbnail.startsWith("http")
-            ? article.thumbnail
-            : `${siteConfig.url}${article.thumbnail}`,
+          {
+            "@type": "ImageObject",
+
+            url: article.thumbnail.startsWith("http")
+              ? article.thumbnail
+              : `${siteConfig.url}${article.thumbnail}`,
+          },
         ]
-      : [`${siteConfig.url}/images/og-default.jpg`],
+      : [
+          {
+            "@type": "ImageObject",
+            url: `${siteConfig.url}/images/og-default.jpg`,
+            width: 1200,
+            height: 630,
+          },
+        ],
 
     author: {
       "@type": "Person",

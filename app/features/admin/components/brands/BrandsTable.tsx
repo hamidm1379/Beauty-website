@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search, Loader2, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import DeleteBrandModal from "./DeleteBrandModal";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface Brand {
   id: number;
@@ -28,26 +29,26 @@ export default function BrandsTable() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
+    async function loadBrands() {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/brands");
+        const json = await res.json();
+    
+        if (!res.ok) {
+          throw new Error(json.message);
+        }
+    
+        setBrands(json.data);
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      } finally {
+        setLoading(false);
+      }
+    }
+
     loadBrands();
   }, []);
-
-  async function loadBrands() {
-    try {
-      setLoading(true);
-      const res = await fetch("/api/brands");
-      const json = await res.json();
-
-      if (!res.ok) {
-        throw new Error(json.message);
-      }
-
-      setBrands(json.data);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const filteredBrands = useMemo(() => {
     const keyword = search.toLowerCase();
@@ -84,8 +85,8 @@ export default function BrandsTable() {
       toast.success("برند با موفقیت حذف شد.");
       setBrands((prev) => prev.filter((brand) => brand.id !== deleteId));
       setDeleteId(null);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setDeleteLoading(false);
     }

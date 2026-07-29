@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ProductStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 import fs from "fs/promises";
@@ -71,6 +72,7 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
 
     const formData = await request.formData();
     const variantsRaw = formData.get("variants") as string | null;
+    const seoKeywords = formData.get("seoKeywords") as string;
     const product = await prisma.product.findUnique({
       where: {
         id: productId,
@@ -137,9 +139,11 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
         stock: Number(formData.get("stock")),
         categoryId: Number(formData.get("categoryId")),
         brandId: Number(formData.get("brandId")),
-        status: formData.get("status") as any,
+        status: formData.get("status") as ProductStatus,
         thumbnail,
         shortDescription: (formData.get("shortDescription") as string) ?? "",
+        purchasePrice: Number(formData.get("purchasePrice")),
+        seoKeywords: seoKeywords ?? "",
         discountPrice: formData.get("discountPrice")
           ? Number(formData.get("discountPrice"))
           : null,

@@ -12,7 +12,7 @@ interface ArticleCategoryProps {
 
   categories: Category[];
 
-  updateField: (name: string, value: any) => void;
+  updateField: (name: string, value: string | number | File | null) => void;
 }
 
 export default function ArticleCategory({

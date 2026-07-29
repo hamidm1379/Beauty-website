@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Send, MessageCircle, Mail, ArrowLeft, Star } from "lucide-react";
 import enamad from "@/public/images.png";
+import { toast } from "sonner";
 
 const quickLinks = [
   { href: "/", label: "صفحه اصلی" },
@@ -15,10 +17,9 @@ const quickLinks = [
 ];
 
 const serviceLinks = [
-  { href: "#", label: "پیگیری سفارش" },
-  { href: "#", label: "روش‌های پرداخت" },
-  { href: "#", label: "ارسال و تحویل" },
-  { href: "#", label: "مرجوعی کالا" },
+  { href: "/account", label: "پیگیری سفارش" },
+  { href: "#", label: "قوانین و مقررات" },
+  { href: "#", label: "حریم خصوصی" },
 ];
 
 const infoLinks = [
@@ -179,6 +180,19 @@ function TwinklingStars() {
 }
 
 export default function Footer() {
+  const [email, setEmail] = useState("");
+
+  const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!email.trim()) {
+      return toast.error("لطفاً ایمیل خود را وارد کنید.");
+    } else {
+      toast.success("با موفقیت عضو خبرنامه شدید 🎉");
+    }
+
+    setEmail("");
+  };
   return (
     <footer className="relative overflow-hidden border-t border-gray-100 bg-linear-to-b from-pink-50/60 via-white to-white">
       {/* Decorative glow */}
@@ -199,89 +213,141 @@ export default function Footer() {
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.6 }}
           className="
-            mb-16
-            flex
-            flex-col
-            items-center
-            justify-between
-            gap-6
-            rounded-4xl
-            bg-linear-to-l
-            from-pink-500
-            to-rose-400
-            p-8
-            text-center
-            shadow-lg
-            shadow-pink-200/50
-            md:flex-row
-            md:text-right
-          "
+    relative
+    mb-16
+    overflow-hidden
+    rounded-2xl
+    md:rounded-4xl
+
+    border
+    border-pink-200
+    
+    bg-white
+    p-6
+    md:p-8
+
+    shadow-xl
+    shadow-pink-200/60
+  "
         >
-          <div>
-            <h3 className="text-2xl font-bold text-white">
-              عضو خبرنامه زیبارو شو
-            </h3>
-            <p className="mt-2 text-pink-50">
-              جدیدترین تخفیف‌ها و نکات آرایشی رو زودتر از همه دریافت کن
-            </p>
-          </div>
+          {/* Decoration */}
+          <div className="absolute -top-24 -left-20 h-56 w-56 rounded-full bg-pink-100 blur-3xl opacity-70" />
+          <div className="absolute -bottom-24 -right-20 h-56 w-56 rounded-full bg-rose-100 blur-3xl opacity-70" />
 
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="
-              flex
-              w-full
-              max-w-sm
-              items-center
-              gap-2
-              rounded-full
-              bg-white/95
-              p-1.5
-              pr-5
-              shadow-inner
-            "
-          >
-            <Mail size={18} className="shrink-0 text-gray-400" />
+          <div className="relative flex flex-col items-center justify-between gap-4 md:gap-8 lg:flex-row">
+            {/* Text */}
+            <div className="max-w-xl text-center lg:text-right">
+              <span
+                className="
+          inline-flex
+          items-center
+          rounded-full
+          bg-pink-50
+          px-4
+          py-2
+          text-[13px]
+          sm:text-sm
+          font-bold
+          text-pink-600
+        "
+              >
+                خبرنامه زیبارو
+              </span>
 
-            <input
-              type="email"
-              placeholder="ایمیل شما"
+              <h3 className="mt-2 md:mt-5 text-xl sm:text-2xl md:text-3xl font-black text-gray-900">
+                عضو خبرنامه شوید
+              </h3>
+
+              <p className="mt-3 max-sm:text-sm leading-8 text-gray-500">
+                جدیدترین تخفیف‌ها، محصولات جدید و نکات آرایشی را زودتر از همه
+                دریافت کنید.
+              </p>
+            </div>
+
+            {/* Form */}
+            <form
+              onSubmit={handleSubscribe}
               className="
-                w-full
-                bg-transparent
-                text-sm
-                text-gray-700
+        flex
+        w-full
+        
+        items-center
+        gap-0.5
+        sm:gap-3
 
-                outline-none
+        rounded-2xl
 
-                placeholder:text-gray-400
-              "
-            />
+        border
+        border-gray-200
 
-            <motion.button
-              whileHover={{ gap: "10px", scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              type="submit"
-              className="
-                flex
-                shrink-0
-                items-center
-                gap-1.5
-                rounded-full
-                bg-pink-500
-                px-5
-                py-2.5
-                text-sm
-                font-bold
-                text-white
-                transition-colors
-                hover:bg-pink-600
-              "
+        bg-gray-50
+        p-2
+
+        transition
+
+        focus-within:border-pink-400
+        focus-within:bg-white
+        focus-within:shadow-lg
+      "
             >
-              عضویت
-              <ArrowLeft size={14} />
-            </motion.button>
-          </form>
+              <div className="flex h-8 w-8 md:h-11 md:w-11 items-center justify-center rounded-lg md:rounded-xl md:bg-pink-100 text-pink-500">
+                <Mail size={18} />
+              </div>
+
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="ایمیل خود را وارد کنید..."
+                className="
+          flex-1
+          bg-transparent
+          text-gray-700
+          outline-none
+          placeholder:text-gray-400
+          placeholder:max-md:text-[11px]
+          max-sm:text-[11px]
+          w-full
+        "
+              />
+
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="
+          flex
+          items-center
+          gap-0.5
+          sm:gap-2
+          cursor-pointer
+          rounded-md
+          sm:rounded-xl
+
+          text-[12px]
+          bg-pink-500
+          
+          px-1
+          py-1.5
+
+          sm:px-6
+          sm:py-3
+
+          sm:font-bold
+
+          text-white
+
+          shadow-lg
+
+          transition
+
+          hover:bg-pink-600
+        "
+              >
+                عضویت
+                <ArrowLeft size={14} />
+              </motion.button>
+            </form>
+          </div>
         </motion.div>
 
         {/* Main grid */}

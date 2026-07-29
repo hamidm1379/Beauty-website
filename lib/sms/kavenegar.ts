@@ -1,21 +1,59 @@
+// const KAVENEGAR_API_KEY = process.env.KAVENEGAR_API_KEY;
+// const KAVENEGAR_OTP_TEMPLATE = process.env.KAVENEGAR_OTP_TEMPLATE ?? "verify";
+
+// /**
+//  * ارسال کد تایید با استفاده از سرویس Verify Lookup کاوه‌نگار
+//  * مستندات: https://kavenegar.com/rest.html#lookup
+//  */
+// export async function sendOtpSms(phone: string, code: string) {
+//   if (!KAVENEGAR_API_KEY) {
+//     throw new Error("KAVENEGAR_API_KEY تنظیم نشده است.");
+//   }
+
+//   const url = `https://api.kavenegar.com/v1/${KAVENEGAR_API_KEY}/verify/lookup.json`;
+
+//   const params = new URLSearchParams({
+//     receptor: phone,
+//     token: code,
+//     template: KAVENEGAR_OTP_TEMPLATE,
+//   });
+
+//   const response = await fetch(`${url}?${params.toString()}`, {
+//     method: "GET",
+//   });
+
+//   const result = await response.json();
+
+//   if (!response.ok || result?.return?.status !== 200) {
+//     throw new Error(
+//       result?.return?.message ?? "خطا در ارسال پیامک. لطفاً دوباره تلاش کنید.",
+//     );
+//   }
+
+//   return result;
+// }
 const KAVENEGAR_API_KEY = process.env.KAVENEGAR_API_KEY;
-const KAVENEGAR_OTP_TEMPLATE = process.env.KAVENEGAR_OTP_TEMPLATE ?? "verify";
+const KAVENEGAR_SENDER_LINE = process.env.KAVENEGAR_SENDER_LINE;
 
 /**
- * ارسال کد تایید با استفاده از سرویس Verify Lookup کاوه‌نگار
- * مستندات: https://kavenegar.com/rest.html#lookup
+ * ارسال کد تایید با استفاده از API عادی ارسال پیامک کاوه‌نگار.
+ * (برخلاف Verify Lookup، این متد نیاز به سرویس پیشرفته/تایید کسب‌وکار ندارد
+ * و روی اکانت‌های عادی/رایگان هم کار می‌کند.)
+ * مستندات: https://kavenegar.com/rest.html#sms-send
  */
 export async function sendOtpSms(phone: string, code: string) {
   if (!KAVENEGAR_API_KEY) {
     throw new Error("KAVENEGAR_API_KEY تنظیم نشده است.");
   }
 
-  const url = `https://api.kavenegar.com/v1/${KAVENEGAR_API_KEY}/verify/lookup.json`;
+  const url = `https://api.kavenegar.com/v1/${KAVENEGAR_API_KEY}/sms/send.json`;
+
+  const message = `کد تایید شما: ${code}\nبرق لب`;
 
   const params = new URLSearchParams({
     receptor: phone,
-    token: code,
-    template: KAVENEGAR_OTP_TEMPLATE,
+    message,
+    ...(KAVENEGAR_SENDER_LINE ? { sender: KAVENEGAR_SENDER_LINE } : {}),
   });
 
   const response = await fetch(`${url}?${params.toString()}`, {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { articleService } from "@/lib/services/article.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface RouteParams {
   params: Promise<{
@@ -21,13 +22,13 @@ export async function GET(
       success: true,
       data: article,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "مقاله پیدا نشد.",
+        message: getErrorMessage(error) ?? "مقاله پیدا نشد.",
       },
       {
         status: 404,
@@ -66,13 +67,13 @@ export async function PUT(
       data: article,
       message: "مقاله با موفقیت بروزرسانی شد.",
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "خطا در بروزرسانی مقاله.",
+        message: getErrorMessage(error) ?? "خطا در بروزرسانی مقاله.",
       },
       {
         status: 400,
@@ -94,13 +95,13 @@ export async function DELETE(
       success: true,
       message: "مقاله با موفقیت حذف شد.",
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "خطا در حذف مقاله.",
+        message: getErrorMessage(error) ?? "خطا در حذف مقاله.",
       },
       {
         status: 400,

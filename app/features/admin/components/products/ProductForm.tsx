@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import ImageUploader from "@/app/shared/components/UploadImage";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface ProductFormProps {
   mode: "create" | "edit";
@@ -17,6 +18,7 @@ interface ProductData {
   slug: string;
   description: string;
   price: number;
+  purchasePrice: number | null;
   stock: number;
   thumbnail?: string;
   images: {
@@ -28,6 +30,7 @@ interface ProductData {
   status: "ACTIVE" | "DRAFT" | "INACTIVE";
   discountPrice: number;
   shortDescription: string | null;
+  seoKeywords?: string | null;
   variants?: {
     id: number;
     colorName: string;
@@ -51,6 +54,7 @@ interface FormState {
   slug: string;
   description: string;
   price: string;
+  purchasePrice: string;
   stock: string;
   thumbnailFile: File | null;
   imageFiles: File[];
@@ -61,6 +65,7 @@ interface FormState {
   status: "ACTIVE" | "DRAFT" | "INACTIVE";
   discountPrice: string;
   shortDescription: string | null;
+  seoKeywords: string;
 }
 
 const INITIAL_FORM_STATE: FormState = {
@@ -68,6 +73,7 @@ const INITIAL_FORM_STATE: FormState = {
   slug: "",
   description: "",
   price: "",
+  purchasePrice: "",
   stock: "",
   thumbnailFile: null,
   imageFiles: [],
@@ -78,6 +84,7 @@ const INITIAL_FORM_STATE: FormState = {
   status: "ACTIVE",
   discountPrice: "",
   shortDescription: null,
+  seoKeywords: "",
 };
 
 export default function ProductForm({ mode, initialData }: ProductFormProps) {
@@ -89,28 +96,26 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
   const [variants, setVariants] = useState([
     {
       colorName: "",
-
       colorCode: "",
-
       stock: 0,
     },
   ]);
+
   const addColor = () => {
     setVariants((prev) => [
       ...prev,
-
       {
         colorName: "",
-
         colorCode: "",
-
         stock: 0,
       },
     ]);
   };
+
   const removeColor = (index: number) => {
     setVariants(variants.filter((_, i) => i !== index));
   };
+
   const handleVariantChange = (
     index: number,
     field: "colorName" | "colorCode" | "stock",
@@ -124,6 +129,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       ),
     );
   };
+
   useEffect(() => {
     if (!initialData) return;
 
@@ -132,6 +138,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       slug: initialData.slug,
       description: initialData.description ?? "",
       price: initialData.price.toString(),
+      purchasePrice: initialData.purchasePrice?.toString() ?? "",
       stock: initialData.stock.toString(),
       thumbnailFile: null,
       imageFiles: [],
@@ -143,7 +150,9 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       status: initialData.status,
       discountPrice: initialData.discountPrice?.toString() ?? "",
       shortDescription: initialData.shortDescription ?? null,
+      seoKeywords: initialData.seoKeywords ?? "",
     });
+
     if (initialData.variants && initialData.variants.length > 0) {
       setVariants(
         initialData.variants.map((v) => ({
@@ -156,15 +165,14 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
   }, [initialData]);
 
   useEffect(() => {
-    loadCategories();
-    loadBrands();
-  }, []);
+    async function loadCategories() {
+      const res = await fetch("/api/categories");
+      const json = await res.json();
+      setCategories(json.data ?? []);
+    }
 
-  async function loadCategories() {
-    const res = await fetch("/api/categories");
-    const json = await res.json();
-    setCategories(json.data ?? []);
-  }
+    loadCategories();
+  }, []);
 
   async function loadBrands() {
     const res = await fetch("/api/brands");
@@ -219,6 +227,9 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    // گارد دفاعی: تو حالت edit، بدون id معتبر اصلاً درخواست نفرست
+    // (نبودش دقیقاً همون چیزیه که باعث PUT /api/products/undefined میشه)
+
     try {
       setLoading(true);
 
@@ -228,14 +239,17 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       formData.append("slug", form.slug);
       formData.append("description", form.description);
       formData.append("price", form.price);
+      formData.append("purchasePrice", form.purchasePrice);
       formData.append("stock", form.stock);
       formData.append("categoryId", form.categoryId);
       formData.append("brandId", form.brandId);
       formData.append("status", form.status);
       formData.append("discountPrice", form.discountPrice);
+      formData.append("variants", JSON.stringify(variants));
+      formData.append("seoKeywords", form.seoKeywords);
+
       // تصاویر قبلی
       formData.append("oldThumbnail", form.thumbnail);
-      formData.append("variants", JSON.stringify(variants));
 
       form.imageUrls.forEach((image) => {
         formData.append("oldImages", image);
@@ -252,15 +266,24 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
         formData.append("images", file);
       });
 
-      const response = await fetch(
-        mode === "create"
-          ? "/api/products"
-          : `/api/products/${initialData?.id}`,
-        {
-          method: mode === "create" ? "POST" : "PUT",
-          body: formData,
-        },
-      );
+      const isEditMode = mode === "edit";
+
+      if (isEditMode && !initialData?.id) {
+        toast.error(
+          "شناسه محصول در دسترس نیست؛ لطفاً صفحه را رفرش کرده و دوباره تلاش کنید.",
+        );
+        setLoading(false);
+        return;
+      }
+
+      const url = isEditMode
+        ? `/api/products/${initialData!.id}`
+        : "/api/products";
+
+      const response = await fetch(url, {
+        method: isEditMode ? "PUT" : "POST",
+        body: formData,
+      });
 
       const result = await response.json();
 
@@ -276,8 +299,8 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
 
       router.push("/admin/products");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(false);
     }
@@ -311,6 +334,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           className="w-full rounded-xl border px-4 py-3"
         />
       </div>
+
       {/* Short Description */}
       <div>
         <label className="mb-2 block text-sm font-medium">
@@ -323,15 +347,10 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           value={form.shortDescription ?? ""}
           onChange={handleChange}
           placeholder="یک توضیح کوتاه برای نمایش در صفحه محصول..."
-          className="
-      w-full
-      rounded-xl
-      border
-      px-4
-      py-3
-    "
+          className="w-full rounded-xl border px-4 py-3"
         />
       </div>
+
       {/* Description */}
       <div>
         <label className="mb-2 block text-sm font-medium">توضیحات</label>
@@ -346,7 +365,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
 
       <div className="grid grid-cols-2 gap-6">
         <div>
-          <label className="mb-2 block text-sm font-medium">قیمت</label>
+          <label className="mb-2 block text-sm font-medium">قیمت فروش</label>
           <input
             type="number"
             name="price"
@@ -355,6 +374,21 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
             className="w-full rounded-xl border px-4 py-3"
           />
         </div>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium">
+            قیمت خرید (بهای تمام‌شده)
+          </label>
+          <input
+            type="number"
+            name="purchasePrice"
+            value={form.purchasePrice}
+            onChange={handleChange}
+            placeholder="اختیاری — برای محاسبه سود ناخالص"
+            className="w-full rounded-xl border px-4 py-3"
+          />
+        </div>
+
         <div>
           <label className="mb-2 block text-sm font-medium">تخفیف (%)</label>
 
@@ -378,6 +412,26 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
             className="w-full rounded-xl border px-4 py-3"
           />
         </div>
+      </div>
+
+      {/* SEO Keywords */}
+      <div>
+        <label className="mb-2 block text-sm font-medium">
+          کلمات کلیدی سئو
+        </label>
+
+        <input
+          type="text"
+          name="seoKeywords"
+          value={form.seoKeywords}
+          onChange={handleChange}
+          placeholder="کلمات کلیدی را با کاما جدا کنید، مثلاً: کرم پودر, آرایشی, استی لادر"
+          className="w-full rounded-xl border px-4 py-3"
+        />
+
+        <p className="mt-1.5 text-xs text-gray-400">
+          این کلمات برای بهبود رتبه‌بندی محصول در موتورهای جستجو استفاده می‌شود.
+        </p>
       </div>
 
       {/* Category */}
@@ -415,6 +469,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           ))}
         </select>
       </div>
+
       {/* Variants */}
       <div>
         <div className="mb-3 flex items-center justify-between">
@@ -491,6 +546,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           ))}
         </div>
       </div>
+
       {/* Status */}
       <div>
         <label className="mb-2 block text-sm font-medium">وضعیت</label>

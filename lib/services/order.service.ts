@@ -1,16 +1,137 @@
 import { orderRepository } from "@/lib/repositories/order.repository";
 import { cartService } from "@/lib/services/cart.service";
 
+import { OrderStatus, PaymentStatus } from "@prisma/client";
+
 function generateOrderNumber() {
   return `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 }
 
 class OrderService {
+  // =================================================
+  // ADMIN
+  // =================================================
+
+  /**
+   * لیست سفارش‌ها برای ادمین
+   */
+  async getPendingCount() {
+    return orderRepository.countPending();
+  }
+
+  async findByOrderNumber(orderNumber: string, userId: number) {
+    return orderRepository.findByOrderNumber(orderNumber, userId);
+  }
+  async getAdminOrder(id: number) {
+    const order = await orderRepository.findAdminById(id);
+
+    if (!order) {
+      throw new Error("سفارش پیدا نشد");
+    }
+
+    return order;
+  }
+
+  async addTrackingCode(id: number, code: string) {
+    return orderRepository.updateTrackingCode(id, code);
+  }
+  async getAdminOrders(params?: {
+    status?: OrderStatus;
+    paymentStatus?: PaymentStatus;
+    search?: string;
+    page?: number;
+    limit?: number;
+  }) {
+    return orderRepository.findAll(params);
+  }
+
+  /**
+   * تعداد سفارش‌ها
+   */
+  async getOrderCount(params?: {
+    status?: OrderStatus;
+
+    paymentStatus?: PaymentStatus;
+  }) {
+    return orderRepository.count(params);
+  }
+
+  /**
+   * تغییر وضعیت سفارش
+   */
+  async changeOrderStatus(
+    id: number,
+
+    status: OrderStatus,
+  ) {
+    const order = await orderRepository.findById(id);
+
+    if (!order) {
+      throw new Error("سفارش پیدا نشد");
+    }
+
+    return orderRepository.updateStatus(id, status);
+  }
+
+  /**
+   * تغییر وضعیت پرداخت
+   */
+  async changePaymentStatus(
+    id: number,
+
+    paymentStatus: PaymentStatus,
+  ) {
+    const order = await orderRepository.findById(id);
+
+    if (!order) {
+      throw new Error("سفارش پیدا نشد");
+    }
+
+    return orderRepository.updatePaymentStatus(id, paymentStatus);
+  }
+
+  /**
+   * تغییر اطلاعات مدیریتی سفارش
+   */
+  async updateAdminInfo(
+    id: number,
+
+    data: {
+      trackingCode?: string;
+
+      notes?: string;
+
+      paymentRef?: string;
+    },
+  ) {
+    const order = await orderRepository.findById(id);
+
+    if (!order) {
+      throw new Error("سفارش پیدا نشد");
+    }
+
+    return orderRepository.updateAdminInfo(id, data);
+  }
+
+  /**
+   * آمار داشبورد ادمین
+   */
+  async getStats() {
+    return orderRepository.getStats();
+  }
+
+  // =================================================
+  // CUSTOMER
+  // =================================================
+
   /**
    * ایجاد سفارش جدید
    */
-  async createOrder(userId: number, addressId: number) {
-    // سبد خرید
+  async createOrder(
+    userId: number,
+
+    addressId: number,
+  ) {
     const cart = await cartService.getCart(userId);
 
     if (!cart || cart.items.length === 0) {
@@ -18,7 +139,9 @@ class OrderService {
     }
 
     let subtotal = 0;
+
     let discount = 0;
+
     let total = 0;
 
     const items = cart.items.map((item) => {
@@ -38,7 +161,9 @@ class OrderService {
       const itemTotal = finalPrice * item.quantity;
 
       subtotal += itemSubtotal;
+
       discount += itemDiscount;
+
       total += itemTotal;
 
       return {
@@ -53,6 +178,7 @@ class OrderService {
         productTitle: item.product.title,
 
         productImage: item.product.thumbnail ?? null,
+        purchasePrice: item.product.purchasePrice,
 
         product: {
           connect: {
@@ -65,9 +191,9 @@ class OrderService {
     const order = await orderRepository.create({
       orderNumber: generateOrderNumber(),
 
-      status: "PENDING",
+      status: OrderStatus.PENDING,
 
-      paymentStatus: "PENDING",
+      paymentStatus: PaymentStatus.PENDING,
 
       subtotal,
 
@@ -100,16 +226,20 @@ class OrderService {
   }
 
   /**
-   * دریافت سفارش‌های کاربر
+   * سفارش‌های کاربر
    */
   async getUserOrders(userId: number) {
     return orderRepository.findByUserId(userId);
   }
 
   /**
-   * دریافت جزئیات سفارش
+   * جزئیات سفارش کاربر
    */
-  async getOrder(id: number, userId: number) {
+  async getOrder(
+    id: number,
+
+    userId: number,
+  ) {
     const order = await orderRepository.findById(id);
 
     if (!order) {

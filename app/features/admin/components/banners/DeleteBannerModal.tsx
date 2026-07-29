@@ -1,4 +1,5 @@
 "use client";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -40,8 +41,8 @@ export default function DeleteBannerModal({
       setOpen(false);
 
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(false);
     }

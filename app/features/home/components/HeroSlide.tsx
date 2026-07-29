@@ -11,7 +11,7 @@ import {
 import { Sparkles } from "lucide-react";
 
 // ========== Types ==========
-type HeroSlideProps = {
+export type HeroSlideProps = {
   title: string;
   subtitle?: string;
   image: string;
@@ -211,17 +211,17 @@ function HeroContent({
       animate="visible"
       className="flex flex-col"
     >
-      <motion.span
+      {/* <motion.span
         variants={itemVariants}
         className="mb-5 inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-medium text-pink-600 shadow-md ring-1 ring-pink-100"
       >
         <Sparkles size={14} className="text-pink-400" />
         محصولات آرایشی و مراقبتی
-      </motion.span>
+      </motion.span> */}
 
       <motion.h1
         variants={itemVariants}
-        className="bg-linear-to-l from-gray-900 via-gray-800 to-pink-700 bg-clip-text text-3xl font-black leading-tight text-transparent md:text-5xl lg:text-6xl"
+        className="bg-linear-to-l from-gray-900 via-gray-800 to-pink-700 bg-clip-text text-2xl font-black leading-tight text-transparent md:text-5xl lg:text-6xl"
       >
         {title}
       </motion.h1>
@@ -229,7 +229,7 @@ function HeroContent({
       {subtitle && (
         <motion.p
           variants={itemVariants}
-          className="mt-6 max-w-xl text-lg leading-9 text-gray-600"
+          className="mt-6 max-w-xl md:text-lg leading-9 text-gray-600"
         >
           {subtitle}
         </motion.p>
@@ -237,7 +237,7 @@ function HeroContent({
 
       <motion.div
         variants={itemVariants}
-        className="mt-10 flex flex-wrap gap-4"
+        className="mt-5 md:mt-10 flex flex-wrap gap-4"
       >
         <ActionButton link={link} buttonText={buttonText} />
         
@@ -251,7 +251,7 @@ function ActionButton({
   buttonText,
 }: Pick<HeroSlideProps, "link" | "buttonText">) {
   const className =
-    "rounded-full bg-linear-to-l from-pink-500 to-rose-500 px-8 py-4 font-semibold text-white shadow-lg shadow-pink-300/40 transition hover:scale-105 hover:shadow-xl hover:shadow-pink-300/50";
+    "rounded-full bg-linear-to-l from-pink-500 to-rose-500 max-md:text-sm px-4 py-2 md:px-8 md:py-4 font-semibold text-white shadow-lg shadow-pink-300/40 transition hover:scale-105 hover:shadow-xl hover:shadow-pink-300/50";
   const text = buttonText || "مشاهده";
 
   if (link) {
@@ -284,7 +284,7 @@ function HeroImage({ image, title }: Pick<HeroSlideProps, "image" | "title">) {
       <motion.div
         animate={FLOATING_ANIMATION.animate}
         transition={FLOATING_ANIMATION.transition}
-        className="relative h-105 w-105 md:h-125 md:w-125"
+        className="relative h-65 w-full md:h-125 md:w-125"
       >
         <Image
           src={image}
@@ -308,7 +308,7 @@ export default function HeroSlide({
 }: HeroSlideProps) {
   return (
     <section
-      className="relative overflow-hidden rounded-[40px] bg-linear-to-br from-pink-50 via-rose-50 to-fuchsia-50 ring-1 ring-pink-100/50"
+      className="relative overflow-hidden rounded-[20px] md:rounded-[40px] bg-linear-to-br from-pink-50 via-rose-50 to-fuchsia-50 ring-1 ring-pink-100/50"
       aria-label={title}
     >
       <DecorativeBlurs />

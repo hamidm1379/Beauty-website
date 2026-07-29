@@ -307,7 +307,7 @@ export default function ProductsHeader({
   totalProducts = 245,
 }: ProductsHeaderProps) {
   return (
-    <section className="relative mb-8 overflow-hidden rounded-3xl border border-gray-100 bg-white px-6 py-8 shadow-sm md:px-8">
+    <section className="relative mb-8 overflow-hidden rounded-xl md:rounded-3xl border border-gray-100 bg-white px-6 py-8 shadow-sm md:px-8">
       {/* Decorative glow */}
       <div className="pointer-events-none absolute -left-16 -top-20 h-56 w-56 rounded-full bg-pink-100/50 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -right-10 h-56 w-56 rounded-full bg-rose-50 blur-3xl" />
@@ -319,7 +319,7 @@ export default function ProductsHeader({
         className="relative"
       >
         {/* Breadcrumb */}
-        <nav className="mb-5 flex items-center gap-2 text-sm text-gray-500">
+        <nav className="mb-3 sm:mb-5 flex items-center gap-2 text-sm text-gray-500">
           <Link href="/" className="group relative transition hover:text-pink-500">
             خانه
             <span className="absolute -bottom-1 right-0 h-px w-0 bg-pink-500 transition-all duration-300 group-hover:w-full" />
@@ -342,17 +342,17 @@ export default function ProductsHeader({
                   ease: "easeInOut",
                   repeatDelay: 1.5,
                 }}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-pink-500 to-rose-400 shadow-md shadow-pink-200/60"
+                className="flex h-10 w-10 md:h-11 md:w-11 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-pink-500 to-rose-400 shadow-md shadow-pink-200/60"
               >
                 <Sparkles size={20} className="text-white" />
               </motion.div>
 
-              <h1 className="text-3xl font-black text-gray-900 sm:text-4xl">
+              <h1 className="text-xl sm:text-3xl md:text-4xl font-black text-gray-900">
                 {title}
               </h1>
             </div>
 
-            <p className="mt-4 max-w-2xl leading-8 text-gray-500">
+            <p className="mt-2 sm:mt-4 max-w-2xl leading-8 text-gray-500 max-sm:text-sm">
               مجموعه‌ای از بهترین محصولات آرایشی، مراقبت پوست و مو از
               برندهای معتبر دنیا با تضمین اصالت کالا و ارسال سریع.
             </p>

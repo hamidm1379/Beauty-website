@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertTriangle, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface DeleteProductModalProps {
   productId: number;
@@ -44,8 +45,8 @@ export default function DeleteProductModal({
       setOpen(false);
 
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(false);
     }

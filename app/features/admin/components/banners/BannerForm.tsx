@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -10,10 +10,24 @@ import BannerLink from "@/app/features/admin/components/banners/form/BannerLink"
 import BannerPosition from "@/app/features/admin/components/banners/form/BannerPosition";
 import BannerSchedule from "@/app/features/admin/components/banners/form/BannerSchedule";
 import BannerActions from "@/app/features/admin/components/banners/form/BannerActions";
+import { getErrorMessage } from "@/lib/utils/errors";
+
+interface BannerFormInitialData {
+  id: number;
+  title: string;
+  image?: string | null;
+  mobileImage?: string | null;
+  link?: string | null;
+  position: string;
+  order: number;
+  status: string;
+  startDate?: string | null;
+  endDate?: string | null;
+}
 
 interface BannerFormProps {
   mode: "create" | "edit";
-  initialData?: any;
+  initialData?: BannerFormInitialData;
 }
 
 export default function BannerForm({ mode, initialData }: BannerFormProps) {
@@ -22,57 +36,32 @@ export default function BannerForm({ mode, initialData }: BannerFormProps) {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    title: "",
+    title: initialData?.title ?? "",
 
     imageFile: null as File | null,
-    imageUrl: "",
+    imageUrl: initialData?.image ?? "",
 
     mobileImageFile: null as File | null,
-    mobileImageUrl: "",
+    mobileImageUrl: initialData?.mobileImage ?? "",
 
-    link: "",
+    link: initialData?.link ?? "",
 
-    position: "HOME_HERO",
+    position: initialData?.position ?? "HOME_HERO",
 
-    order: 1,
+    order: initialData?.order ?? 1,
 
-    status: "ACTIVE",
+    status: initialData?.status ?? "ACTIVE",
 
-    startDate: "",
-    endDate: "",
+    startDate: initialData?.startDate
+      ? new Date(initialData.startDate).toISOString().slice(0, 16)
+      : "",
+
+    endDate: initialData?.endDate
+      ? new Date(initialData.endDate).toISOString().slice(0, 16)
+      : "",
   });
 
-  useEffect(() => {
-    if (!initialData) return;
-
-    setForm({
-      title: initialData.title ?? "",
-
-      imageFile: null,
-      imageUrl: initialData.image ?? "",
-
-      mobileImageFile: null,
-      mobileImageUrl: initialData.mobileImage ?? "",
-
-      link: initialData.link ?? "",
-
-      position: initialData.position ?? "HOME_HERO",
-
-      order: initialData.order ?? 1,
-
-      status: initialData.status ?? "ACTIVE",
-
-      startDate: initialData.startDate
-        ? new Date(initialData.startDate).toISOString().slice(0, 16)
-        : "",
-
-      endDate: initialData.endDate
-        ? new Date(initialData.endDate).toISOString().slice(0, 16)
-        : "",
-    });
-  }, [initialData]);
-
-  function updateField(name: string, value: any) {
+  function updateField(name: string, value: string | number | File | null | Date) {
     setForm((prev) => ({
       ...prev,
       [name]: value,
@@ -158,8 +147,8 @@ export default function BannerForm({ mode, initialData }: BannerFormProps) {
 
       router.push("/admin/banners");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message ?? "خطایی در ثبت بنر رخ داده است.");
+    } catch (error) {
+      toast.error(getErrorMessage(error) ?? "خطایی در ثبت بنر رخ داده است.");
     } finally {
       setLoading(false);
     }

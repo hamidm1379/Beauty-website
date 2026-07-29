@@ -61,7 +61,8 @@ export default function WhyChooseUs() {
             bg-pink-50
             px-4
             py-2
-            text-sm
+            text-[12px]
+            sm:text-sm 
             font-semibold
             text-pink-600
           "
@@ -72,7 +73,9 @@ export default function WhyChooseUs() {
         <h2
           className="
             mt-5
-            text-4xl
+            text-2xl
+            sm:text-3xl
+            md:text-4xl
             font-black
             text-gray-900
           "
@@ -82,8 +85,11 @@ export default function WhyChooseUs() {
 
         <p
           className="
-            mt-5
-            leading-8
+            mt-4
+            sm:mt-5
+            leading-7
+            sm:leading-8
+            max-sm:text-justify
             text-gray-500
           "
         >
@@ -97,11 +103,12 @@ export default function WhyChooseUs() {
 
       <div
         className="
-          mt-16
+          mt-8
+          sm:mt-16
 
           grid
-
-          gap-7
+          gap-5
+          sm:gap-7
 
           md:grid-cols-2
 
@@ -120,15 +127,18 @@ export default function WhyChooseUs() {
                 relative
 
                 overflow-hidden
-
-                rounded-4xl
+                rounded-2xl
+                sm:rounded-3xl
+                md:rounded-4xl
 
                 border
                 border-gray-100
 
                 bg-white
-
-                p-8
+                max-sm:pb-6
+                p-4
+                sm:p-6
+                md:p-8
 
                 shadow-sm
 
@@ -175,14 +185,15 @@ export default function WhyChooseUs() {
                   relative
 
                   flex
-
-                  h-18
-                  w-18
+                  h-15
+                  w-15
+                  sm:h-18
+                  sm:w-18
 
                   items-center
                   justify-center
-
-                  rounded-3xl
+                  rounded-2xl
+                  sm:rounded-3xl
 
                   bg-linear-to-br
                   from-pink-500
@@ -207,10 +218,10 @@ export default function WhyChooseUs() {
               <h3
                 className="
                   relative
-
-                  mt-8
-
-                  text-2xl
+                  mt-4
+                  sm:mt-8
+                  text-xl
+                  sm:text-2xl
                   font-bold
 
                   text-gray-900
@@ -224,10 +235,10 @@ export default function WhyChooseUs() {
               <p
                 className="
                   relative
-
-                  mt-4
-
-                  leading-8
+                  mt-2
+                  sm:mt-4
+                  leading-7
+                  sm:leading-8
 
                   text-gray-500
                 "
@@ -252,7 +263,7 @@ export default function WhyChooseUs() {
 
                   transition-all
                   duration-500
-
+                  max-sm:hidden
                   group-hover:w-full
                 "
               />

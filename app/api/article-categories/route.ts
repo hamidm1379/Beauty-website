@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { articleCategoryRepository } from "@/lib/repositories/article-category.repository";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export async function GET() {
   try {
@@ -9,11 +10,11 @@ export async function GET() {
       success: true,
       data: categories,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "خطایی رخ داده است.",
+        message: getErrorMessage(error) ?? "خطایی رخ داده است.",
       },
       { status: 500 }
     );
@@ -60,11 +61,11 @@ export async function POST(req: NextRequest) {
       success: true,
       data: category,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "خطایی رخ داده است.",
+        message: getErrorMessage(error) ?? "خطایی رخ داده است.",
       },
       { status: 500 }
     );

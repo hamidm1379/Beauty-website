@@ -53,7 +53,6 @@ const menu = [
     title: "سفارش ها",
     icon: ShoppingBag,
     href: "/admin/orders",
-    badge: "18",
   },
 
   {
@@ -119,7 +118,11 @@ const menu = [
   },
 ];
 
-export default function AdminSidebar() {
+interface Props {
+  ordersBadge?: number;
+}
+
+export default function AdminSidebar({ ordersBadge = 0 }: Props) {
   const [openMenus, setOpenMenus] = useState<string[]>(["محصولات"]);
 
   const toggleMenu = (title: string) => {
@@ -216,15 +219,22 @@ export default function AdminSidebar() {
         "
       >
         <div className="space-y-2">
-          {menu.map((item) => (
-            <div key={item.title}>
-              <SidebarItem
-                item={item}
-                open={openMenus.includes(item.title)}
-                onToggle={() => toggleMenu(item.title)}
-              />
-            </div>
-          ))}
+          {menu.map((item) => {
+            const badge =
+              item.href === "/admin/orders" && ordersBadge > 0
+                ? String(ordersBadge)
+                : undefined;
+
+            return (
+              <div key={item.title}>
+                <SidebarItem
+                  item={{ ...item, badge }}
+                  open={openMenus.includes(item.title)}
+                  onToggle={() => toggleMenu(item.title)}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 

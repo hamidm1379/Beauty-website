@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { couponService } from "@/lib/services/coupon.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,11 +22,11 @@ export async function POST(request: NextRequest) {
       success: true,
       data: result,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "کد تخفیف معتبر نیست.",
+        message: getErrorMessage(error) ?? "کد تخفیف معتبر نیست.",
       },
       { status: 400 },
     );

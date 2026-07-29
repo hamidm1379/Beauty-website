@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { userService } from "@/lib/services/user.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -25,13 +26,13 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
     );
 
     return NextResponse.json({ success: true, data: address });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "خطا در تنظیم آدرس پیش‌فرض",
+        message: getErrorMessage(error) ?? "خطا در تنظیم آدرس پیش‌فرض",
       },
       { status: 400 },
     );

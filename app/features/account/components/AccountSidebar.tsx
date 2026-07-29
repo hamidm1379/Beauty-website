@@ -1,5 +1,7 @@
 "use client";
 
+import type { User } from "@prisma/client";
+
 import { motion } from "framer-motion";
 import {
   ShoppingBag,
@@ -13,12 +15,12 @@ import {
 } from "lucide-react";
 
 interface AccountSidebarProps {
-  user: any;
+  user: User;
   activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const menuItems = (user: any) => [
+const menuItems = (user: User) => [
   //   {
   //     id: "dashboard",
   //     title: "داشبورد",

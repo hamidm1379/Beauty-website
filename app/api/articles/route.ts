@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { articleService } from "@/lib/services/article.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,13 +20,13 @@ export async function GET(request: NextRequest) {
       success: true,
       data,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "خطا در دریافت مقالات.",
+        message: getErrorMessage(error) ?? "خطا در دریافت مقالات.",
       },
       {
         status: 500,
@@ -59,13 +60,13 @@ export async function POST(request: NextRequest) {
       data: article,
       message: "مقاله با موفقیت ایجاد شد.",
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: error.message ?? "خطا در ایجاد مقاله.",
+        message: getErrorMessage(error) ?? "خطا در ایجاد مقاله.",
       },
       {
         status: 400,

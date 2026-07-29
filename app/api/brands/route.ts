@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { brandService } from "@/lib/services/brand.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export async function GET() {
   try {
@@ -10,11 +11,11 @@ export async function GET() {
       success: true,
       data: brands,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 500,
@@ -43,11 +44,11 @@ export async function POST(request: NextRequest) {
         status: 201,
       }
     );
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 400,

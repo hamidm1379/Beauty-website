@@ -145,7 +145,7 @@ export default function ProductTabs({ product }: Props) {
               "
             >
               {product.description ? (
-                <div
+                <p
                   dangerouslySetInnerHTML={{
                     __html: product.description,
                   }}

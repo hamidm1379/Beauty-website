@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MapPin, Star, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface Address {
   id: number;
@@ -45,8 +46,8 @@ export default function AdminUserAddresses({ userId, addresses }: Props) {
 
       toast.success("آدرس با موفقیت حذف شد.");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message || "خطا در حذف آدرس");
+    } catch (error) {
+      toast.error(getErrorMessage(error) || "خطا در حذف آدرس");
     } finally {
       setDeletingId(null);
     }

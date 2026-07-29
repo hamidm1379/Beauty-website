@@ -6,7 +6,7 @@ interface BannerPositionProps {
     order: number;
   };
 
-  updateField: (name: string, value: any) => void;
+  updateField: (name: string, value: string | number | File | null) => void;
 }
 
 const positions = [

@@ -11,10 +11,18 @@ import ArticleCategory from "@/app/features/admin/components/articles/form/Artic
 import ArticleSeo from "@/app/features/admin/components/articles/form/ArticleSeo";
 import ArticlePublish from "@/app/features/admin/components/articles/form/ArticlePublish";
 import ArticleActions from "@/app/features/admin/components/articles/form/ArticleActions";
+import { getErrorMessage } from "@/lib/utils/errors";
+
+import type {
+  ArticleCategoryOption,
+  ArticleFormState,
+  ArticleInitialData,
+  UpdateField,
+} from "./types";
 
 interface ArticleFormProps {
   mode: "create" | "edit";
-  initialData?: any;
+  initialData?: ArticleInitialData;
 }
 
 export default function ArticleForm({ mode, initialData }: ArticleFormProps) {
@@ -22,70 +30,68 @@ export default function ArticleForm({ mode, initialData }: ArticleFormProps) {
 
   const [loading, setLoading] = useState(false);
 
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<ArticleCategoryOption[]>([]);
 
-  const [form, setForm] = useState({
-    title: "",
-    slug: "",
+  const [form, setForm] = useState<ArticleFormState>(
+    initialData
+      ? {
+          title: initialData.title ?? "",
+          slug: initialData.slug ?? "",
 
-    excerpt: "",
-    content: "",
+          excerpt: initialData.excerpt ?? "",
+          content: initialData.content ?? "",
 
-    thumbnailFile: null as File | null,
-    thumbnailUrl: "",
+          thumbnailFile: null,
+          thumbnailUrl: initialData.thumbnail ?? "",
 
-    categoryId: "",
+          categoryId: String(initialData.categoryId ?? ""),
 
-    status: "DRAFT" as "DRAFT" | "PUBLISHED",
+          status: initialData.status ?? "DRAFT",
 
-    publishedAt: "",
+          publishedAt: initialData.publishedAt
+            ? new Date(initialData.publishedAt).toISOString().slice(0, 16)
+            : "",
 
-    seoTitle: "",
-    seoDescription: "",
-    seoKeywords: "",
-  });
+          seoTitle: initialData.seoTitle ?? "",
+          seoDescription: initialData.seoDescription ?? "",
+          seoKeywords: initialData.seoKeywords ?? "",
+        }
+      : {
+          title: "",
+          slug: "",
+
+          excerpt: "",
+          content: "",
+
+          thumbnailFile: null,
+          thumbnailUrl: "",
+
+          categoryId: "",
+
+          status: "DRAFT",
+
+          publishedAt: "",
+
+          seoTitle: "",
+          seoDescription: "",
+          seoKeywords: "",
+        },
+  );
 
   useEffect(() => {
+    async function loadCategories() {
+      try {
+        const res = await fetch("/api/article-categories");
+        const json = await res.json();
+
+        if (json.success) {
+          setCategories(json.data);
+        }
+      } catch {}
+    }
+
     loadCategories();
   }, []);
-
-  useEffect(() => {
-    if (!initialData) return;
-
-    setForm({
-      title: initialData.title ?? "",
-      slug: initialData.slug ?? "",
-
-      excerpt: initialData.excerpt ?? "",
-      content: initialData.content ?? "",
-
-      thumbnailFile: null,
-      thumbnailUrl: initialData.thumbnail ?? "",
-
-      categoryId: String(initialData.categoryId ?? ""),
-
-      status: initialData.status ?? "DRAFT",
-
-      publishedAt: initialData.publishedAt
-        ? new Date(initialData.publishedAt).toISOString().slice(0, 16)
-        : "",
-
-      seoTitle: initialData.seoTitle ?? "",
-      seoDescription: initialData.seoDescription ?? "",
-      seoKeywords: initialData.seoKeywords ?? "",
-    });
-  }, [initialData]);
-
-  async function loadCategories() {
-    try {
-      const res = await fetch("/api/article-categories");
-      const json = await res.json();
-
-      if (json.success) {
-        setCategories(json.data);
-      }
-    } catch {}
-  }
 
   function generateSlug(text: string) {
     return text
@@ -95,12 +101,12 @@ export default function ArticleForm({ mode, initialData }: ArticleFormProps) {
       .replace(/[^\w-]/g, "");
   }
 
-  function updateField(name: string, value: any) {
+  const updateField: UpdateField = (name, value) => {
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
-  }
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -175,8 +181,8 @@ export default function ArticleForm({ mode, initialData }: ArticleFormProps) {
 
       router.push("/admin/articles");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message ?? "خطایی رخ داده است.");
+    } catch (error) {
+      toast.error(getErrorMessage(error) ?? "خطایی رخ داده است.");
     } finally {
       setLoading(false);
     }

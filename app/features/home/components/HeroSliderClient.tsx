@@ -6,17 +6,17 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 
-import HeroSlide from "./HeroSlide";
+import HeroSlide, { HeroSlideProps } from "./HeroSlide";
 
 interface Props {
-  banners: any[];
+  banners: HeroSlideProps[];
 }
 
 export default function HeroSliderClient({
   banners,
 }: Props) {
   return (
-    <section className="py-8">
+    <section className="py-2 sm:py-6 md:py-8">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <Swiper
           modules={[Pagination, Autoplay]}

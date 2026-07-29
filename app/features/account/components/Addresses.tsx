@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Plus, Pencil, Trash2, Star, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface Address {
   id: number;
@@ -163,8 +164,8 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
       }
 
       closeForm();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setSaving(false);
     }
@@ -187,8 +188,8 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
       setAddresses((prev) => prev.filter((a) => a.id !== id));
       toast.success("آدرس حذف شد.");
       setConfirmDeleteId(null);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setDeletingId(null);
     }
@@ -212,8 +213,8 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
         prev.map((a) => ({ ...a, isDefault: a.id === id })),
       );
       toast.success("آدرس پیش‌فرض به‌روزرسانی شد.");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setSettingDefaultId(null);
     }

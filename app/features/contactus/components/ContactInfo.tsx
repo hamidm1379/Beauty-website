@@ -38,24 +38,25 @@ export default function ContactInfo() {
     <aside
       className="
         h-fit
-
-        rounded-3xl
+        rounded-xl
+        sm:rounded-2xl
+        md:rounded-3xl
 
         border
         border-gray-100
 
         bg-white
-
+        w-full
         p-7
-
+        mx-auto
         shadow-sm
       "
     >
       <h2
         className="
           text-center
-
-          text-2xl
+          sm:text-xl
+          md:text-2xl
           font-bold
 
           text-gray-900
@@ -64,7 +65,7 @@ export default function ContactInfo() {
         اطلاعات تماس
       </h2>
 
-      <div className="mt-8 space-y-7">
+      <div className="mt-6 md:mt-8 space-y-7">
         {contactItems.map((item, index) => {
           const Icon = item.icon;
 
@@ -92,7 +93,7 @@ export default function ContactInfo() {
               <p
                 className="
                   leading-7
-
+                  my-auto
                   text-gray-600
                 "
               >

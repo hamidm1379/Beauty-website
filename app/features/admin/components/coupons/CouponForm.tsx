@@ -1,25 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { getErrorMessage } from "@/lib/utils/errors";
+
+interface CouponFormInitialData {
+  id: number;
+  code: string;
+  title: string | null;
+  description: string | null;
+  type: "PERCENT" | "FIXED";
+  value: number;
+  minimumPurchase: number | null;
+  maximumDiscount: number | null;
+  usageLimit: number | null;
+  isActive: boolean;
+  startsAt: string | null;
+  expiresAt: string | null;
+}
+
 interface CouponFormProps {
   mode: "create" | "edit";
-  initialData?: {
-    id: number;
-    code: string;
-    title: string | null;
-    description: string | null;
-    type: "PERCENT" | "FIXED";
-    value: number;
-    minimumPurchase: number | null;
-    maximumDiscount: number | null;
-    usageLimit: number | null;
-    isActive: boolean;
-    startsAt: string | null;
-    expiresAt: string | null;
-  };
+  initialData?: CouponFormInitialData;
 }
 
 interface FormState {
@@ -36,20 +40,6 @@ interface FormState {
   expiresAt: string;
 }
 
-const INITIAL_FORM: FormState = {
-  code: "",
-  title: "",
-  description: "",
-  type: "PERCENT",
-  value: "",
-  minimumPurchase: "",
-  maximumDiscount: "",
-  usageLimit: "",
-  isActive: true,
-  startsAt: "",
-  expiresAt: "",
-};
-
 function toDateInputValue(value: string | null) {
   if (!value) return "";
   return new Date(value).toISOString().slice(0, 10);
@@ -58,29 +48,23 @@ function toDateInputValue(value: string | null) {
 export default function CouponForm({ mode, initialData }: CouponFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState<FormState>(INITIAL_FORM);
-
-  useEffect(() => {
-    if (!initialData) return;
-
-    setForm({
-      code: initialData.code,
-      title: initialData.title ?? "",
-      description: initialData.description ?? "",
-      type: initialData.type,
-      value: String(initialData.value),
-      minimumPurchase: initialData.minimumPurchase
-        ? String(initialData.minimumPurchase)
-        : "",
-      maximumDiscount: initialData.maximumDiscount
-        ? String(initialData.maximumDiscount)
-        : "",
-      usageLimit: initialData.usageLimit ? String(initialData.usageLimit) : "",
-      isActive: initialData.isActive,
-      startsAt: toDateInputValue(initialData.startsAt),
-      expiresAt: toDateInputValue(initialData.expiresAt),
-    });
-  }, [initialData]);
+  const [form, setForm] = useState<FormState>({
+    code: initialData?.code ?? "",
+    title: initialData?.title ?? "",
+    description: initialData?.description ?? "",
+    type: initialData?.type ?? "PERCENT",
+    value: initialData ? String(initialData.value) : "",
+    minimumPurchase: initialData?.minimumPurchase
+      ? String(initialData.minimumPurchase)
+      : "",
+    maximumDiscount: initialData?.maximumDiscount
+      ? String(initialData.maximumDiscount)
+      : "",
+    usageLimit: initialData?.usageLimit ? String(initialData.usageLimit) : "",
+    isActive: initialData?.isActive ?? true,
+    startsAt: toDateInputValue(initialData?.startsAt ?? null),
+    expiresAt: toDateInputValue(initialData?.expiresAt ?? null),
+  });
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -149,8 +133,8 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
 
       router.push("/admin/coupons");
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setLoading(false);
     }

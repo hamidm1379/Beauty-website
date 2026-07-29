@@ -68,7 +68,8 @@ export default function OurValues() {
             px-4
             py-2
 
-            text-sm
+            text-[12px]
+            sm:text-sm
             font-semibold
 
             text-pink-600
@@ -79,9 +80,12 @@ export default function OurValues() {
 
         <h2
           className="
-            mt-5
+            mt-3
+            sm:mt-6
 
-            text-4xl
+            text-2xl
+            sm:text-3xl
+            md:text-4xl
             font-black
 
             text-gray-900
@@ -92,9 +96,11 @@ export default function OurValues() {
 
         <p
           className="
-            mt-6
-
+            mt-4
+            sm:mt-8
             leading-8
+            sm:leading-9
+            max-sm:text-justify
 
             text-gray-500
           "
@@ -109,11 +115,13 @@ export default function OurValues() {
 
       <div
         className="
-          mt-16
+          mt-8
+          sm:mt-16
 
           grid
+          gap-5
 
-          gap-7
+          sm:gap-7
 
           md:grid-cols-2
         "
@@ -131,15 +139,23 @@ export default function OurValues() {
 
                 overflow-hidden
 
-                rounded-4xl
+                rounded-2xl
+                sm:rounded-3xl
+                md:rounded-4xl
 
                 border
                 border-gray-100
 
                 bg-white/80
 
-                p-8
-
+                px-4
+                sm:px-6
+                md:px-8
+                pt-4
+                sm:pt-6
+                md:pt-8
+                pb-16
+                md:pb-20
                 backdrop-blur-sm
 
                 shadow-sm
@@ -184,13 +200,16 @@ export default function OurValues() {
 
                   flex
 
-                  h-16
-                  w-16
+                  
+                  h-15
+                  w-15
+                  sm:h-16
+                  sm:w-16
 
                   items-center
                   justify-center
-
-                  rounded-3xl
+                  rounded-2xl
+                  sm:rounded-3xl
 
                   bg-linear-to-br
                   from-pink-500
@@ -215,10 +234,10 @@ export default function OurValues() {
               <h3
                 className="
                   relative
-
-                  mt-8
-
-                  text-2xl
+                  mt-4
+                  sm:mt-8
+                  text-xl
+                  sm:text-2xl
                   font-bold
 
                   text-gray-900
@@ -232,10 +251,10 @@ export default function OurValues() {
               <p
                 className="
                   relative
-
-                  mt-4
-
-                  leading-8
+                  mt-2
+                  sm:mt-4
+                  leading-7
+                  sm:leading-8
 
                   text-gray-500
                 "
@@ -252,7 +271,10 @@ export default function OurValues() {
                   bottom-6
                   left-6
 
-                  text-6xl
+                  lg:text-5xl
+                  md:text-4xl
+                  sm:text-3xl
+                  text-2xl
                   font-black
 
                   text-pink-100

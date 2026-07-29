@@ -25,17 +25,16 @@ export default function DiscountBanner() {
       className="
       relative
       overflow-hidden
-
       h-70
-
-      rounded-4xl
-
+      rounded-2xl
+      md:rounded-4xl
       bg-linear-to-br
       from-pink-500
       via-rose-400
       to-fuchsia-500
-
-      p-8
+      py-2
+      px-6
+      md:p-8
       text-white
       "
     >
@@ -44,9 +43,9 @@ export default function DiscountBanner() {
         <div className="flex h-full flex-col">
           <Gift size={42} />
 
-          <h3 className="mt-5 text-2xl font-bold">تخفیف اولین خرید</h3>
+          <h3 className="mt-5 text-xl md:text-2xl font-bold">تخفیف اولین خرید</h3>
 
-          <p className="mt-3 max-w-xs text-white/90">
+          <p className="mt-3 max-md:text-sm max-w-xs text-white/90">
             برای اولین سفارش خود ۲۰٪ تخفیف دریافت کنید.
           </p>
 
@@ -57,9 +56,11 @@ export default function DiscountBanner() {
             w-fit
             rounded-2xl
             bg-white/20
-            px-8
+            px-4
             py-2
-            font-bold
+            sm:px-8
+            sm:py-2
+            sm:font-bold
             backdrop-blur-sm
             select-none cursor-default
           "
@@ -67,7 +68,7 @@ export default function DiscountBanner() {
             WELCOME20
           </div>
 
-          <div className="flex-1" />
+          <div className="sm:flex-1 max-sm:h-2.5" />
 
           <button
             onClick={copyDiscountCode}
@@ -75,13 +76,17 @@ export default function DiscountBanner() {
     w-fit
     rounded-2xl
     bg-white
-    px-6
+    px-4
     py-2
+    sm:px-6
+    sm:py-2
     font-medium
     text-pink-600
     text-center
-    m-1.5
+    m-0.5
+    sm:m-1.5
     cursor-pointer
+    text-sm
 
     transition-all
     duration-300

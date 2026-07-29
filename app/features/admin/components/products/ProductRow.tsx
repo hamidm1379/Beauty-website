@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 interface ProductRowProps {
-  product: any;
+  product: { id: number; title: string; slug: string; thumbnail?: string | null; brand?: { title: string } | null; price: number; discountPrice?: number | null; status: string; stock: number; };
 
   checked: boolean;
 

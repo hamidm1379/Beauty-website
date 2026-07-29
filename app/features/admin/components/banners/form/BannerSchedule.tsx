@@ -7,7 +7,7 @@ interface BannerScheduleProps {
     endDate: string;
   };
 
-  updateField: (name: string, value: any) => void;
+  updateField: (name: string, value: string | number | File | null) => void;
 }
 
 export default function BannerSchedule({

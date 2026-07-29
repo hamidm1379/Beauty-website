@@ -1,15 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useRouter } from "next/navigation";
 
 import { toast } from "sonner";
 import ImageUploader from "@/app/shared/components/UploadImage";
+import { getErrorMessage } from "@/lib/utils/errors";
+
+interface CategoryFormInitialData {
+  id: number;
+  title: string;
+  slug: string;
+  image?: string | null;
+}
 
 interface CategoryFormProps {
   mode: "create" | "edit";
-  initialData?: any;
+  initialData?: CategoryFormInitialData;
 }
 
 export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
@@ -18,22 +26,11 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    title: "",
-    slug: "",
+    title: initialData?.title ?? "",
+    slug: initialData?.slug ?? "",
     imageFile: null as File | null,
-    imageUrl: "",
+    imageUrl: initialData?.image ?? "",
   });
-
-  useEffect(() => {
-    if (!initialData) return;
-
-    setForm({
-      title: initialData.title ?? "",
-      slug: initialData.slug ?? "",
-      imageFile: null,
-      imageUrl: initialData.image ?? "",
-    });
-  }, [initialData]);
 
   function generateSlug(text: string) {
     return text
@@ -122,8 +119,8 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
       router.push("/admin/categories");
 
       router.refresh();
-    } catch (error: any) {
-      toast.error(error.message ?? "خطایی رخ داده است.");
+    } catch (error) {
+      toast.error(getErrorMessage(error) ?? "خطایی رخ داده است.");
     } finally {
       setLoading(false);
     }

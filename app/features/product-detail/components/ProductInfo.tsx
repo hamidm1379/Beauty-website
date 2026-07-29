@@ -236,7 +236,7 @@ export default function ProductInfo({
           </div>
         )}
 
-        <h2
+        <div
           className="
       mt-2
       text-4xl
@@ -255,7 +255,7 @@ export default function ProductInfo({
           >
             تومان
           </span>
-        </h2>
+        </div>
       </div>
       {/* Description */}
       <p

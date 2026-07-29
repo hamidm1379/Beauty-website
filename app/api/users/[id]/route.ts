@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { userService } from "@/lib/services/user.service";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface Props {
   params: Promise<{
@@ -18,10 +19,10 @@ export async function GET(
     const user = await userService.getUser(Number(id));
 
     return NextResponse.json(user);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 404,
@@ -44,10 +45,10 @@ export async function PATCH(
     );
 
     return NextResponse.json(user);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 400,
@@ -67,10 +68,10 @@ export async function DELETE(
     return NextResponse.json({
       success: true,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       {
-        message: error.message,
+        message: getErrorMessage(error),
       },
       {
         status: 400,

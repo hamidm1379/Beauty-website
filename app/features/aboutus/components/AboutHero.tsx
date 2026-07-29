@@ -30,19 +30,19 @@ const trustPoints = [
 
 export default function AboutHero() {
   return (
-    <section className="relative overflow-hidden bg-[#FCF7F6] px-8 py-24 lg:px-20">
+    <section className="relative overflow-hidden bg-[#FCF7F6] px-6 py-8 lg:py-24 lg:px-20">
       {/* Ambient glows, matching the site's signature look */}
       <div className="pointer-events-none absolute -top-24 -right-24 h-80 w-80 rounded-full bg-linear-to-br from-violet-300/50 to-purple-200/30 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-linear-to-tr from-pink-300/50 to-rose-200/30 blur-3xl" />
 
-      <div className="relative mx-auto grid max-w-7xl items-start gap-20 lg:grid-cols-[1.15fr_0.85fr]">
+      <div className="relative mx-auto grid max-w-7xl items-start gap-10 md:gap-20 lg:grid-cols-[1.15fr_0.85fr]">
         {/* ---------------- Left: statement ---------------- */}
         <div className="relative">
           <motion.span
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 rounded-full bg-pink-100 px-5 py-2 text-sm font-semibold text-pink-600"
+            className="inline-flex items-center gap-2 rounded-full bg-pink-100 px-5 py-2 text-[12px] sm:text-sm font-semibold text-pink-600"
           >
             زیبارو، از سال ۲۰۲۱
           </motion.span>
@@ -51,7 +51,7 @@ export default function AboutHero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.7 }}
-            className="mt-8 text-5xl font-black leading-[1.3] text-slate-900 lg:text-6xl"
+            className="mt-8 text-3xl sm:text-4xl md:text-5xl font-black leading-[1.3] text-slate-900 lg:text-6xl"
           >
             زیبایی یعنی
             <br />
@@ -97,7 +97,7 @@ export default function AboutHero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.7 }}
-            className="mt-8 max-w-xl text-lg leading-9 text-slate-500"
+            className="mt-8 max-w-xl max-sm:text-justify text-md sm:text-lg leading-8 sm:leading-9 text-slate-500"
           >
             ما در زیبارو تلاش می‌کنیم بهترین برندهای آرایشی و مراقبتی دنیا را
             با تضمین اصالت کالا، ارسال سریع و پشتیبانی حرفه‌ای در اختیار شما
@@ -112,15 +112,15 @@ export default function AboutHero() {
           >
             <Link
               href="/products"
-              className="group inline-flex items-center gap-3 rounded-2xl bg-linear-to-l from-pink-500 to-rose-500 px-8 py-4 font-bold text-white shadow-lg shadow-pink-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+              className="group inline-flex items-center gap-1 sm:gap-3 rounded-xl sm:rounded-2xl bg-linear-to-l from-pink-500 to-rose-500 px-4 py-2 sm:px-8 sm:py-4 sm:font-bold text-white shadow-lg shadow-pink-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
             >
               مشاهده محصولات
-              <ArrowLeft className="h-5 w-5 transition group-hover:-translate-x-1" />
+              <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 transition group-hover:-translate-x-1" />
             </Link>
 
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-8 py-4 font-semibold text-slate-700 transition-all duration-300 hover:bg-slate-50"
+              className="inline-flex items-center gap-1 sm:gap-2 rounded-xl sm:rounded-2xl border border-slate-200 bg-white px-4 py-2 sm:px-8 sm:py-4 sm:font-semibold text-slate-700 transition-all duration-300 hover:bg-slate-50"
             >
               تماس با ما
             </Link>
@@ -142,18 +142,18 @@ export default function AboutHero() {
                 className="group flex items-start gap-5 px-7 py-7 transition-colors hover:bg-pink-50/40"
               >
                 <span
-                  className={`mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${item.bg} ${item.color} transition-transform duration-300 group-hover:rotate-6`}
+                  className={`mt-1 flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-lg sm:rounded-2xl ${item.bg} ${item.color} transition-transform duration-300 group-hover:rotate-6`}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
                 </span>
                 <div>
                   <div className="flex items-center gap-3">
-                    <span className="text-lg font-bold text-slate-900">
+                    <span className="text-md sm:text-lg font-bold text-slate-900">
                       {item.title}
                     </span>
-                    <span className="text-xs text-slate-300">0{index + 1}</span>
+                    <span className="text-[10px] sm:text-xs text-slate-300">0{index + 1}</span>
                   </div>
-                  <p className="mt-2 leading-7 text-slate-500">{item.desc}</p>
+                  <p className="mt-1 sm:mt-2 leading-6 sm:leading-7 max-sm:text-[15px] text-slate-500">{item.desc}</p>
                 </div>
               </div>
             );

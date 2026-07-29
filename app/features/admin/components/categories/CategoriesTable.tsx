@@ -6,6 +6,7 @@ import { Search, Loader2, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import DeleteCategoryModal from "./DeleteCategoryModal";
 import Image from "next/image";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 // Types
 interface Category {
@@ -32,27 +33,26 @@ export default function CategoriesTable() {
 
   // Effects
   useEffect(() => {
+    async function loadCategories() {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/categories");
+        const json = await res.json();
+    
+        if (!res.ok) {
+          throw new Error(json.message);
+        }
+    
+        setCategories(json.data);
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      } finally {
+        setLoading(false);
+      }
+    }
+
     loadCategories();
   }, []);
-
-  // API Functions
-  async function loadCategories() {
-    try {
-      setLoading(true);
-      const res = await fetch("/api/categories");
-      const json = await res.json();
-
-      if (!res.ok) {
-        throw new Error(json.message);
-      }
-
-      setCategories(json.data);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
   const [deleteLoading, setDeleteLoading] = useState(false);
   async function handleDelete() {
     if (!deleteId) return;
@@ -77,8 +77,8 @@ export default function CategoriesTable() {
       );
 
       setDeleteId(null);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       setDeleteLoading(false);
     }

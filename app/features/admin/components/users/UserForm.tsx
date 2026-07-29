@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { userSchema, UserSchema } from "@/lib/validations/user.schema";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export default function UserForm({ mode, user }: Props) {
   const [isPending, startTransition] = useTransition();
@@ -65,8 +66,8 @@ export default function UserForm({ mode, user }: Props) {
 
             router.push("/admin/users");
             router.refresh();
-          } catch (error: any) {
-            toast.error(error.message);
+          } catch (error) {
+            toast.error(getErrorMessage(error));
           }
         }),
       )}
@@ -196,7 +197,7 @@ export default function UserForm({ mode, user }: Props) {
 interface Props {
   mode: "create" | "edit";
 
-  user?: any;
+  user?: { id?: number; firstName: string; lastName?: string | null; email?: string | null; phone: string; role: string; isActive: boolean };
 }
 interface InputProps {
   label: string;
@@ -207,7 +208,7 @@ interface InputProps {
 
   type?: string;
 
-  registration: any;
+  registration: Record<string, unknown>;
 }
 
 function Input({

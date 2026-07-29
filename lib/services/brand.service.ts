@@ -65,7 +65,8 @@ class BrandService {
     const brand = await this.getById(id);
 
     // اگر محصول دارد حذف نشود
-    if ((brand as any).products?.length) {
+    const productCount = "_count" in brand ? brand._count.products : 0;
+    if (productCount > 0) {
       throw new Error("ابتدا محصولات این برند را حذف یا منتقل کنید.");
     }
 

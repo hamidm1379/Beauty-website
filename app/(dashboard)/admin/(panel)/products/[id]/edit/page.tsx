@@ -11,35 +11,36 @@ import { ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import ProductForm from "@/app/features/admin/components/products/ProductForm";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 export default function EditProductPage() {
   const { id } = useParams();
 
   const [loading, setLoading] = useState(true);
 
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<Record<string, unknown>>(null);
 
   useEffect(() => {
-    loadProduct();
-  }, []);
-
-  async function loadProduct() {
-    try {
-      const response = await fetch(`/api/products/${id}`);
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message);
+    async function loadProduct() {
+      try {
+        const response = await fetch(`/api/products/${id}`);
+    
+        const result = await response.json();
+    
+        if (!response.ok) {
+          throw new Error(result.message);
+        }
+    
+        setProduct(result.data);
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      } finally {
+        setLoading(false);
       }
-
-      setProduct(result.data);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
     }
-  }
+
+    loadProduct();
+  }, [id]);
 
   if (loading) {
     return (

@@ -11,6 +11,7 @@ import { ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import CategoryForm from "@/app/features/admin/components/categories/CategoryForm";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface Category {
   id: number;
@@ -27,26 +28,26 @@ export default function EditCategoryPage() {
   const [category, setCategory] = useState<Category | null>(null);
 
   useEffect(() => {
-    loadCategory();
-  }, []);
-
-  async function loadCategory() {
-    try {
-      const response = await fetch(`/api/categories/${id}`);
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message);
+    async function loadCategory() {
+      try {
+        const response = await fetch(`/api/categories/${id}`);
+    
+        const result = await response.json();
+    
+        if (!response.ok) {
+          throw new Error(result.message);
+        }
+    
+        setCategory(result.data);
+      } catch (error) {
+        toast.error(getErrorMessage(error));
+      } finally {
+        setLoading(false);
       }
-
-      setCategory(result.data);
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setLoading(false);
     }
-  }
+
+    loadCategory();
+  }, [id]);
 
   if (loading) {
     return (

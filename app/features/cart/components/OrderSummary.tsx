@@ -13,6 +13,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils/errors";
 
 interface CartItem {
   quantity: number;
@@ -99,9 +100,9 @@ export default function OrderSummary({ items }: Props) {
 
       setAppliedCoupon(result.data);
       toast.success(`کد تخفیف «${result.data.code}» با موفقیت اعمال شد.`);
-    } catch (error: any) {
+    } catch (error) {
       setAppliedCoupon(null);
-      toast.error(error.message);
+      toast.error(getErrorMessage(error));
     } finally {
       setApplying(false);
     }
