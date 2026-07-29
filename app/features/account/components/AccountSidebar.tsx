@@ -1,13 +1,13 @@
 "use client";
 
-import type { User } from "@prisma/client";
+import type { AccountUser } from "@/types/account";
 
 import { motion } from "framer-motion";
 import {
   ShoppingBag,
   Heart,
   MapPin,
-  User,
+  User as UserIcon,
   Settings,
   LogOut,
   ChevronLeft,
@@ -15,12 +15,12 @@ import {
 } from "lucide-react";
 
 interface AccountSidebarProps {
-  user: User;
+  user: AccountUser;
   activeTab: string;
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const menuItems = (user: User) => [
+const menuItems = (user: AccountUser) => [
   //   {
   //     id: "dashboard",
   //     title: "داشبورد",
@@ -47,7 +47,7 @@ const menuItems = (user: User) => [
   {
     id: "profile",
     title: "اطلاعات حساب",
-    icon: User,
+    icon: UserIcon,
   },
   // {
   //   id: "settings",

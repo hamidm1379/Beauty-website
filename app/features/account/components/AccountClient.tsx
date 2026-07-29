@@ -1,6 +1,6 @@
 "use client";
 
-import type { User } from "@prisma/client";
+import type { AccountUser } from "@/types/account";
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -15,7 +15,7 @@ import WishlistCard from "./WishlistCard";
 import AddressList from "./Addresses";
 
 interface Props {
-  user: User;
+  user: AccountUser;
 }
 
 export default function AccountClient({ user }: Props) {

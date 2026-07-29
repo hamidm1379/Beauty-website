@@ -1,5 +1,5 @@
 "use client";
-import type { User } from "@prisma/client";
+import type { AccountUser } from "@/types/account";
 import { motion } from "framer-motion";
 import {
   Mail,
@@ -11,7 +11,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 interface Props {
-  user: User;
+  user: AccountUser;
 }
 
 export default function ProfileCard({ user }: Props) {

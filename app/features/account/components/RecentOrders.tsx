@@ -17,8 +17,10 @@ import {
   CreditCard,
 } from "lucide-react";
 
+import type { AccountUser } from "@/types/account";
+
 interface Props {
-  orders: { id: number; orderNumber: string; status: string; total: number; createdAt: string; items?: { id: number; productTitle: string; productImage: string | null; quantity: number; totalPrice: number }[] }[];
+  orders: AccountUser["orders"];
 }
 
 const statusMap = {

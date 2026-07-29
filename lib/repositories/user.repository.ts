@@ -288,6 +288,9 @@ class UserRepository {
                 price: true,
                 discountPrice: true,
                 stock: true,
+                brand: {
+                  select: { title: true },
+                },
               },
             },
           },
