@@ -11,6 +11,7 @@ export interface AdminOrderItem {
   productId: number;
   variantTitle: string | null;
   variantColor: string | null;
+  discount?: number;
 }
 
 /** کاربر مرتبط با سفارش. */
@@ -19,6 +20,7 @@ export interface OrderUser {
   firstName: string;
   lastName: string | null;
   phone: string;
+  email?: string | null;
 }
 
 /** آدرس ارسال سفارش. */
@@ -28,6 +30,9 @@ export interface OrderAddress {
   phone: string;
   fullAddress: string;
   postalCode: string;
+  province?: string;
+  city?: string;
+  addressLine?: string;
 }
 
 /** سفارش برای نمایش در پنل ادمین. */

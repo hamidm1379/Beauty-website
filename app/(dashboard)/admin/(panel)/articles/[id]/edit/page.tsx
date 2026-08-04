@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import ArticleForm from "@/app/features/admin/components/articles/ArticleForm";
+import ArticleForm, { type ArticleInitialData } from "@/app/features/admin/components/articles/ArticleForm";
 import { articleService } from "@/lib/services/article.service";
 
 interface EditArticlePageProps {
@@ -23,13 +23,13 @@ export default async function EditArticlePage({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5 sm:space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-xl sm:text-3xl font-bold">
           ویرایش مقاله
         </h1>
 
-        <p className="mt-2 text-gray-500">
+        <p className="mt-1.5 sm:mt-2 text-xs sm:text-base text-gray-500">
           اطلاعات مقاله را ویرایش کنید.
         </p>
       </div>

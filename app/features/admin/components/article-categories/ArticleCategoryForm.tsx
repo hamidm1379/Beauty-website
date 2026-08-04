@@ -137,11 +137,11 @@ export default function ArticleCategoryForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-8 rounded-3xl bg-white p-8 shadow-sm"
+      className="space-y-6 rounded-2xl bg-white p-4 shadow-sm sm:space-y-8 sm:rounded-3xl sm:p-8"
     >
       {/* Title */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
           عنوان دسته‌بندی
         </label>
 
@@ -150,26 +150,26 @@ export default function ArticleCategoryForm({
           value={form.title}
           onChange={handleChange}
           required
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
       </div>
 
       {/* Slug */}
       <div>
-        <label className="mb-2 block text-sm font-medium">Slug</label>
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">Slug</label>
 
         <input
           name="slug"
           value={form.slug}
           onChange={handleChange}
           required
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
       </div>
 
       {/* Image */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
           تصویر دسته‌بندی
         </label>
 
@@ -180,55 +180,51 @@ export default function ArticleCategoryForm({
           onChange={(file) =>
             setForm((prev) => ({
               ...prev,
-              imageFile: file,
+              imageFile: file as File | null,
             }))
           }
         />
       </div>
 
       {/* SEO */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
         <div>
-          <label className="mb-2 block text-sm font-medium">
-            SEO Title
-          </label>
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">SEO Title</label>
 
           <input
             name="seoTitle"
             value={form.seoTitle}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">
-            SEO Description
-          </label>
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">SEO Description</label>
 
           <textarea
             rows={3}
             name="seoDescription"
             value={form.seoDescription}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
           />
         </div>
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-end gap-4 border-t pt-6">
+      <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end sm:gap-4 sm:pt-6">
         <button
           type="button"
           onClick={() => router.back()}
-          className="rounded-xl border px-6 py-3"
+          className="rounded-lg border px-4 py-2 text-sm sm:rounded-xl sm:px-6 sm:py-3 sm:text-base"
         >
           انصراف
         </button>
 
         <button
           disabled={loading}
-          className="rounded-xl bg-pink-600 px-8 py-3 font-semibold text-white hover:bg-pink-700 disabled:opacity-50"
+          className="rounded-lg bg-pink-600 px-5 py-2 text-sm font-semibold text-white hover:bg-pink-700 disabled:opacity-50 sm:rounded-xl sm:px-8 sm:py-3 sm:text-base"
         >
           {mode === "create" ? "ثبت دسته‌بندی" : "بروزرسانی دسته‌بندی"}
         </button>

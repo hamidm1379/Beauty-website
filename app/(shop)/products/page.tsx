@@ -39,7 +39,7 @@ export default async function ProductsPage({ searchParams }: Props) {
   });
   return (
     <main className="bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 md:py-8 lg:px-8">
+      <div className="mx-auto max-w-7xl pb-8 px-4 md:py-8 lg:px-8">
         {/* Title */}
         <ProductsHeader />
 

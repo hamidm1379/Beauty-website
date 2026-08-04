@@ -206,17 +206,17 @@ export default function ProductCard({ product }: Props) {
           </h3>
 
           {/* Price */}
-          <div className="mt-1 md:mt-3 flex items-baseline gap-2">
+          <div className="mt-1 md:mt-3 flex items-baseline sm:gap-2">
             {hasDiscount ? (
               <>
                 <p className="text-[12px] font-bold text-pink-600 md:text-[16px]">
                   {finalPrice.toLocaleString("fa-IR")}
-                  <span className="mr-1 text-[10px] font-normal text-gray-400 md:text-[12px]">
+                  <span className="mr-1 text-[9px] font-normal text-gray-400 md:text-[12px]">
                     تومان
                   </span>
                 </p>
 
-                <p className="text-[11px] text-gray-400 line-through md:text-[13px]">
+                <p className="text-[10px] text-gray-400 line-through md:text-[13px]">
                   {product.price.toLocaleString("fa-IR")}
                 </p>
               </>

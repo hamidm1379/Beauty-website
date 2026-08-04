@@ -6,7 +6,7 @@ import ArticleCard from "./ArticleCard";
 
 
 interface Props {
-  articles: { id: number; title: string; slug: string; thumbnail?: string | null; excerpt?: string | null; category?: { title: string } | null; createdAt: string }[];
+  articles: { id: number; title: string; slug: string; thumbnail?: string | null; excerpt?: string | null; category?: { title: string } | null; createdAt: string | Date }[];
 }
 
 const container = {
@@ -45,8 +45,9 @@ export default function ArticlesGridClient({
         className="
           grid
           gap-8
-          md:grid-cols-2
-          xl:grid-cols-3
+          grid-cols-1
+          sm:grid-cols-2
+          md:grid-cols-3
         "
       >
         {articles.map((article) => (

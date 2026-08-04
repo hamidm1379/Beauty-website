@@ -52,53 +52,42 @@ export default function DeleteBannerModal({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-xl bg-red-50 p-2 text-red-600 transition hover:bg-red-100"
+        className="rounded-lg bg-red-50 p-1.5 text-red-600 transition hover:bg-red-100 sm:rounded-xl sm:p-2"
       >
-        <Trash2 size={18} />
+        <Trash2 size={16} className="sm:hidden" />
+        <Trash2 size={18} className="hidden sm:block" />
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl sm:rounded-3xl sm:p-8">
             <div className="flex justify-center">
-              <div className="rounded-full bg-red-100 p-5">
-                <Trash2
-                  className="text-red-600"
-                  size={34}
-                />
+              <div className="rounded-full bg-red-100 p-3 sm:p-5">
+                <Trash2 className="text-red-600" size={24} />
               </div>
             </div>
 
-            <h2 className="mt-6 text-center text-2xl font-bold">
+            <h2 className="mt-4 text-center text-lg font-bold sm:mt-6 sm:text-2xl">
               حذف بنر
             </h2>
 
-            <p className="mt-4 text-center text-gray-500">
+            <p className="mt-3 text-center text-sm text-gray-500 sm:mt-4 sm:text-base">
               آیا از حذف بنر
             </p>
 
-            <p className="mt-2 text-center font-semibold text-gray-900">
+            <p className="mt-1.5 text-center text-sm font-semibold text-gray-900 sm:mt-2 sm:text-base">
               {bannerTitle}
             </p>
 
-            <p className="mt-2 text-center text-gray-500">
+            <p className="mt-1.5 text-center text-sm text-gray-500 sm:mt-2 sm:text-base">
               اطمینان دارید؟
             </p>
 
-            <div className="mt-8 flex gap-3">
+            <div className="mt-6 flex gap-2.5 sm:mt-8 sm:gap-3">
               <button
                 onClick={() => setOpen(false)}
                 disabled={loading}
-                className="
-                  flex-1
-                  rounded-xl
-                  border
-                  border-gray-300
-                  py-3
-                  font-medium
-                  transition
-                  hover:bg-gray-100
-                "
+                className="flex-1 rounded-lg border border-gray-300 py-2 text-sm font-medium transition hover:bg-gray-100 sm:rounded-xl sm:py-3 sm:text-base"
               >
                 انصراف
               </button>
@@ -106,32 +95,16 @@ export default function DeleteBannerModal({
               <button
                 onClick={handleDelete}
                 disabled={loading}
-                className="
-                  flex
-                  flex-1
-                  items-center
-                  justify-center
-                  gap-2
-                  rounded-xl
-                  bg-red-600
-                  py-3
-                  font-medium
-                  text-white
-                  transition
-                  hover:bg-red-700
-                "
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-red-600 py-2 text-sm font-medium text-white transition hover:bg-red-700 sm:rounded-xl sm:py-3 sm:text-base"
               >
                 {loading ? (
                   <>
-                    <Loader2
-                      size={18}
-                      className="animate-spin"
-                    />
+                    <Loader2 size={16} className="animate-spin" />
                     در حال حذف...
                   </>
                 ) : (
                   <>
-                    <Trash2 size={18} />
+                    <Trash2 size={16} />
                     حذف
                   </>
                 )}

@@ -151,7 +151,6 @@ export default function AboutHero() {
                     <span className="text-md sm:text-lg font-bold text-slate-900">
                       {item.title}
                     </span>
-                    <span className="text-[10px] sm:text-xs text-slate-300">0{index + 1}</span>
                   </div>
                   <p className="mt-1 sm:mt-2 leading-6 sm:leading-7 max-sm:text-[15px] text-slate-500">{item.desc}</p>
                 </div>

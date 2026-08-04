@@ -13,7 +13,21 @@ import {
 } from "@/app/features/cart/actions";
 
 interface Props {
-  items: { id: number; productTitle: string; productImage: string | null; quantity: number; totalPrice: number }[];
+  items: {
+    id: number;
+    quantity: number;
+    product: {
+      id: number;
+      title: string;
+      thumbnail?: string | null;
+      price: number;
+      discountPrice?: number | null;
+      stock: number;
+      brand?: { id: number; title: string; slug: string; createdAt: Date; logo: string | null } | null;
+      images: { id: number; image: string; productId: number; sortOrder: number }[];
+    };
+    variant?: { id: number; colorName: string; colorCode: string } | null;
+  }[];
 }
 
 export default function CartList({ items: initialItems }: Props) {
@@ -89,25 +103,25 @@ export default function CartList({ items: initialItems }: Props) {
   }
 
   return (
-    <section className="space-y-6">
-      <div className="flex items-center justify-between rounded-3xl border border-gray-100 bg-white px-6 py-5 shadow-sm">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">
+    <section className="space-y-4 sm:space-y-6">
+      <div className="flex items-center justify-between gap-3 rounded-2xl sm:rounded-3xl border border-gray-100 bg-white px-4 py-4 sm:px-6 sm:py-5 shadow-sm">
+        <div className="min-w-0">
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-900">
             محصولات سبد خرید
           </h2>
 
-          <p className="mt-2 text-gray-500">
+          <p className="mt-1 sm:mt-2 text-xs sm:text-base text-gray-500">
             {items.length} محصول در سبد خرید شما
           </p>
         </div>
 
-        <div className="rounded-2xl bg-pink-50 px-4 py-2 font-semibold text-pink-600">
+        <div className="rounded-xl sm:rounded-2xl bg-pink-50 px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base font-semibold text-pink-600">
           {items.length} کالا
         </div>
       </div>
 
       <AnimatePresence mode="popLayout">
-        <motion.div layout className="space-y-6">
+        <motion.div layout className="space-y-4 sm:space-y-6">
           {items.map((item) => (
             <CartItem
               key={item.id}

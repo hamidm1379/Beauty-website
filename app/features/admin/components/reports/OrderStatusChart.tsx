@@ -10,25 +10,12 @@ export default function OrderStatusChart({
   data: OrderStatusPoint[];
 }) {
   return (
-    <div
-      className="
-rounded-3xl
-bg-white
-p-6
-shadow
-"
-    >
-      <h2
-        className="
-mb-6
-text-xl
-font-black
-"
-      >
+    <div className="rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-6 shadow">
+      <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-black">
         وضعیت سفارش‌ها
       </h2>
 
-      <div className="h-75">
+      <div className="h-60 sm:h-72 md:h-75">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie

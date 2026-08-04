@@ -26,35 +26,38 @@ export default function RelatedProducts({
   return (
     <section
       className="
-        mt-12
-        rounded-3xl
+        mt-8
+        rounded-2xl
         border
         border-gray-100
         bg-white
-        p-6
+        p-4
         shadow-sm
+        sm:mt-12
+        sm:rounded-3xl
+        sm:p-6
       "
     >
       {/* Header */}
 
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-5 flex items-center justify-between gap-3 sm:mb-8">
         <div>
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-lg font-bold sm:text-2xl">
             محصولات مرتبط
           </h2>
 
-          <p className="mt-1 text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 sm:text-base">
             پیشنهادهایی که شاید دوست داشته باشید
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex shrink-0 gap-2 sm:gap-3">
           <button
             className="
               related-prev
               flex
-              h-11
-              w-11
+              h-9
+              w-9
               cursor-pointer
               items-center
               justify-center
@@ -65,17 +68,19 @@ export default function RelatedProducts({
               hover:border-pink-500
               hover:bg-pink-500
               hover:text-white
+              sm:h-11
+              sm:w-11
             "
           >
-            <ChevronRight size={20} />
+            <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
 
           <button
             className="
               related-next
               flex
-              h-11
-              w-11
+              h-9
+              w-9
               cursor-pointer
               items-center
               justify-center
@@ -86,9 +91,11 @@ export default function RelatedProducts({
               hover:border-pink-500
               hover:bg-pink-500
               hover:text-white
+              sm:h-11
+              sm:w-11
             "
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </div>
       </div>
@@ -97,7 +104,7 @@ export default function RelatedProducts({
 
       <Swiper
         modules={[Navigation]}
-        spaceBetween={20}
+        spaceBetween={12}
         navigation={{
           prevEl: ".related-prev",
           nextEl: ".related-next",
@@ -105,18 +112,27 @@ export default function RelatedProducts({
         breakpoints={{
           0: {
             slidesPerView: 2,
+            spaceBetween: 12,
+          },
+          480: {
+            slidesPerView: 2,
+            spaceBetween: 16,
           },
           640: {
-            slidesPerView: 2,
+            slidesPerView: 3,
+            spaceBetween: 16,
           },
           768: {
             slidesPerView: 3,
+            spaceBetween: 20,
           },
           1024: {
             slidesPerView: 4,
+            spaceBetween: 20,
           },
           1280: {
             slidesPerView: 5,
+            spaceBetween: 20,
           },
         }}
       >

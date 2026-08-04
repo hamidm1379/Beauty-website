@@ -8,11 +8,14 @@ export interface ProductSchemaInput {
   description?: string | null;
   thumbnail?: string | null;
   sku?: string | null;
+  barcode?: string | null;
   price: number;
   discountPrice?: number | null;
   stock: number;
   brand?: { title?: string | null } | null;
   category?: { title?: string | null } | null;
+  images?: { image: string }[] | null;
+  review?: { rating: number }[] | null;
 }
 
 /** کمینه‌ی فیلدهای مقاله/برندی که برای ساخت schema مقاله نیاز است. */
@@ -134,7 +137,37 @@ export function productSchema(product: ProductSchemaInput) {
     ? Math.round(product.price - (product.price * percent) / 100)
     : product.price;
 
-  return {
+  const images: { "@type": "ImageObject"; url: string; width: number; height: number }[] = [];
+
+  if (product.thumbnail) {
+    images.push({
+      "@type": "ImageObject",
+      url: `${siteConfig.url}${product.thumbnail}`,
+      width: 1200,
+      height: 1200,
+    });
+  }
+
+  if (product.images) {
+    for (const img of product.images) {
+      if (img.image && img.image !== product.thumbnail) {
+        images.push({
+          "@type": "ImageObject",
+          url: `${siteConfig.url}${img.image}`,
+          width: 1200,
+          height: 1200,
+        });
+      }
+    }
+  }
+
+  const reviewCount = product.review?.length ?? 0;
+  const averageRating =
+    reviewCount > 0
+      ? product.review!.reduce((sum, r) => sum + r.rating, 0) / reviewCount
+      : 0;
+
+  const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
 
     "@type": "Product",
@@ -143,14 +176,7 @@ export function productSchema(product: ProductSchemaInput) {
 
     name: product.title,
 
-    image: [
-      {
-        "@type": "ImageObject",
-        url: `${siteConfig.url}${product.thumbnail}`,
-        width: 800,
-        height: 800,
-      },
-    ],
+    image: images.length > 0 ? images : undefined,
 
     description: product.description,
 
@@ -181,6 +207,20 @@ export function productSchema(product: ProductSchemaInput) {
       itemCondition: "https://schema.org/NewCondition",
     },
   };
+
+  if (product.barcode) {
+    schema.gtin = product.barcode;
+  }
+
+  if (reviewCount > 0) {
+    schema.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: Number(averageRating.toFixed(1)),
+      reviewCount,
+    };
+  }
+
+  return schema;
 }
 
 export function articleSchema(article: ArticleSchemaInput) {
@@ -203,18 +243,13 @@ export function articleSchema(article: ArticleSchemaInput) {
           {
             "@type": "ImageObject",
 
-            url: `${siteConfig.url}/images/og-default.jpg`,
+            url: article.thumbnail.startsWith("http")
+              ? article.thumbnail
+              : `${siteConfig.url}${article.thumbnail}`,
 
             width: 1200,
 
             height: 630,
-          },
-          {
-            "@type": "ImageObject",
-
-            url: article.thumbnail.startsWith("http")
-              ? article.thumbnail
-              : `${siteConfig.url}${article.thumbnail}`,
           },
         ]
       : [
@@ -238,6 +273,8 @@ export function articleSchema(article: ArticleSchemaInput) {
       logo: {
         "@type": "ImageObject",
         url: `${siteConfig.url}/logo.png`,
+        width: 512,
+        height: 512,
       },
     },
 

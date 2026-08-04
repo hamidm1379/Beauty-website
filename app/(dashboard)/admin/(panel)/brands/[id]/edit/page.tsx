@@ -78,30 +78,16 @@ export default function EditBrandPage() {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900">ویرایش برند</h1>
+          <h1 className="text-xl font-extrabold text-gray-900 sm:text-3xl">ویرایش برند</h1>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 sm:mt-2 sm:text-sm">
             اطلاعات برند را بروزرسانی کنید.
           </p>
         </div>
 
         <Link
           href="/admin/brands"
-          className="
-            flex
-            items-center
-            gap-2
-            rounded-xl
-            border
-            border-gray-200
-            bg-white
-            px-5
-            py-3
-            text-sm
-            font-medium
-            transition
-            hover:bg-gray-50
-          "
+          className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-medium transition hover:bg-gray-50 sm:gap-2 sm:rounded-xl sm:px-5 sm:py-3 sm:text-sm"
         >
           <ArrowRight size={18} />
           بازگشت

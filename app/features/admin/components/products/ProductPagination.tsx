@@ -41,37 +41,14 @@ export default function ProductPagination({
   }
   return (
     <motion.section
-      initial={{
-        opacity: 0,
-        y: 15,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-      }}
-      className="
-        rounded-4xl
-        border
-        border-gray-100
-        bg-white
-        p-6
-        shadow-sm
-      "
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-3xl border border-gray-100 bg-white p-3 shadow-sm sm:rounded-4xl sm:p-6"
     >
-      <div
-        className="
-          flex
-          flex-col
-          gap-6
-
-          lg:flex-row
-          lg:items-center
-          lg:justify-between
-        "
-      >
+      <div className="flex flex-col gap-4 sm:gap-6 lg:flex-row items-center lg:justify-between">
         {/* Info */}
 
-        <div className="text-sm text-gray-500">
+        <div className="text-xs text-gray-500 sm:text-sm">
           نمایش
           <span className="mx-1 font-bold text-pink-600">
             {((page - 1) * perPage + 1).toLocaleString("fa-IR")}
@@ -89,34 +66,16 @@ export default function ProductPagination({
 
         {/* Pagination */}
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 overflow-x-auto sm:gap-2">
           {/* Prev */}
 
           <button
-            className="
-              flex
-              h-11
-              w-11
-              items-center
-              justify-center
-
-              rounded-2xl
-
-              border
-              border-gray-200
-
-              transition
-
-              hover:border-pink-500
-              hover:text-pink-500
-
-              disabled:cursor-not-allowed
-              disabled:opacity-40
-            "
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 transition hover:border-pink-500 hover:text-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:h-11 sm:w-11 sm:rounded-2xl"
             onClick={() => changePage(page - 1)}
             disabled={page === 1}
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={16} className="sm:hidden" />
+            <ChevronRight size={18} className="hidden sm:block" />
           </button>
 
           {/* Numbers */}
@@ -125,23 +84,7 @@ export default function ProductPagination({
             <button
               key={item}
               onClick={() => changePage(item)}
-              className={`
-                h-11
-                w-11
-
-                rounded-2xl
-
-                text-sm
-                font-bold
-
-                transition-all
-
-                ${
-                  item === page
-                    ? "bg-linear-to-r from-pink-500 to-rose-500 text-white shadow-lg"
-                    : "border border-gray-200 hover:border-pink-500 hover:text-pink-600"
-                }
-              `}
+              className={`h-9 w-9 shrink-0 rounded-xl text-xs font-bold transition-all sm:h-11 sm:w-11 sm:rounded-2xl sm:text-sm ${item === page ? "bg-linear-to-r from-pink-500 to-rose-500 text-white shadow-lg" : "border border-gray-200 hover:border-pink-500 hover:text-pink-600"}`}
             >
               {item.toLocaleString("fa-IR")}
             </button>
@@ -152,55 +95,22 @@ export default function ProductPagination({
           <button
             onClick={() => changePage(page + 1)}
             disabled={page === totalPages}
-            className="
-              flex
-              h-11
-              w-11
-              items-center
-              justify-center
-
-              rounded-2xl
-
-              border
-              border-gray-200
-
-              transition
-
-              hover:border-pink-500
-              hover:text-pink-500
-
-              disabled:cursor-not-allowed
-              disabled:opacity-40
-            "
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 transition hover:border-pink-500 hover:text-pink-500 disabled:cursor-not-allowed disabled:opacity-40 sm:h-11 sm:w-11 sm:rounded-2xl"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={16} className="sm:hidden" />
+            <ChevronLeft size={18} className="hidden sm:block" />
           </button>
         </div>
 
         {/* Per Page */}
 
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500">تعداد نمایش</span>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-xs text-gray-500 sm:text-sm">تعداد نمایش</span>
 
           <select
             value={perPage}
             onChange={(e) => changeLimit(Number(e.target.value))}
-            className="
-              h-11
-
-              rounded-2xl
-
-              border
-              border-gray-200
-
-              px-4
-
-              text-sm
-
-              outline-none
-
-              focus:border-pink-500
-            "
+            className="h-9 rounded-xl border border-gray-200 px-3 text-xs outline-none focus:border-pink-500 sm:h-11 sm:rounded-2xl sm:px-4 sm:text-sm"
           >
             <option value={10}>۱۰</option>
             <option value={20}>۲۰</option>

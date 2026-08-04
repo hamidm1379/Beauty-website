@@ -54,22 +54,6 @@ export default function WhyChooseUs() {
       {/* Header */}
 
       <div className="mx-auto max-w-2xl text-center">
-        <span
-          className="
-            inline-flex
-            rounded-full
-            bg-pink-50
-            px-4
-            py-2
-            text-[12px]
-            sm:text-sm 
-            font-semibold
-            text-pink-600
-          "
-        >
-          چرا زیبارو؟
-        </span>
-
         <h2
           className="
             mt-5

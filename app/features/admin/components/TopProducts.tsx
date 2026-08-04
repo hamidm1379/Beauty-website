@@ -78,20 +78,20 @@ export default function TopProducts() {
     >
       {/* Header */}
 
-      <div className="flex items-center justify-between border-b border-gray-100 p-6">
+      <div className="flex items-center justify-between border-b border-gray-100 p-4 sm:p-6">
         <div>
-          <h2 className="text-xl font-black text-gray-900">
+          <h2 className="text-lg font-black text-gray-900 sm:text-xl">
             محصولات پرفروش
           </h2>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 sm:mt-2 sm:text-sm">
             برترین محصولات این ماه
           </p>
         </div>
 
         <button
           className="
-            flex
+            hidden
             items-center
             gap-2
 
@@ -110,6 +110,7 @@ export default function TopProducts() {
             transition
 
             hover:bg-pink-100
+            sm:flex
           "
         >
           مشاهده همه
@@ -138,22 +139,25 @@ export default function TopProducts() {
             whileHover={{
               backgroundColor: "#fafafa",
             }}
-            className="p-5"
+            className="p-4 sm:p-5"
           >
             <div className="flex items-center justify-between">
               {/* Left */}
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3 sm:gap-4">
                 <div
                   className="
                     relative
 
-                    h-18
-                    w-18
+                    h-14
+                    w-14
 
                     overflow-hidden
 
-                    rounded-2xl
+                    rounded-xl
+                    sm:h-18
+                    sm:w-18
+                    sm:rounded-2xl
 
                     bg-gray-100
                   "
@@ -167,26 +171,26 @@ export default function TopProducts() {
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-gray-900">
+                  <h3 className="text-sm font-bold text-gray-900 sm:text-base">
                     {product.name}
                   </h3>
 
-                  <p className="mt-1 text-sm text-gray-500">
+                  <p className="mt-0.5 text-xs text-gray-500 sm:mt-1 sm:text-sm">
                     {product.category}
                   </p>
 
-                  <div className="mt-3 flex items-center gap-4">
-                    <span className="flex items-center gap-1 text-amber-500">
+                  <div className="mt-2 flex items-center gap-3 sm:mt-3 sm:gap-4">
+                    <span className="flex items-center gap-1 text-xs text-amber-500 sm:text-sm">
                       <Star
-                        size={16}
+                        size={14}
                         fill="currentColor"
                       />
 
                       {product.rating}
                     </span>
 
-                    <span className="flex items-center gap-1 text-gray-500">
-                      <ShoppingCart size={15} />
+                    <span className="flex items-center gap-1 text-xs text-gray-500 sm:text-sm">
+                      <ShoppingCart size={13} />
 
                       {product.sales}
                     </span>
@@ -197,17 +201,17 @@ export default function TopProducts() {
               {/* Right */}
 
               <div className="text-left">
-                <h4 className="text-2xl font-black text-gray-900">
+                <h4 className="text-lg font-black text-gray-900 sm:text-2xl">
                   {product.revenue}
                 </h4>
 
-                <p className="mt-1 text-xs text-gray-400">
+                <p className="mt-0.5 text-[10px] text-gray-400 sm:mt-1 sm:text-xs">
                   درآمد
                 </p>
 
                 <div
                   className="
-                    mt-3
+                    mt-2
 
                     inline-flex
                     items-center
@@ -217,16 +221,19 @@ export default function TopProducts() {
 
                     bg-emerald-50
 
-                    px-3
-                    py-1.5
-
-                    text-sm
+                    px-2
+                    py-1
+                    text-xs
                     font-bold
 
                     text-emerald-600
+                    sm:mt-3
+                    sm:px-3
+                    sm:py-1.5
+                    sm:text-sm
                   "
                 >
-                  <TrendingUp size={15} />
+                  <TrendingUp size={13} />
 
                   {product.growth}
                 </div>
@@ -235,8 +242,8 @@ export default function TopProducts() {
 
             {/* Progress */}
 
-            <div className="mt-5">
-              <div className="mb-2 flex items-center justify-between text-xs">
+            <div className="mt-4 sm:mt-5">
+              <div className="mb-1.5 flex items-center justify-between text-[10px] sm:mb-2 sm:text-xs">
                 <span className="text-gray-500">
                   میزان فروش
                 </span>
@@ -246,7 +253,7 @@ export default function TopProducts() {
                 </span>
               </div>
 
-              <div className="h-2 overflow-hidden rounded-full bg-gray-100">
+              <div className="h-1.5 overflow-hidden rounded-full bg-gray-100 sm:h-2">
                 <motion.div
                   initial={{
                     width: 0,

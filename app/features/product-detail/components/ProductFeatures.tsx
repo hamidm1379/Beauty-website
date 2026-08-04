@@ -30,13 +30,14 @@ const features = [
 
 export default function ProductFeatures() {
   return (
-    <section className="mt-10 border-t border-gray-100 pt-8">
+    <section className="mt-4 border-t border-gray-100 pt-6 sm:mt-10 sm:pt-8">
       <div
         className="
           grid
-          grid-cols-2
-          gap-4
-
+          grid-cols-1
+          gap-3
+          sm:grid-cols-2
+          sm:gap-4
           lg:grid-cols-4
         "
       >
@@ -51,16 +52,16 @@ export default function ProductFeatures() {
 
                 flex
                 items-center
-                gap-4
+                gap-3
 
-                rounded-2xl
+                rounded-xl
 
                 border
                 border-gray-100
 
                 bg-gray-50
 
-                p-5
+                p-3.5
 
                 transition-all
                 duration-300
@@ -69,18 +70,22 @@ export default function ProductFeatures() {
                 hover:border-pink-200
                 hover:bg-white
                 hover:shadow-lg
+                sm:gap-4
+                sm:rounded-2xl
+                sm:p-5
               "
             >
               <div
                 className="
                   flex
-                  h-14
-                  w-14
+                  h-11
+                  w-11
+                  shrink-0
 
                   items-center
                   justify-center
 
-                  rounded-2xl
+                  rounded-xl
 
                   bg-pink-100
 
@@ -88,12 +93,15 @@ export default function ProductFeatures() {
                   duration-300
 
                   group-hover:bg-pink-500
+                  sm:h-14
+                  sm:w-14
+                  sm:rounded-2xl
                 "
               >
                 <Icon
                   className="
-                    h-7
-                    w-7
+                    h-5
+                    w-5
 
                     text-pink-500
 
@@ -101,16 +109,18 @@ export default function ProductFeatures() {
                     duration-300
 
                     group-hover:text-white
+                    sm:h-7
+                    sm:w-7
                   "
                 />
               </div>
 
-              <div>
-                <h4 className="font-bold text-gray-800">
+              <div className="min-w-0">
+                <h4 className="truncate text-sm font-bold text-gray-800 sm:text-base">
                   {feature.title}
                 </h4>
 
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-0.5 truncate text-xs text-gray-500 sm:mt-1 sm:text-sm">
                   {feature.description}
                 </p>
               </div>

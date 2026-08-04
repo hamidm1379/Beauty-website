@@ -8,60 +8,33 @@ import CategoryForm from "@/app/features/admin/components/categories/CategoryFor
 
 export default function NewCategoryPage() {
   return (
-    <div className="space-y-6">
-
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
 
-      <div className="flex items-center justify-between">
-
+      <div className="flex items-center justify-between gap-3">
         <div>
-
-          <h1 className="text-3xl font-extrabold text-gray-900">
+          <h1 className="text-xl font-extrabold text-gray-900 sm:text-3xl">
             افزودن دسته‌بندی
           </h1>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 sm:mt-2 sm:text-sm">
             اطلاعات دسته‌بندی جدید را وارد کنید.
           </p>
-
         </div>
 
         <Link
           href="/admin/categories"
-          className="
-            flex
-            items-center
-            gap-2
-
-            rounded-xl
-
-            border
-            border-gray-200
-
-            bg-white
-
-            px-5
-            py-3
-
-            text-sm
-            font-medium
-
-            transition
-
-            hover:bg-gray-50
-          "
+          className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-medium transition hover:bg-gray-50 sm:gap-2 sm:rounded-xl sm:px-5 sm:py-3 sm:text-sm"
         >
-          <ArrowRight size={18} />
-
+          <ArrowRight size={16} className="sm:hidden" />
+          <ArrowRight size={18} className="hidden sm:block" />
           بازگشت
         </Link>
-
       </div>
 
       {/* Form */}
 
       <CategoryForm mode="create" />
-
     </div>
   );
 }

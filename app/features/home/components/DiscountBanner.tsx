@@ -25,7 +25,8 @@ export default function DiscountBanner() {
       className="
       relative
       overflow-hidden
-      h-70
+      h-56
+      lg:h-70
       rounded-2xl
       md:rounded-4xl
       bg-linear-to-br
@@ -43,14 +44,16 @@ export default function DiscountBanner() {
         <div className="flex h-full flex-col">
           <Gift size={42} />
 
-          <h3 className="mt-5 text-xl md:text-2xl font-bold">تخفیف اولین خرید</h3>
+          <h3 className="mt-2 sm:mt-5 text-xl md:text-2xl font-bold">
+            تخفیف اولین خرید
+          </h3>
 
           <p className="mt-3 max-md:text-sm max-w-xs text-white/90">
             برای اولین سفارش خود ۲۰٪ تخفیف دریافت کنید.
           </p>
-
-          <div
-            className="
+          <div className="grid max-lg:grid-cols-2">
+            <div
+              className="
             mt-6
             inline-flex
             w-fit
@@ -63,40 +66,41 @@ export default function DiscountBanner() {
             sm:font-bold
             backdrop-blur-sm
             select-none cursor-default
+            lg:col-span-2
           "
-          >
-            WELCOME20
-          </div>
+            >
+              WELCOME20
+            </div>
 
-          <div className="sm:flex-1 max-sm:h-2.5" />
-
-          <button
-            onClick={copyDiscountCode}
-            className="
-    w-fit
+            <button
+              onClick={copyDiscountCode}
+              className="
+            
     rounded-2xl
     bg-white
-    px-4
-    py-2
+    px-2
+    py-1
     sm:px-6
     sm:py-2
     font-medium
     text-pink-600
     text-center
-    m-0.5
-    sm:m-1.5
+    lg:w-fit
+    lg:mt-3
     cursor-pointer
-    text-sm
-
+    text-xs
+    max-lg:mt-6
+    max-lg:mx-auto
     transition-all
     duration-300
-
+    max-lg:h-9.25
     hover:scale-105
     hover:shadow-lg
   "
-          >
-            کپی کد تخفیف
-          </button>
+            >
+              کپی کد تخفیف
+            </button>
+          </div>
         </div>
 
         {/* Image */}

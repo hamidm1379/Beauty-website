@@ -18,8 +18,8 @@ const quickLinks = [
 
 const serviceLinks = [
   { href: "/account", label: "پیگیری سفارش" },
-  { href: "#", label: "قوانین و مقررات" },
-  { href: "#", label: "حریم خصوصی" },
+  { href: "/terms", label: "قوانین و مقررات" },
+  { href: "/privacy", label: "حریم خصوصی" },
 ];
 
 const infoLinks = [
@@ -50,38 +50,17 @@ function FooterLinkGroup({
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay }}
     >
-      <h4 className="mb-6 text-lg font-bold text-gray-900">{title}</h4>
+      <h4 className="mb-4 sm:mb-6 text-base sm:text-lg font-bold text-gray-900">{title}</h4>
 
-      <ul className="space-y-3">
+      <ul className="space-y-2.5 sm:space-y-3">
         {links.map((link) => (
           <li key={link.label}>
             <Link
               href={link.href}
-              className="
-                group
-                relative
-                inline-flex
-                items-center
-                text-gray-500
-                transition-colors
-                duration-300
-                hover:text-pink-500
-              "
+              className="group relative inline-flex items-center text-sm sm:text-base text-gray-500 transition-colors duration-300 hover:text-pink-500"
             >
               <span>{link.label}</span>
-              <span
-                className="
-                  absolute
-                  -bottom-1
-                  right-0
-                  h-px
-                  w-0
-                  bg-pink-500
-                  transition-all
-                  duration-300
-                  group-hover:w-full
-                "
-              />
+              <span className="absolute -bottom-1 right-0 h-px w-0 bg-pink-500 transition-all duration-300 group-hover:w-full" />
             </Link>
           </li>
         ))}
@@ -113,8 +92,8 @@ function FloatingBubbles() {
           key={i}
           className="absolute rounded-full"
           style={{
-            width: b.size,
-            height: b.size,
+            width: b.size * 0.6,
+            height: b.size * 0.6,
             top: b.top,
             left: b.left,
             background:
@@ -170,8 +149,12 @@ function TwinklingStars() {
           }}
         >
           <Star
+            size={s.size * 0.7}
+            className="fill-pink-300 text-pink-300 drop-shadow-[0_0_4px_rgba(244,114,182,0.8)] sm:hidden"
+          />
+          <Star
             size={s.size}
-            className="fill-pink-300 text-pink-300 drop-shadow-[0_0_4px_rgba(244,114,182,0.8)]"
+            className="hidden fill-pink-300 text-pink-300 drop-shadow-[0_0_4px_rgba(244,114,182,0.8)] sm:block"
           />
         </motion.span>
       ))}
@@ -196,8 +179,8 @@ export default function Footer() {
   return (
     <footer className="relative overflow-hidden border-t border-gray-100 bg-linear-to-b from-pink-50/60 via-white to-white">
       {/* Decorative glow */}
-      <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-pink-200/30 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-pink-100/40 blur-3xl" />
+      <div className="pointer-events-none absolute -left-24 -top-24 h-48 w-48 sm:h-72 sm:w-72 rounded-full bg-pink-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 h-48 w-48 sm:h-72 sm:w-72 rounded-full bg-pink-100/40 blur-3xl" />
 
       {/* Floating bubbles */}
       <FloatingBubbles />
@@ -205,60 +188,31 @@ export default function Footer() {
       {/* Twinkling stars */}
       <TwinklingStars />
 
-      <div className="relative mx-auto max-w-7xl px-4 pt-16 pb-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 pt-10 sm:pt-16 pb-6 lg:px-8">
         {/* Newsletter — signature element */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.6 }}
-          className="
-    relative
-    mb-16
-    overflow-hidden
-    rounded-2xl
-    md:rounded-4xl
-
-    border
-    border-pink-200
-    
-    bg-white
-    p-6
-    md:p-8
-
-    shadow-xl
-    shadow-pink-200/60
-  "
+          className="relative mb-10 sm:mb-16 overflow-hidden rounded-2xl md:rounded-4xl border border-pink-200 bg-white p-4 sm:p-6 md:p-8 shadow-xl shadow-pink-200/60"
         >
           {/* Decoration */}
-          <div className="absolute -top-24 -left-20 h-56 w-56 rounded-full bg-pink-100 blur-3xl opacity-70" />
-          <div className="absolute -bottom-24 -right-20 h-56 w-56 rounded-full bg-rose-100 blur-3xl opacity-70" />
+          <div className="absolute -top-24 -left-20 h-40 w-40 sm:h-56 sm:w-56 rounded-full bg-pink-100 blur-3xl opacity-70" />
+          <div className="absolute -bottom-24 -right-20 h-40 w-40 sm:h-56 sm:w-56 rounded-full bg-rose-100 blur-3xl opacity-70" />
 
           <div className="relative flex flex-col items-center justify-between gap-4 md:gap-8 lg:flex-row">
             {/* Text */}
             <div className="max-w-xl text-center lg:text-right">
-              <span
-                className="
-          inline-flex
-          items-center
-          rounded-full
-          bg-pink-50
-          px-4
-          py-2
-          text-[13px]
-          sm:text-sm
-          font-bold
-          text-pink-600
-        "
-              >
+              <span className="inline-flex items-center rounded-full bg-pink-50 px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-sm font-bold text-pink-600">
                 خبرنامه زیبارو
               </span>
 
-              <h3 className="mt-2 md:mt-5 text-xl sm:text-2xl md:text-3xl font-black text-gray-900">
+              <h3 className="mt-2 md:mt-5 text-lg sm:text-2xl md:text-3xl font-black text-gray-900">
                 عضو خبرنامه شوید
               </h3>
 
-              <p className="mt-3 max-sm:text-sm leading-8 text-gray-500">
+              <p className="mt-2 sm:mt-3 text-xs sm:text-sm md:text-base leading-6 sm:leading-8 text-gray-500">
                 جدیدترین تخفیف‌ها، محصولات جدید و نکات آرایشی را زودتر از همه
                 دریافت کنید.
               </p>
@@ -267,28 +221,7 @@ export default function Footer() {
             {/* Form */}
             <form
               onSubmit={handleSubscribe}
-              className="
-        flex
-        w-full
-        
-        items-center
-        gap-0.5
-        sm:gap-3
-
-        rounded-2xl
-
-        border
-        border-gray-200
-
-        bg-gray-50
-        p-2
-
-        transition
-
-        focus-within:border-pink-400
-        focus-within:bg-white
-        focus-within:shadow-lg
-      "
+              className="flex w-full items-center gap-0.5 sm:gap-3 rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 p-1.5 sm:p-2 transition focus-within:border-pink-400 focus-within:bg-white focus-within:shadow-lg"
             >
               <div className="flex h-8 w-8 md:h-11 md:w-11 items-center justify-center rounded-lg md:rounded-xl md:bg-pink-100 text-pink-500">
                 <Mail size={18} />
@@ -299,49 +232,13 @@ export default function Footer() {
                 onChange={(e) => setEmail(e.target.value)}
                 type="email"
                 placeholder="ایمیل خود را وارد کنید..."
-                className="
-          flex-1
-          bg-transparent
-          text-gray-700
-          outline-none
-          placeholder:text-gray-400
-          placeholder:max-md:text-[11px]
-          max-sm:text-[11px]
-          w-full
-        "
+                className="flex-1 w-full bg-transparent text-sm sm:text-base text-gray-700 outline-none placeholder:text-gray-400 placeholder:text-[11px] sm:placeholder:text-sm"
               />
 
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                className="
-          flex
-          items-center
-          gap-0.5
-          sm:gap-2
-          cursor-pointer
-          rounded-md
-          sm:rounded-xl
-
-          text-[12px]
-          bg-pink-500
-          
-          px-1
-          py-1.5
-
-          sm:px-6
-          sm:py-3
-
-          sm:font-bold
-
-          text-white
-
-          shadow-lg
-
-          transition
-
-          hover:bg-pink-600
-        "
+                className="flex items-center gap-0.5 sm:gap-2 cursor-pointer rounded-md sm:rounded-xl bg-pink-500 px-2 py-1.5 sm:px-6 sm:py-3 text-[11px] sm:text-sm sm:font-bold text-white shadow-lg transition hover:bg-pink-600"
               >
                 عضویت
                 <ArrowLeft size={14} />
@@ -351,15 +248,16 @@ export default function Footer() {
         </motion.div>
 
         {/* Main grid */}
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 sm:gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.5 }}
+            className="col-span-2 sm:col-span-1"
           >
-            <div className="mb-6 flex items-center gap-2">
+            <div className="mb-4 sm:mb-6 flex items-center gap-2">
               <motion.div
                 animate={{ scale: [1, 1.12, 1] }}
                 transition={{
@@ -367,17 +265,17 @@ export default function Footer() {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="h-10 w-10 rounded-full bg-linear-to-br from-pink-500 to-rose-400"
+                className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-linear-to-br from-pink-500 to-rose-400"
               />
-              <h3 className="text-2xl font-bold text-gray-800">زیبارو</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-800">زیبارو</h3>
             </div>
 
-            <p className="leading-8 text-gray-500">
+            <p className="text-sm sm:text-base leading-6 sm:leading-8 text-gray-500">
               فروشگاه اینترنتی زیبارو، مرجع تخصصی فروش محصولات آرایشی و بهداشتی
               اصل با بهترین قیمت و ارسال سریع.
             </p>
 
-            <div className="mt-6 flex items-center gap-3">
+            <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-3">
               {socials.map(({ icon: Icon, href, label }, i) => (
                 <motion.a
                   key={label}
@@ -396,25 +294,7 @@ export default function Footer() {
                     boxShadow: "0 8px 20px -4px rgba(236, 72, 153, 0.45)",
                   }}
                   whileTap={{ scale: 0.95 }}
-                  className="
-                    relative
-
-                    flex
-                    h-11
-                    w-11
-                    items-center
-                    justify-center
-                    rounded-full
-                    border
-                    border-gray-200
-                    bg-white
-                    text-gray-500
-                    transition-colors
-                    duration-300
-                    hover:border-pink-500
-                    hover:bg-pink-500
-                    hover:text-white
-                  "
+                  className="relative flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors duration-300 hover:border-pink-500 hover:bg-pink-500 hover:text-white"
                 >
                   <Icon size={18} />
                 </motion.a>
@@ -436,10 +316,10 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="my-10 border-t border-gray-100" />
+        <div className="my-6 sm:my-10 border-t border-gray-100" />
 
         {/* Bottom footer */}
-        <div className="flex flex-col-reverse items-center justify-between gap-4 text-center text-sm text-gray-400 md:flex-row">
+        <div className="flex flex-col-reverse items-center justify-between gap-4 text-center text-xs sm:text-sm text-gray-400 md:flex-row">
           <p>© 2026 تمامی حقوق این وب‌سایت محفوظ است.</p>
 
           <p>
@@ -448,6 +328,7 @@ export default function Footer() {
               height={200}
               src={enamad}
               alt="نماد اعتماد الکترونیکی"
+              className="h-auto w-24 sm:w-36 md:w-[220px]"
             />
           </p>
         </div>

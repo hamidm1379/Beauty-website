@@ -9,7 +9,8 @@ export default function BrandsBanner() {
       className="
       relative
 
-      h-70
+      h-64
+      lg:h-70
 
       overflow-hidden
 

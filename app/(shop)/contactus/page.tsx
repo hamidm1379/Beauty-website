@@ -8,7 +8,7 @@ import ContactInfo from "@/app/features/contactus/components/ContactInfo";
 export default function ContactPage() {
   return (
     <main className="bg-[#fcfcfc]">
-      <div className="mx-auto max-w-7xl px-4 py-4 md:py-8">
+      <div className="mx-auto max-w-7xl px-4 py-6 md:py-8">
 
 
         <div className="mt-2 md:mt-8 text-center">
@@ -27,9 +27,11 @@ export default function ContactPage() {
             md:mt-10
 
             grid
-            gap-3
+            gap-4
+            sm:gap-5
             md:gap-6
 
+            md:grid-cols-2
             lg:grid-cols-[280px_1fr_360px]
           "
         >
@@ -37,7 +39,9 @@ export default function ContactPage() {
 
           <ContactForm />
 
-          <ContactImage />
+          <div className="hidden lg:block">
+            <ContactImage />
+          </div>
         </section>
 
         {/* <section className="mx-auto mt-12 max-w-5xl">

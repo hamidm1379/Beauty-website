@@ -11,22 +11,19 @@ import FinancialCards from "@/app/features/admin/components/reports/FinancialCar
 export default async function ReportsPage({
   searchParams,
 }: {
-  searchParams: {
+  searchParams: Promise<{
     range?: string;
-  };
+  }>;
 }) {
+  const params = await searchParams;
+
   const reports = await reportService.getReports({
-    range: searchParams.range,
+    range: params.range,
   });
 
   return (
-    <div className="space-y-8">
-      <h1
-        className="
-text-3xl
-font-black
-"
-      >
+    <div className="space-y-5 sm:space-y-8">
+      <h1 className="text-xl sm:text-3xl font-black">
         گزارشات فروش
       </h1>
 
@@ -34,7 +31,7 @@ font-black
       <ReportCards data={reports.summary} />
       <FinancialCards data={reports.financial} />
       <SalesChart data={reports.salesChart} />
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-3 sm:gap-6 lg:grid-cols-2">
         <OrderStatusChart data={reports.orderStatus} />
         <TopProducts data={reports.topProducts} />
       </div>

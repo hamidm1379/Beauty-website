@@ -57,27 +57,6 @@ export default function OurValues() {
       {/* Header */}
 
       <div className="mx-auto max-w-3xl text-center">
-        <span
-          className="
-            inline-flex
-
-            rounded-full
-
-            bg-pink-100
-
-            px-4
-            py-2
-
-            text-[12px]
-            sm:text-sm
-            font-semibold
-
-            text-pink-600
-          "
-        >
-          ارزش‌های ما
-        </span>
-
         <h2
           className="
             mt-3
@@ -151,11 +130,9 @@ export default function OurValues() {
                 px-4
                 sm:px-6
                 md:px-8
-                pt-4
-                sm:pt-6
-                md:pt-8
-                pb-16
-                md:pb-20
+                py-4
+                sm:py-6
+                md:py-8
                 backdrop-blur-sm
 
                 shadow-sm
@@ -261,32 +238,6 @@ export default function OurValues() {
               >
                 {item.description}
               </p>
-
-              {/* Number */}
-
-              <span
-                className="
-                  absolute
-
-                  bottom-6
-                  left-6
-
-                  lg:text-5xl
-                  md:text-4xl
-                  sm:text-3xl
-                  text-2xl
-                  font-black
-
-                  text-pink-100
-
-                  transition-all
-                  duration-500
-
-                  group-hover:scale-110
-                "
-              >
-                0{index + 1}
-              </span>
             </div>
           );
         })}

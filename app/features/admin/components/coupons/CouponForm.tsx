@@ -143,25 +143,25 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-8 rounded-3xl bg-white p-8 shadow-sm"
+      className="space-y-6 rounded-2xl bg-white p-4 shadow-sm sm:space-y-8 sm:rounded-3xl sm:p-8"
     >
       {/* Code */}
       <div>
-        <label className="mb-2 block text-sm font-medium">کد تخفیف</label>
-        <div className="flex gap-3">
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">کد تخفیف</label>
+        <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
           <input
             type="text"
             name="code"
             value={form.code}
             onChange={handleChange}
             placeholder="مثلاً SUMMER20"
-            className="w-full rounded-xl border px-4 py-3 uppercase"
+            className="w-full rounded-lg border px-3 py-2 text-sm uppercase sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
             required
           />
           <button
             type="button"
             onClick={generateRandomCode}
-            className="shrink-0 rounded-xl border border-pink-200 px-4 py-3 text-sm font-medium text-pink-600 transition hover:bg-pink-50"
+            className="shrink-0 rounded-lg border border-pink-200 px-3 py-2 text-xs font-medium text-pink-600 transition hover:bg-pink-50 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
           >
             تولید خودکار
           </button>
@@ -170,38 +170,38 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
 
       {/* Title */}
       <div>
-        <label className="mb-2 block text-sm font-medium">عنوان (اختیاری)</label>
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">عنوان (اختیاری)</label>
         <input
           type="text"
           name="title"
           value={form.title}
           onChange={handleChange}
           placeholder="مثلاً تخفیف ویژه تابستان"
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
       </div>
 
       {/* Description */}
       <div>
-        <label className="mb-2 block text-sm font-medium">توضیحات</label>
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">توضیحات</label>
         <textarea
           rows={3}
           name="description"
           value={form.description}
           onChange={handleChange}
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
       </div>
 
       {/* Type + Value */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
         <div>
-          <label className="mb-2 block text-sm font-medium">نوع تخفیف</label>
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">نوع تخفیف</label>
           <select
             name="type"
             value={form.type}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
           >
             <option value="PERCENT">درصدی</option>
             <option value="FIXED">مبلغ ثابت</option>
@@ -209,7 +209,7 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
             مقدار تخفیف {form.type === "PERCENT" ? "(٪)" : "(تومان)"}
           </label>
           <input
@@ -219,16 +219,16 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
             max={form.type === "PERCENT" ? 100 : undefined}
             value={form.value}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
             required
           />
         </div>
       </div>
 
       {/* Minimum purchase + Max discount */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
         <div>
-          <label className="mb-2 block text-sm font-medium">
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
             حداقل مبلغ خرید (اختیاری)
           </label>
           <input
@@ -237,12 +237,12 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
             min={0}
             value={form.minimumPurchase}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
             حداکثر مبلغ تخفیف (اختیاری)
           </label>
           <input
@@ -251,7 +251,7 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
             min={0}
             value={form.maximumDiscount}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
             disabled={form.type === "FIXED"}
           />
         </div>
@@ -259,7 +259,7 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
 
       {/* Usage limit */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
           سقف تعداد استفاده (اختیاری)
         </label>
         <input
@@ -269,14 +269,14 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
           value={form.usageLimit}
           onChange={handleChange}
           placeholder="خالی بگذارید برای نامحدود"
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
       </div>
 
       {/* Dates */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
         <div>
-          <label className="mb-2 block text-sm font-medium">
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
             تاریخ شروع (اختیاری)
           </label>
           <input
@@ -284,12 +284,12 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
             name="startsAt"
             value={form.startsAt}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
             تاریخ انقضا (اختیاری)
           </label>
           <input
@@ -297,33 +297,33 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
             name="expiresAt"
             value={form.expiresAt}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
           />
         </div>
       </div>
 
       {/* Active */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2.5 sm:gap-3">
         <input
           type="checkbox"
           id="isActive"
           name="isActive"
           checked={form.isActive}
           onChange={handleChange}
-          className="h-5 w-5 rounded border-gray-300 text-pink-600"
+          className="h-4 w-4 rounded border-gray-300 text-pink-600 sm:h-5 sm:w-5"
         />
-        <label htmlFor="isActive" className="text-sm font-medium">
+        <label htmlFor="isActive" className="text-xs font-medium sm:text-sm">
           کد تخفیف فعال باشد
         </label>
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-end gap-4 border-t pt-6">
+      <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end sm:gap-4 sm:pt-6">
         <button
           type="button"
           onClick={() => router.back()}
           disabled={loading}
-          className="rounded-xl border border-gray-300 px-6 py-3 font-medium transition hover:bg-gray-100 disabled:opacity-50"
+          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:opacity-50 sm:rounded-xl sm:px-6 sm:py-3 sm:text-base"
         >
           انصراف
         </button>
@@ -331,7 +331,7 @@ export default function CouponForm({ mode, initialData }: CouponFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center gap-2 rounded-xl bg-pink-600 px-8 py-3 font-semibold text-white transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg bg-pink-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-50 sm:rounded-xl sm:px-8 sm:py-3 sm:text-base"
         >
           {loading
             ? "در حال ثبت..."

@@ -73,35 +73,32 @@ export default function OrderFilters() {
   }
 
   return (
-    <div className="space-y-4 rounded-3xl bg-white p-5 shadow-sm">
-      <div className="flex items-center gap-2 text-sm font-semibold text-gray-500">
-        <SlidersHorizontal size={16} />
+    <div className="space-y-3 sm:space-y-4 rounded-2xl sm:rounded-3xl bg-white p-3 sm:p-5 shadow-sm">
+      <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold text-gray-500">
+        <SlidersHorizontal className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         فیلتر سفارش‌ها
       </div>
 
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+      <div className="flex flex-col gap-2.5 sm:gap-3 lg:flex-row lg:items-center">
         {/* Search */}
         <div className="relative flex-1">
-          <Search
-            size={18}
-            className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
-          />
+          <Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 sm:h-[18px] sm:w-[18px] -translate-y-1/2 text-gray-400 sm:right-4" />
 
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="جستجو بر اساس شماره سفارش، نام یا شماره موبایل مشتری..."
-            className="h-12 w-full rounded-2xl border border-gray-200 bg-gray-50 pr-11 pl-10 text-sm outline-none transition focus:border-pink-400 focus:bg-white focus:ring-4 focus:ring-pink-100"
+            className="h-10 sm:h-12 w-full rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 pr-9 pl-8 sm:pr-11 sm:pl-10 text-xs sm:text-sm outline-none transition focus:border-pink-400 focus:bg-white focus:ring-4 focus:ring-pink-100"
           />
 
           {search && (
             <button
               type="button"
               onClick={() => setSearch("")}
-              className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+              className="absolute left-2.5 sm:left-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
               aria-label="پاک کردن جستجو"
             >
-              <X size={16} />
+              <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </button>
           )}
         </div>
@@ -110,7 +107,7 @@ export default function OrderFilters() {
         <select
           value={status}
           onChange={(e) => updateParams({ status: e.target.value })}
-          className="h-12 rounded-2xl border border-gray-200 bg-gray-50 px-4 text-sm outline-none transition focus:border-pink-400 focus:bg-white lg:w-56"
+          className="h-10 sm:h-12 rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 text-xs sm:text-sm outline-none transition focus:border-pink-400 focus:bg-white lg:w-56"
         >
           {STATUS_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -123,7 +120,7 @@ export default function OrderFilters() {
         <select
           value={paymentStatus}
           onChange={(e) => updateParams({ paymentStatus: e.target.value })}
-          className="h-12 rounded-2xl border border-gray-200 bg-gray-50 px-4 text-sm outline-none transition focus:border-pink-400 focus:bg-white lg:w-56"
+          className="h-10 sm:h-12 rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 text-xs sm:text-sm outline-none transition focus:border-pink-400 focus:bg-white lg:w-56"
         >
           {PAYMENT_STATUS_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -137,9 +134,9 @@ export default function OrderFilters() {
           <button
             type="button"
             onClick={resetFilters}
-            className="flex h-12 items-center gap-2 whitespace-nowrap rounded-2xl border border-gray-200 px-5 text-sm font-medium text-gray-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+            className="flex h-10 sm:h-12 items-center gap-1.5 sm:gap-2 whitespace-nowrap rounded-xl sm:rounded-2xl border border-gray-200 px-4 sm:px-5 text-xs sm:text-sm font-medium text-gray-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-500"
           >
-            <X size={16} />
+            <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             حذف فیلترها
           </button>
         )}

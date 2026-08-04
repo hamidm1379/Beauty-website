@@ -68,36 +68,49 @@ export default function ProductToolbar({
         y: 0,
       }}
       className="
-        rounded-4xl
+        rounded-2xl
         border
         border-gray-100
         bg-white
-        p-6
+        p-4
+
         shadow-sm
+
+        sm:rounded-3xl
+        sm:p-5
+
+        xl:rounded-4xl
+        xl:p-6
       "
     >
       <div
         className="
           flex
           flex-col
-          gap-5
+          gap-3
+
+          sm:gap-4
 
           xl:flex-row
           xl:items-center
           xl:justify-between
+          xl:gap-5
         "
       >
         {/* Search */}
 
         <div className="relative w-full xl:max-w-md">
           <Search
-            size={18}
+            size={16}
             className="
               absolute
-              right-4
+              right-3
               top-1/2
               -translate-y-1/2
               text-gray-400
+
+              sm:right-4
+              sm:size-[18px]
             "
           />
 
@@ -111,19 +124,27 @@ export default function ProductToolbar({
               updateFilter("search", (e.target as HTMLInputElement).value);
             }}
             className="
-              h-12
+              h-10
               w-full
-              rounded-2xl
+              rounded-xl
               border
               border-gray-200
               bg-gray-50
-              pr-11
-              pl-4
-              text-sm
+              pr-9
+              pl-3
+              text-xs
               outline-none
               transition
               focus:border-pink-500
               focus:bg-white
+
+              sm:h-11
+              sm:rounded-2xl
+              sm:pr-10
+              sm:pl-4
+              sm:text-sm
+
+              xl:h-12
             "
           />
         </div>
@@ -132,26 +153,39 @@ export default function ProductToolbar({
 
         <div
           className="
-            flex
-            flex-wrap
-            items-center
-            gap-3
+            grid
+            grid-cols-2
+            gap-2
+
+            sm:flex
+            sm:flex-wrap
+            sm:items-center
+            sm:gap-3
           "
         >
           <select
             value={filters.category}
             onChange={(e) => updateFilter("category", e.target.value)}
             className="
-              h-12
-              rounded-2xl
+              h-10
+              w-full
+              rounded-xl
               border
               border-gray-200
               bg-white
-              px-4
-              text-sm
+              px-3
+              text-xs
               outline-none
               transition
               focus:border-pink-500
+
+              sm:h-11
+              sm:w-auto
+              sm:rounded-2xl
+              sm:px-4
+              sm:text-sm
+
+              xl:h-12
             "
           >
             <option value="">همه دسته‌بندی‌ها</option>
@@ -166,17 +200,26 @@ export default function ProductToolbar({
             value={filters.brand}
             onChange={(e) => updateFilter("brand", e.target.value)}
             className="
-    h-12
-    rounded-2xl
-    border
-    border-gray-200
-    bg-white
-    px-4
-    text-sm
-    outline-none
-    transition
-    focus:border-pink-500
-  "
+              h-10
+              w-full
+              rounded-xl
+              border
+              border-gray-200
+              bg-white
+              px-3
+              text-xs
+              outline-none
+              transition
+              focus:border-pink-500
+
+              sm:h-11
+              sm:w-auto
+              sm:rounded-2xl
+              sm:px-4
+              sm:text-sm
+
+              xl:h-12
+            "
           >
             <option value="">همه برندها</option>
 
@@ -190,17 +233,26 @@ export default function ProductToolbar({
             value={filters.status}
             onChange={(e) => updateFilter("status", e.target.value)}
             className="
-    h-12
-    rounded-2xl
-    border
-    border-gray-200
-    bg-white
-    px-4
-    text-sm
-    outline-none
-    transition
-    focus:border-pink-500
-  "
+              h-10
+              w-full
+              rounded-xl
+              border
+              border-gray-200
+              bg-white
+              px-3
+              text-xs
+              outline-none
+              transition
+              focus:border-pink-500
+
+              sm:h-11
+              sm:w-auto
+              sm:rounded-2xl
+              sm:px-4
+              sm:text-sm
+
+              xl:h-12
+            "
           >
             <option value="">همه وضعیت‌ها</option>
 
@@ -215,17 +267,26 @@ export default function ProductToolbar({
             value={filters.sort}
             onChange={(e) => updateFilter("sort", e.target.value)}
             className="
-    h-12
-    rounded-2xl
-    border
-    border-gray-200
-    bg-white
-    px-4
-    text-sm
-    outline-none
-    transition
-    focus:border-pink-500
-  "
+              h-10
+              w-full
+              rounded-xl
+              border
+              border-gray-200
+              bg-white
+              px-3
+              text-xs
+              outline-none
+              transition
+              focus:border-pink-500
+
+              sm:h-11
+              sm:w-auto
+              sm:rounded-2xl
+              sm:px-4
+              sm:text-sm
+
+              xl:h-12
+            "
           >
             <option value="newest">جدیدترین</option>
 
@@ -244,59 +305,74 @@ export default function ProductToolbar({
 
       <div
         className="
-          mt-6
+          mt-4
 
           flex
           flex-wrap
           items-center
           justify-between
 
-          gap-4
+          gap-2
+
+          sm:mt-6
+          sm:gap-4
         "
       >
-        <div className="flex items-center gap-3">
+        <div className="flex flex-1 items-center gap-2 sm:flex-none sm:gap-3">
           <button
             className="
               flex
+              flex-1
               items-center
-              gap-2
+              justify-center
+              gap-1.5
 
-              rounded-2xl
+              rounded-xl
 
               border
               border-gray-200
 
-              px-4
-              py-3
+              px-3
+              py-2
 
-              text-sm
+              text-xs
               font-medium
 
               transition
 
               hover:border-pink-400
               hover:text-pink-600
+
+              sm:flex-none
+              sm:justify-start
+              sm:gap-2
+              sm:rounded-2xl
+              sm:px-4
+              sm:py-3
+              sm:text-sm
             "
           >
-            <RefreshCcw size={17} />
+            <RefreshCcw size={15} className="sm:size-[17px]" />
             بروزرسانی
           </button>
 
           <button
             className="
               flex
+              flex-1
               items-center
-              gap-2
+              justify-center
+              gap-1.5
 
-              rounded-2xl
+              rounded-xl
 
               border
               border-red-200
 
-              px-4
-              py-3
+              px-3
+              py-2
 
-              text-sm
+              text-xs
               font-medium
 
               text-red-500
@@ -304,9 +380,17 @@ export default function ProductToolbar({
               transition
 
               hover:bg-red-50
+
+              sm:flex-none
+              sm:justify-start
+              sm:gap-2
+              sm:rounded-2xl
+              sm:px-4
+              sm:py-3
+              sm:text-sm
             "
           >
-            <Trash2 size={17} />
+            <Trash2 size={15} className="sm:size-[17px]" />
             حذف گروهی
           </button>
         </div>

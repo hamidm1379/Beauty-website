@@ -20,7 +20,13 @@ export default async function ArticleCategoriesPage() {
       <ArticleCategoryToolbar totalCategories={totalCategories} />
 
       {/* Table */}
-      <ArticleCategoriesTable initialData={categories} />
+      <ArticleCategoriesTable
+        initialData={categories.map((c) => ({
+          ...c,
+          createdAt: c.createdAt?.toISOString?.() ?? String(c.createdAt),
+          updatedAt: c.updatedAt?.toISOString?.() ?? String(c.updatedAt),
+        }))}
+      />
     </div>
   );
 }

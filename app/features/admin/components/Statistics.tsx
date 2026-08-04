@@ -90,19 +90,19 @@ export default function Statistics() {
     >
       {/* Header */}
 
-      <div className="border-b border-gray-100 p-6">
-        <h2 className="text-xl font-black text-gray-900">
+      <div className="border-b border-gray-100 p-4 sm:p-6">
+        <h2 className="text-lg font-black text-gray-900 sm:text-xl">
           آمار سریع
         </h2>
 
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-1.5 text-xs text-gray-500 sm:mt-2 sm:text-sm">
           خلاصه عملکرد فروشگاه
         </p>
       </div>
 
       {/* Statistics */}
 
-      <div className="space-y-4 p-6">
+      <div className="space-y-3 p-4 sm:space-y-4 sm:p-6">
         {statistics.map((item, index) => {
           const Icon = item.icon;
 
@@ -124,45 +124,47 @@ export default function Statistics() {
                 x: -3,
               }}
               className="
-                rounded-3xl
+                rounded-2xl
                 border
                 border-gray-100
                 bg-gray-50
-                p-4
+                p-3
                 transition-all
                 hover:bg-white
                 hover:shadow-md
+                sm:rounded-3xl
+                sm:p-4
               "
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs text-gray-500 sm:text-sm">
                     {item.title}
                   </p>
 
-                  <div className="mt-2 flex items-end gap-2">
-                    <h3 className="text-2xl font-black">
+                  <div className="mt-1.5 flex items-end gap-1.5 sm:mt-2 sm:gap-2">
+                    <h3 className="text-xl font-black sm:text-2xl">
                       {item.value}
                     </h3>
 
                     {item.suffix && (
-                      <span className="pb-1 text-xs text-gray-400">
+                      <span className="pb-0.5 text-[10px] text-gray-400 sm:pb-1 sm:text-xs">
                         {item.suffix}
                       </span>
                     )}
                   </div>
 
                   <div
-                    className={`mt-3 flex items-center gap-1 text-sm font-bold ${
+                    className={`mt-2 flex items-center gap-1 text-xs font-bold sm:mt-3 sm:text-sm ${
                       item.positive
                         ? "text-emerald-500"
                         : "text-red-500"
                     }`}
                   >
                     {item.positive ? (
-                      <TrendingUp size={16} />
+                      <TrendingUp size={14} />
                     ) : (
-                      <TrendingDown size={16} />
+                      <TrendingDown size={14} />
                     )}
 
                     {item.change}
@@ -172,11 +174,15 @@ export default function Statistics() {
                 <div
                   className={`
                     flex
-                    h-14
-                    w-14
+                    h-10
+                    w-10
                     items-center
                     justify-center
-                    rounded-2xl
+                    rounded-xl
+
+                    sm:h-14
+                    sm:w-14
+                    sm:rounded-2xl
 
                     ${
                       item.color === "pink"
@@ -189,7 +195,8 @@ export default function Statistics() {
                     }
                   `}
                 >
-                  <Icon size={24} />
+                  <Icon size={18} className="sm:hidden" />
+                  <Icon size={24} className="hidden sm:block" />
                 </div>
               </div>
             </motion.div>
@@ -199,12 +206,12 @@ export default function Statistics() {
 
       {/* Progress */}
 
-      <div className="border-t border-gray-100 p-6">
-        <h3 className="mb-5 font-bold text-gray-900">
+      <div className="border-t border-gray-100 p-4 sm:p-6">
+        <h3 className="mb-4 font-bold text-gray-900 sm:mb-5">
           وضعیت فروشگاه
         </h3>
 
-        <div className="space-y-5">
+        <div className="space-y-4 sm:space-y-5">
           {progress.map((item, index) => {
             const Icon = item.icon;
 

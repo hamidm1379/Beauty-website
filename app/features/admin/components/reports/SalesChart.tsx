@@ -14,29 +14,12 @@ import type { SalesPoint } from "./types";
 
 export default function SalesChart({ data }: { data: SalesPoint[] }) {
   return (
-    <div
-      className="
-rounded-3xl
-bg-white
-p-6
-shadow
-"
-    >
-      <h2
-        className="
-mb-6
-text-xl
-font-black
-"
-      >
+    <div className="rounded-2xl sm:rounded-3xl bg-white p-4 sm:p-6 shadow">
+      <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-black">
         نمودار فروش
       </h2>
 
-      <div
-        className="
-h-87.5
-"
-      >
+      <div className="h-64 sm:h-80 md:h-96">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -46,10 +29,9 @@ h-87.5
             <YAxis />
 
             <Tooltip
-              formatter={(value: number) => [
-                value.toLocaleString() + " تومان",
-                "فروش",
-              ]}
+              formatter={(value: number) =>
+                [value.toLocaleString() + " تومان", "فروش"] as [string, string]
+              }
             />
 
             <Line

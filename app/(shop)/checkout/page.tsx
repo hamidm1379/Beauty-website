@@ -45,17 +45,17 @@ export default async function CheckoutPage({ searchParams }: Props) {
 
   return (
     <main className="bg-[#fcfcfc]">
-      <div className="container mx-auto max-w-7xl px-4 py-8">
+      <div className="container mx-auto max-w-7xl px-4 py-4 sm:py-6 md:py-8">
         {/* Breadcrumb */}
         <Breadcrumb />
 
         {/* Hero */}
-        <section className="mt-6">
+        <section className="mt-4 sm:mt-6 md:mt-8">
           <CheckoutHero />
         </section>
 
         {/* Stepper */}
-        <section className="mt-6">
+        <section className="mt-2 sm:mt-4 md:mt-6">
           <CheckoutStepper currentStep={2} />
         </section>
 

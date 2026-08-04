@@ -88,7 +88,7 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
       const response = await fetch(
         mode === "create"
           ? "/api/categories"
-          : `/api/categories/${initialData.id}`,
+          : `/api/categories/${initialData!.id}`,
         {
           method: mode === "create" ? "POST" : "PUT",
 
@@ -128,12 +128,12 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-8 rounded-3xl bg-white p-8 shadow-sm"
+      className="space-y-6 rounded-2xl bg-white p-4 shadow-sm sm:space-y-8 sm:rounded-3xl sm:p-8"
     >
       {/* Title */}
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
+        <label className="mb-1.5 block text-xs font-medium text-gray-700 sm:mb-2 sm:text-sm">
           عنوان دسته‌بندی
         </label>
 
@@ -143,24 +143,14 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
           value={form.title}
           onChange={handleChange}
           placeholder="مثلاً مراقبت پوست"
-          className="
-            w-full
-            rounded-xl
-            border
-            border-gray-200
-            px-4
-            py-3
-            outline-none
-            transition
-            focus:border-pink-500
-          "
+          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none transition focus:border-pink-500 sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
       </div>
 
       {/* Slug */}
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
+        <label className="mb-1.5 block text-xs font-medium text-gray-700 sm:mb-2 sm:text-sm">
           Slug
         </label>
 
@@ -170,24 +160,14 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
           value={form.slug}
           onChange={handleChange}
           placeholder="skin-care"
-          className="
-            w-full
-            rounded-xl
-            border
-            border-gray-200
-            px-4
-            py-3
-            outline-none
-            transition
-            focus:border-pink-500
-          "
+          className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none transition focus:border-pink-500 sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
       </div>
 
       {/* Image */}
 
       <div>
-        <label className="mb-2 block text-sm font-medium text-gray-700">
+        <label className="mb-1.5 block text-xs font-medium text-gray-700 sm:mb-2 sm:text-sm">
           تصویر دسته‌بندی
         </label>
 
@@ -198,7 +178,7 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
           onChange={(file) =>
             setForm((prev) => ({
               ...prev,
-              imageFile: file,
+              imageFile: file as File | null,
             }))
           }
         />
@@ -223,22 +203,12 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
       )} */}
       {/* Buttons */}
 
-      <div className="flex justify-end gap-4 border-t pt-6">
+      <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end sm:gap-4 sm:pt-6">
         <button
           type="button"
           onClick={() => router.back()}
           disabled={loading}
-          className="
-            rounded-xl
-            border
-            border-gray-300
-            px-6
-            py-3
-            font-medium
-            transition
-            hover:bg-gray-100
-            disabled:opacity-50
-          "
+          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:opacity-50 sm:rounded-xl sm:px-6 sm:py-3 sm:text-base"
         >
           انصراف
         </button>
@@ -246,31 +216,11 @@ export default function CategoryForm({ mode, initialData }: CategoryFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="
-            flex
-            items-center
-            gap-2
-
-            rounded-xl
-
-            bg-pink-600
-
-            px-8
-            py-3
-
-            font-semibold
-            text-white
-
-            transition
-
-            hover:bg-pink-700
-
-            disabled:opacity-50
-          "
+          className="flex items-center justify-center gap-2 rounded-lg bg-pink-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-pink-700 disabled:opacity-50 sm:rounded-xl sm:px-8 sm:py-3 sm:text-base"
         >
           {loading && (
             <svg
-              className="h-5 w-5 animate-spin"
+              className="h-4 w-4 animate-spin sm:h-5 sm:w-5"
               viewBox="0 0 24 24"
               fill="none"
             >

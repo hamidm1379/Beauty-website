@@ -1,13 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Send,
-  MessageCircle,
-} from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 
 const contactItems = [
   {
@@ -22,24 +14,12 @@ const contactItems = [
   },
 ];
 
-const socials = [
-  {
-    icon: Send,
-    href: "#",
-  },
-  {
-    icon: MessageCircle,
-    href: "#",
-  },
-];
-
 export default function ContactInfo() {
   return (
     <aside
       className="
         h-fit
-        rounded-xl
-        sm:rounded-2xl
+        rounded-2xl
         md:rounded-3xl
 
         border
@@ -47,7 +27,8 @@ export default function ContactInfo() {
 
         bg-white
         w-full
-        p-7
+        p-5
+        sm:p-7
         mx-auto
         shadow-sm
       "
@@ -65,7 +46,7 @@ export default function ContactInfo() {
         اطلاعات تماس
       </h2>
 
-      <div className="mt-6 md:mt-8 space-y-7">
+      <div className="mt-5 sm:mt-6 md:mt-8 space-y-5 sm:space-y-7">
         {contactItems.map((item, index) => {
           const Icon = item.icon;
 
@@ -124,53 +105,6 @@ export default function ContactInfo() {
             <div key={index}>
               {content}
             </div>
-          );
-        })}
-      </div>
-
-      <div
-        className="
-          my-8
-
-          border-t
-          border-gray-100
-        "
-      />
-
-      <div className="flex items-center justify-center gap-4">
-        {socials.map((social, index) => {
-          const Icon = social.icon;
-
-          return (
-            <Link
-              key={index}
-              href={social.href}
-              className="
-                flex
-                h-11
-                w-11
-
-                items-center
-                justify-center
-
-                rounded-full
-
-                border
-                border-gray-200
-
-                text-gray-500
-
-                transition-all
-                duration-300
-
-                hover:-translate-y-1
-                hover:border-pink-500
-                hover:bg-pink-500
-                hover:text-white
-              "
-            >
-              <Icon size={19} />
-            </Link>
           );
         })}
       </div>

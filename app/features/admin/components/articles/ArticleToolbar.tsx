@@ -41,32 +41,18 @@ export default function ArticleToolbar({
   }
 
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
-      <div className="grid gap-4 lg:grid-cols-4">
+    <div className="rounded-2xl sm:rounded-3xl bg-white p-3 sm:p-6 shadow-sm">
+      <div className="grid gap-3 sm:gap-4 lg:grid-cols-4">
         {/* Search */}
 
         <div className="relative lg:col-span-2">
-          <Search
-            size={18}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
-          />
+          <Search className="absolute right-3 sm:right-4 top-1/2 h-4 w-4 sm:h-[18px] sm:w-[18px] -translate-y-1/2 text-gray-400" />
 
           <input
             defaultValue={filters.search}
             onChange={(e) => updateParam("search", e.target.value)}
             placeholder="جستجوی عنوان مقاله..."
-            className="
-              w-full
-              rounded-xl
-              border
-              border-gray-200
-              py-3
-              pr-11
-              pl-4
-              outline-none
-              transition
-              focus:border-pink-500
-            "
+            className="w-full rounded-lg sm:rounded-xl border border-gray-200 py-2.5 sm:py-3 pr-9 sm:pr-11 pl-3 sm:pl-4 text-sm sm:text-base outline-none transition focus:border-pink-500"
           />
         </div>
 
@@ -75,14 +61,7 @@ export default function ArticleToolbar({
         <select
           value={filters.category}
           onChange={(e) => updateParam("category", e.target.value)}
-          className="
-            rounded-xl
-            border
-            border-gray-200
-            px-4
-            outline-none
-            focus:border-pink-500
-          "
+          className="rounded-lg sm:rounded-xl border border-gray-200 px-3 sm:px-4 py-2.5 sm:py-0 text-sm sm:text-base outline-none focus:border-pink-500"
         >
           <option value="">همه دسته‌بندی‌ها</option>
 
@@ -101,14 +80,7 @@ export default function ArticleToolbar({
         <select
           value={filters.status}
           onChange={(e) => updateParam("status", e.target.value)}
-          className="
-            rounded-xl
-            border
-            border-gray-200
-            px-4
-            outline-none
-            focus:border-pink-500
-          "
+          className="rounded-lg sm:rounded-xl border border-gray-200 px-3 sm:px-4 py-2.5 sm:py-0 text-sm sm:text-base outline-none focus:border-pink-500"
         >
           <option value="">همه وضعیت‌ها</option>
           <option value="PUBLISHED">منتشر شده</option>
@@ -119,26 +91,18 @@ export default function ArticleToolbar({
 
       {/* Bottom */}
 
-      <div className="mt-5 flex flex-col gap-4 border-t pt-5 md:flex-row md:items-center md:justify-between">
-        <span className="text-sm text-gray-500">
+      <div className="mt-4 sm:mt-5 flex flex-col gap-3 sm:gap-4 border-t pt-4 sm:pt-5 md:flex-row md:items-center md:justify-between">
+        <span className="text-xs sm:text-sm text-gray-500">
           مجموع {totalArticles.toLocaleString("fa-IR")} مقاله
         </span>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {/* Sort */}
 
           <select
             value={filters.sort}
             onChange={(e) => updateParam("sort", e.target.value)}
-            className="
-              rounded-xl
-              border
-              border-gray-200
-              px-4
-              py-2
-              outline-none
-              focus:border-pink-500
-            "
+            className="rounded-lg sm:rounded-xl border border-gray-200 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-base outline-none focus:border-pink-500"
           >
             <option value="newest">جدیدترین</option>
             <option value="oldest">قدیمی‌ترین</option>
@@ -150,24 +114,9 @@ export default function ArticleToolbar({
 
           <button
             onClick={clearFilters}
-            className="
-              flex
-              items-center
-              gap-2
-
-              rounded-xl
-              border
-
-              px-4
-              py-2
-
-              text-gray-600
-
-              transition
-              hover:bg-gray-50
-            "
+            className="flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl border px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-base text-gray-600 transition hover:bg-gray-50"
           >
-            <X size={18} />
+            <X className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
 
             حذف فیلترها
           </button>

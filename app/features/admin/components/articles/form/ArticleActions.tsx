@@ -12,26 +12,15 @@ export default function ArticleActions({
   onCancel,
 }: ArticleActionsProps) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm">
-      <div className="flex justify-end gap-4">
+    <div className="rounded-2xl bg-white p-4 shadow-sm sm:rounded-3xl sm:p-8">
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:gap-4">
         {/* Cancel */}
 
         <button
           type="button"
           disabled={loading}
           onClick={onCancel}
-          className="
-            rounded-xl
-            border
-            border-gray-300
-            px-6
-            py-3
-            font-medium
-            transition
-            hover:bg-gray-100
-            disabled:cursor-not-allowed
-            disabled:opacity-50
-          "
+          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 sm:rounded-xl sm:px-6 sm:py-3 sm:text-base"
         >
           انصراف
         </button>
@@ -41,25 +30,11 @@ export default function ArticleActions({
         <button
           type="submit"
           disabled={loading}
-          className="
-            flex
-            items-center
-            gap-3
-            rounded-xl
-            bg-pink-600
-            px-8
-            py-3
-            font-semibold
-            text-white
-            transition
-            hover:bg-pink-700
-            disabled:cursor-not-allowed
-            disabled:opacity-50
-          "
+          className="flex items-center justify-center gap-2 rounded-lg bg-pink-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-50 sm:gap-3 sm:rounded-xl sm:px-8 sm:py-3 sm:text-base"
         >
           {loading && (
             <svg
-              className="h-5 w-5 animate-spin"
+              className="h-4 w-4 animate-spin sm:h-5 sm:w-5"
               viewBox="0 0 24 24"
               fill="none"
             >
@@ -80,9 +55,7 @@ export default function ArticleActions({
             </svg>
           )}
 
-          {mode === "create"
-            ? "ثبت مقاله"
-            : "بروزرسانی مقاله"}
+          {mode === "create" ? "ثبت مقاله" : "بروزرسانی مقاله"}
         </button>
       </div>
     </div>

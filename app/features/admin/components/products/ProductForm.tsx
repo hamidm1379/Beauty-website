@@ -3,16 +3,22 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import dynamic from "next/dynamic";
 
 import ImageUploader from "@/app/shared/components/UploadImage";
 import { getErrorMessage } from "@/lib/utils/errors";
+
+const RichTextEditor = dynamic(
+  () => import("@/app/shared/components/RichTextEditor"),
+  { ssr: false },
+);
 
 interface ProductFormProps {
   mode: "create" | "edit";
   initialData?: ProductData;
 }
 
-interface ProductData {
+export interface ProductData {
   id: number;
   title: string;
   slug: string;
@@ -174,11 +180,15 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
     loadCategories();
   }, []);
 
-  async function loadBrands() {
-    const res = await fetch("/api/brands");
-    const json = await res.json();
-    setBrands(json.data ?? []);
-  }
+  useEffect(() => {
+    async function loadBrands() {
+      const res = await fetch("/api/brands");
+      const json = await res.json();
+      setBrands(json.data ?? []);
+    }
+
+    loadBrands();
+  }, []);
 
   function generateSlug(text: string) {
     return text
@@ -210,17 +220,17 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
     }));
   }
 
-  function handleThumbnailChange(file: File | null) {
+  function handleThumbnailChange(value: File | File[] | null) {
     setForm((prev) => ({
       ...prev,
-      thumbnailFile: file,
+      thumbnailFile: value instanceof File ? value : null,
     }));
   }
 
-  function handleImagesChange(files: File[]) {
+  function handleImagesChange(value: File | File[] | null) {
     setForm((prev) => ({
       ...prev,
-      imageFiles: files,
+      imageFiles: Array.isArray(value) ? value : [],
     }));
   }
 
@@ -309,35 +319,35 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-8 rounded-3xl bg-white p-8 shadow-sm"
+      className="space-y-6 rounded-2xl bg-white p-4 shadow-sm sm:space-y-8 sm:rounded-3xl sm:p-8"
     >
       {/* Title */}
       <div>
-        <label className="mb-2 block text-sm font-medium">عنوان محصول</label>
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">عنوان محصول</label>
         <input
           type="text"
           name="title"
           value={form.title}
           onChange={handleChange}
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
       </div>
 
       {/* Slug */}
       <div>
-        <label className="mb-2 block text-sm font-medium">Slug</label>
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">Slug</label>
         <input
           type="text"
           name="slug"
           value={form.slug}
           onChange={handleChange}
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
       </div>
 
       {/* Short Description */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
           توضیح کوتاه محصول
         </label>
 
@@ -347,36 +357,35 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           value={form.shortDescription ?? ""}
           onChange={handleChange}
           placeholder="یک توضیح کوتاه برای نمایش در صفحه محصول..."
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
       </div>
 
       {/* Description */}
       <div>
-        <label className="mb-2 block text-sm font-medium">توضیحات</label>
-        <textarea
-          rows={6}
-          name="description"
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">توضیحات</label>
+        <RichTextEditor
           value={form.description}
-          onChange={handleChange}
-          className="w-full rounded-xl border px-4 py-3"
+          onChange={(value) => setForm((prev) => ({ ...prev, description: value }))}
+          placeholder="توضیحات کامل محصول را وارد کنید..."
+          minHeight="250px"
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
         <div>
-          <label className="mb-2 block text-sm font-medium">قیمت فروش</label>
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">قیمت فروش</label>
           <input
             type="number"
             name="price"
             value={form.price}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
             قیمت خرید (بهای تمام‌شده)
           </label>
           <input
@@ -385,12 +394,12 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
             value={form.purchasePrice}
             onChange={handleChange}
             placeholder="اختیاری — برای محاسبه سود ناخالص"
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
           />
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium">تخفیف (%)</label>
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">تخفیف (%)</label>
 
           <input
             type="number"
@@ -399,24 +408,24 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
             max={100}
             value={form.discountPrice}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
           />
         </div>
         <div>
-          <label className="mb-2 block text-sm font-medium">موجودی</label>
+          <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">موجودی</label>
           <input
             type="number"
             name="stock"
             value={form.stock}
             onChange={handleChange}
-            className="w-full rounded-xl border px-4 py-3"
+            className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
           />
         </div>
       </div>
 
       {/* SEO Keywords */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">
           کلمات کلیدی سئو
         </label>
 
@@ -426,22 +435,22 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           value={form.seoKeywords}
           onChange={handleChange}
           placeholder="کلمات کلیدی را با کاما جدا کنید، مثلاً: کرم پودر, آرایشی, استی لادر"
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         />
 
-        <p className="mt-1.5 text-xs text-gray-400">
+        <p className="mt-1.5 text-[11px] text-gray-400 sm:text-xs">
           این کلمات برای بهبود رتبه‌بندی محصول در موتورهای جستجو استفاده می‌شود.
         </p>
       </div>
 
       {/* Category */}
       <div>
-        <label className="mb-2 block text-sm font-medium">دسته بندی</label>
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">دسته بندی</label>
         <select
           name="categoryId"
           value={form.categoryId}
           onChange={handleChange}
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         >
           <option value="">انتخاب کنید</option>
           {categories.map((category) => (
@@ -454,12 +463,12 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
 
       {/* Brand */}
       <div>
-        <label className="mb-2 block text-sm font-medium">برند</label>
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">برند</label>
         <select
           name="brandId"
           value={form.brandId}
           onChange={handleChange}
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         >
           <option value="">انتخاب کنید</option>
           {brands.map((brand) => (
@@ -472,22 +481,22 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
 
       {/* Variants */}
       <div>
-        <div className="mb-3 flex items-center justify-between">
-          <label className="block text-sm font-semibold">رنگ‌بندی محصول</label>
+        <div className="mb-2.5 flex items-center justify-between sm:mb-3">
+          <label className="block text-xs font-semibold sm:text-sm">رنگ‌بندی محصول</label>
           <button
             type="button"
             onClick={addColor}
-            className="rounded-lg bg-pink-50 px-4 py-2 text-sm font-medium text-pink-600 transition hover:bg-pink-100"
+            className="rounded-lg bg-pink-50 px-3 py-1.5 text-xs font-medium text-pink-600 transition hover:bg-pink-100 sm:px-4 sm:py-2 sm:text-sm"
           >
             + افزودن رنگ
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {variants.map((variant, index) => (
             <div
               key={index}
-              className="grid grid-cols-1 gap-3 rounded-xl border p-4 sm:grid-cols-4"
+              className="grid grid-cols-1 gap-3 rounded-xl border p-3 sm:grid-cols-4 sm:p-4"
             >
               <div>
                 <label className="mb-1 block text-xs text-gray-500">
@@ -536,7 +545,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
                   <button
                     type="button"
                     onClick={() => removeColor(index)}
-                    className="text-sm font-medium text-red-500 hover:text-red-700"
+                    className="text-xs font-medium text-red-500 hover:text-red-700 sm:text-sm"
                   >
                     حذف این رنگ
                   </button>
@@ -549,12 +558,12 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
 
       {/* Status */}
       <div>
-        <label className="mb-2 block text-sm font-medium">وضعیت</label>
+        <label className="mb-1.5 block text-xs font-medium sm:mb-2 sm:text-sm">وضعیت</label>
         <select
           name="status"
           value={form.status}
           onChange={handleChange}
-          className="w-full rounded-xl border px-4 py-3"
+          className="w-full rounded-lg border px-3 py-2 text-sm sm:rounded-xl sm:px-4 sm:py-3 sm:text-base"
         >
           <option value="ACTIVE">فعال</option>
           <option value="DRAFT">پیش نویس</option>
@@ -564,7 +573,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
 
       {/* Thumbnail */}
       <div>
-        <label className="mb-3 block text-sm font-semibold">
+        <label className="mb-2 block text-xs font-semibold sm:mb-3 sm:text-sm">
           تصویر اصلی محصول
         </label>
         <ImageUploader
@@ -577,7 +586,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
 
       {/* Gallery */}
       <div>
-        <label className="mb-3 block text-sm font-semibold">گالری تصاویر</label>
+        <label className="mb-2 block text-xs font-semibold sm:mb-3 sm:text-sm">گالری تصاویر</label>
         <ImageUploader
           multiple
           value={form.imageFiles}
@@ -587,12 +596,12 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-end gap-4 border-t pt-6">
+      <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row sm:justify-end sm:gap-4 sm:pt-6">
         <button
           type="button"
           onClick={() => router.back()}
           disabled={loading}
-          className="rounded-xl border border-gray-300 px-6 py-3 font-medium transition hover:bg-gray-100 disabled:opacity-50"
+          className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:opacity-50 sm:rounded-xl sm:px-6 sm:py-3 sm:text-base"
         >
           انصراف
         </button>
@@ -600,11 +609,11 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center gap-2 rounded-xl bg-pink-600 px-8 py-3 font-semibold text-white transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-lg bg-pink-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-50 sm:rounded-xl sm:px-8 sm:py-3 sm:text-base"
         >
           {loading && (
             <svg
-              className="h-5 w-5 animate-spin"
+              className="h-4 w-4 animate-spin sm:h-5 sm:w-5"
               viewBox="0 0 24 24"
               fill="none"
             >

@@ -16,20 +16,10 @@ export default function LogoutButton() {
         })
       }
       disabled={pending}
-      className="
-        flex
-        w-full
-        items-center
-        gap-3
-        rounded-xl
-        px-4
-        py-3
-        text-red-600
-        transition
-        hover:bg-red-50
-      "
+      className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm text-red-600 transition hover:bg-red-50 sm:gap-3 sm:px-4 sm:py-3 sm:text-base"
     >
-      <LogOut size={18} />
+      <LogOut size={16} className="sm:hidden" />
+      <LogOut size={18} className="hidden sm:block" />
 
       {pending ? "در حال خروج..." : "خروج از حساب"}
     </button>

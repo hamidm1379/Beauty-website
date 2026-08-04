@@ -82,47 +82,34 @@ export default function BrandStatistics() {
 
   if (loading) {
     return (
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-2 xl:grid-cols-4">
         {[1, 2, 3, 4].map((item) => (
-          <div
-            key={item}
-            className="h-36 animate-pulse rounded-3xl bg-gray-100"
-          />
+          <div key={item} className="h-24 animate-pulse rounded-2xl bg-gray-100 sm:h-36 sm:rounded-3xl" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-2 xl:grid-cols-4">
       {cards.map((card) => {
         const Icon = card.icon;
 
         return (
-          <div
-            key={card.title}
-            className="rounded-3xl bg-white p-6 shadow-sm transition hover:shadow-md"
-          >
+          <div key={card.title} className="rounded-2xl bg-white p-3 shadow-sm transition hover:shadow-md sm:rounded-3xl sm:p-6">
             <div className="flex items-center justify-between">
-
               <div>
+                <p className="text-xs text-gray-500 sm:text-sm">{card.title}</p>
 
-                <p className="text-sm text-gray-500">
-                  {card.title}
-                </p>
-
-                <h3 className="mt-3 text-3xl font-bold text-gray-900">
+                <h3 className="mt-1.5 text-lg font-bold text-gray-900 sm:mt-3 sm:text-3xl">
                   {card.value}
                 </h3>
-
               </div>
 
-              <div
-                className={`flex h-14 w-14 items-center justify-center rounded-2xl ${card.color}`}
-              >
-                <Icon size={28} />
+              <div className={`flex h-9 w-9 items-center justify-center rounded-xl sm:h-14 sm:w-14 sm:rounded-2xl ${card.color}`}>
+                <Icon size={18} className="sm:hidden" />
+                <Icon size={28} className="hidden sm:block" />
               </div>
-
             </div>
           </div>
         );

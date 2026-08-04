@@ -38,11 +38,13 @@ export default function ContactForm() {
   return (
     <section
       className="
-        rounded-3xl
+        rounded-2xl
+        sm:rounded-3xl
         border
         border-gray-100
         bg-white
-        p-8
+        p-5
+        sm:p-8
         shadow-sm
       "
     >
@@ -133,7 +135,7 @@ export default function ContactForm() {
 
         <textarea
           name="message"
-          rows={7}
+          rows={5}
           placeholder="پیام شما..."
           required
           className="
@@ -142,7 +144,8 @@ export default function ContactForm() {
             rounded-2xl
             border
             border-gray-200
-            p-5
+            p-4
+            sm:p-5
             outline-none
             transition
 

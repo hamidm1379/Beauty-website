@@ -34,14 +34,14 @@ export default async function BlogsPage({ searchParams }: Props) {
 
   return (
     <main className="bg-[#fcfcfc]">
-      <div className="container mx-auto max-w-7xl px-4 py-10">
+      <div className="container mx-auto max-w-7xl px-4 py-6 sm:py-8 md:py-10">
         <ArticlesHero />
 
-        <section className="mt-10">
+        <section className="mt-6 sm:mt-10">
           <ArticlesFilter categories={categories} />
         </section>
 
-        <section className="mt-10">
+        <section className="mt-6 sm:mt-10">
           <section className="mt-10">
             {result.items.length > 0 ? (
               <ArticlesGrid articles={result.items} />

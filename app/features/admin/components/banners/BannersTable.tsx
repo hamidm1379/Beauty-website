@@ -21,7 +21,7 @@ function PositionBadge({ position }: { position: Banner["position"] }) {
   };
 
   return (
-    <span className="rounded-xl bg-blue-100 px-3 py-1 text-sm text-blue-700">
+    <span className="whitespace-nowrap rounded-lg bg-blue-100 px-2 py-0.5 text-xs text-blue-700 sm:rounded-xl sm:px-3 sm:py-1 sm:text-sm">
       {labels[position]}
     </span>
   );
@@ -30,7 +30,7 @@ function PositionBadge({ position }: { position: Banner["position"] }) {
 function ActiveBadge({ active }: { active: boolean }) {
   return (
     <span
-      className={`rounded-xl px-3 py-1 text-sm font-medium ${
+      className={`whitespace-nowrap rounded-lg px-2 py-0.5 text-xs font-medium sm:rounded-xl sm:px-3 sm:py-1 sm:text-sm ${
         active ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
       }`}
     >
@@ -42,28 +42,23 @@ function ActiveBadge({ active }: { active: boolean }) {
 export default function BannersTable({ banners }: BannersTableProps) {
   if (banners.length === 0) {
     return (
-      <div className="rounded-3xl bg-white p-20 text-center text-gray-500 shadow-sm">
+      <div className="rounded-2xl bg-white p-10 text-center text-sm text-gray-500 shadow-sm sm:rounded-3xl sm:p-20 sm:text-base">
         هیچ بنری یافت نشد.
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
-      <table className="w-full">
+    <div className="overflow-x-auto rounded-2xl bg-white shadow-sm sm:rounded-3xl">
+      <table className="w-full min-w-[820px] text-sm sm:text-base">
         <thead className="border-b bg-gray-50">
           <tr>
-            <th className="px-6 py-4 text-right">بنر</th>
-
-            <th className="px-6 py-4 text-center">محل نمایش</th>
-
-            <th className="px-6 py-4 text-center">ترتیب</th>
-
-            <th className="px-6 py-4 text-center">وضعیت</th>
-
-            <th className="px-6 py-4 text-center">زمان نمایش</th>
-
-            <th className="px-6 py-4 text-center">عملیات</th>
+            <th className="px-3 py-2.5 text-right whitespace-nowrap sm:px-6 sm:py-4">بنر</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">محل نمایش</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">ترتیب</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">وضعیت</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">زمان نمایش</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">عملیات</th>
           </tr>
         </thead>
 
@@ -75,17 +70,17 @@ export default function BannersTable({ banners }: BannersTableProps) {
             >
               {/* Banner */}
 
-              <td className="px-6 py-5">
-                <div className="flex items-center gap-4">
+              <td className="px-3 py-3 sm:px-6 sm:py-5">
+                <div className="flex items-center gap-2.5 sm:gap-4">
                   <Image
                     src={banner.image}
                     alt={banner.title}
                     width={120}
                     height={70}
-                    className="h-16 w-28 rounded-xl border object-cover"
+                    className="h-11 w-20 shrink-0 rounded-lg border object-cover sm:h-16 sm:w-28 sm:rounded-xl"
                   />
 
-                  <div>
+                  <div className="whitespace-nowrap">
                     <h3 className="font-semibold">{banner.title}</h3>
 
                     {banner.subtitle && (
@@ -95,7 +90,7 @@ export default function BannersTable({ banners }: BannersTableProps) {
                     )}
 
                     {banner.buttonText && (
-                      <span className="mt-2 inline-flex rounded-lg bg-pink-100 px-2 py-1 text-xs text-pink-700">
+                      <span className="mt-1.5 inline-flex rounded-lg bg-pink-100 px-2 py-0.5 text-[11px] text-pink-700 sm:mt-2 sm:py-1 sm:text-xs">
                         {banner.buttonText}
                       </span>
                     )}
@@ -105,25 +100,25 @@ export default function BannersTable({ banners }: BannersTableProps) {
 
               {/* Position */}
 
-              <td className="px-6 py-5 text-center">
+              <td className="px-3 py-3 text-center whitespace-nowrap sm:px-6 sm:py-5">
                 <PositionBadge position={banner.position} />
               </td>
 
               {/* Sort */}
 
-              <td className="px-6 py-5 text-center font-semibold">
+              <td className="px-3 py-3 text-center font-semibold whitespace-nowrap sm:px-6 sm:py-5">
                 {banner.order}
               </td>
 
               {/* Active */}
 
-              <td className="px-6 py-5 text-center">
+              <td className="px-3 py-3 text-center whitespace-nowrap sm:px-6 sm:py-5">
                 <ActiveBadge active={banner.status === "ACTIVE"} />
               </td>
 
               {/* Schedule */}
 
-              <td className="px-6 py-5 text-center text-sm text-gray-500">
+              <td className="px-3 py-3 text-center text-xs whitespace-nowrap text-gray-500 sm:px-6 sm:py-5 sm:text-sm">
                 {banner.startDate
                   ? new Date(banner.startDate).toLocaleDateString("fa-IR")
                   : "-"}
@@ -137,13 +132,14 @@ export default function BannersTable({ banners }: BannersTableProps) {
 
               {/* Actions */}
 
-              <td className="px-6 py-5">
-                <div className="flex justify-center gap-3">
+              <td className="px-3 py-3 sm:px-6 sm:py-5">
+                <div className="flex justify-center gap-2 sm:gap-3">
                   <Link
                     href={`/admin/banners/${banner.id}/edit`}
-                    className="rounded-xl bg-blue-50 p-2 text-blue-600 transition hover:bg-blue-100"
+                    className="rounded-lg bg-blue-50 p-1.5 text-blue-600 transition hover:bg-blue-100 sm:rounded-xl sm:p-2"
                   >
-                    <Pencil size={18} />
+                    <Pencil size={16} className="sm:hidden" />
+                    <Pencil size={18} className="hidden sm:block" />
                   </Link>
 
                   <DeleteBannerModal

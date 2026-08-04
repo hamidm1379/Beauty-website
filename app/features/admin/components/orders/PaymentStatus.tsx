@@ -43,10 +43,8 @@ export default function PaymentStatus({ order }: { order: AdminOrder }) {
   const Icon = config.icon;
 
   return (
-    <div
-      className={`mt-5 flex items-center gap-2 rounded-xl p-3 text-sm font-bold ${config.className}`}
-    >
-      <Icon size={16} />
+    <div className={`mt-3 sm:mt-5 flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl p-2 sm:p-3 text-xs sm:text-sm font-bold ${config.className}`}>
+      <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
       {config.label}
     </div>
   );

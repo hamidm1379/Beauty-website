@@ -84,20 +84,20 @@ export default function RecentActivities() {
     >
       {/* Header */}
 
-      <div className="flex items-center justify-between border-b border-gray-100 p-6">
+      <div className="flex items-center justify-between border-b border-gray-100 p-4 sm:p-6">
         <div>
-          <h2 className="text-xl font-black text-gray-900">
+          <h2 className="text-lg font-black text-gray-900 sm:text-xl">
             فعالیت‌های اخیر
           </h2>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 sm:mt-2 sm:text-sm">
             آخرین اتفاقات فروشگاه
           </p>
         </div>
 
         <button
           className="
-            flex
+            hidden
             items-center
             gap-2
 
@@ -116,6 +116,7 @@ export default function RecentActivities() {
             transition
 
             hover:bg-pink-100
+            sm:flex
           "
         >
           مشاهده همه
@@ -126,21 +127,22 @@ export default function RecentActivities() {
 
       {/* Timeline */}
 
-      <div className="relative p-6">
+      <div className="relative p-4 sm:p-6">
         {/* Line */}
 
         <div
           className="
             absolute
-            right-11.5
+            right-9
             top-0
             bottom-0
             w-px
             bg-gray-200
+            sm:right-11.5
           "
         />
 
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {activities.map((activity, index) => {
             const Icon = activity.icon;
 
@@ -158,7 +160,7 @@ export default function RecentActivities() {
                 transition={{
                   delay: index * 0.08,
                 }}
-                className="relative flex gap-5"
+                className="relative flex gap-4 sm:gap-5"
               >
                 {/* Icon */}
 
@@ -168,19 +170,23 @@ export default function RecentActivities() {
                     z-10
 
                     flex
-                    h-14
-                    w-14
+                    h-10
+                    w-10
                     shrink-0
 
                     items-center
                     justify-center
 
-                    rounded-2xl
+                    rounded-xl
+                    sm:h-14
+                    sm:w-14
+                    sm:rounded-2xl
 
                     ${activity.color}
                   `}
                 >
-                  <Icon size={24} />
+                  <Icon size={18} className="sm:hidden" />
+                  <Icon size={24} className="hidden sm:block" />
                 </div>
 
                 {/* Content */}
@@ -192,14 +198,16 @@ export default function RecentActivities() {
                   className="
                     flex-1
 
-                    rounded-3xl
+                    rounded-2xl
+                    sm:rounded-3xl
 
                     border
                     border-gray-100
 
                     bg-gray-50
 
-                    p-5
+                    p-3.5
+                    sm:p-5
 
                     transition-all
 
@@ -208,16 +216,16 @@ export default function RecentActivities() {
                   "
                 >
                   <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-gray-900">
+                    <h3 className="text-sm font-bold text-gray-900 sm:text-base">
                       {activity.title}
                     </h3>
 
-                    <span className="text-xs text-gray-400">
+                    <span className="text-[10px] text-gray-400 sm:text-xs">
                       {activity.time}
                     </span>
                   </div>
 
-                  <p className="mt-3 leading-7 text-gray-500">
+                  <p className="mt-2 text-xs leading-6 text-gray-500 sm:mt-3 sm:text-sm sm:leading-7">
                     {activity.description}
                   </p>
                 </motion.div>

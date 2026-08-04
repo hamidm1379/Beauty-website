@@ -10,12 +10,13 @@ export default function ContactImage() {
 
         relative
 
-        hidden
         overflow-hidden
 
         rounded-3xl
 
-        lg:block
+        h-full
+        min-h-[300px]
+        lg:min-h-0
       "
     >
       <Image

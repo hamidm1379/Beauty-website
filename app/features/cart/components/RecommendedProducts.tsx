@@ -20,34 +20,17 @@ export default function RecommendedProducts({ products }: Props) {
     <section>
       {/* Header */}
 
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <span
-            className="
-              rounded-full
-              bg-pink-100
-              px-4
-              py-2
-              text-sm
-              font-semibold
-              text-pink-600
-            "
-          >
+          <span className="rounded-full bg-pink-100 px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm font-semibold text-pink-600">
             پیشنهاد ویژه
           </span>
 
-          <h2
-            className="
-              mt-4
-              text-4xl
-              font-black
-              text-gray-900
-            "
-          >
+          <h2 className="mt-3 text-xl sm:mt-4 sm:text-3xl lg:text-4xl font-black text-gray-900">
             شاید این محصولات را هم دوست داشته باشید
           </h2>
 
-          <p className="mt-3 text-gray-500">
+          <p className="mt-2 text-sm sm:mt-3 sm:text-base text-gray-500">
             بر اساس محصولات موجود در سبد خرید شما
           </p>
         </div>
@@ -88,14 +71,7 @@ export default function RecommendedProducts({ products }: Props) {
             },
           },
         }}
-        className="
-          grid
-          gap-6
-
-          grid-cols-2
-
-          lg:grid-cols-4
-        "
+className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
       >
         {products.map((product) => (
           <motion.div
@@ -119,29 +95,10 @@ export default function RecommendedProducts({ products }: Props) {
 
       {/* Mobile Button */}
 
-      <div className="mt-8 lg:hidden">
+      <div className="mt-6 sm:mt-8 lg:hidden">
         <Link
           href="/products"
-          className="
-            flex
-            h-12
-            items-center
-            justify-center
-
-            rounded-2xl
-
-            border
-            border-pink-300
-
-            font-semibold
-
-            text-pink-600
-
-            transition
-
-            hover:bg-pink-500
-            hover:text-white
-          "
+          className="flex h-11 sm:h-12 items-center justify-center rounded-xl sm:rounded-2xl border border-pink-300 text-sm sm:text-base font-semibold text-pink-600 transition hover:bg-pink-500 hover:text-white"
         >
           مشاهده همه محصولات
         </Link>

@@ -138,7 +138,7 @@ export default function ArticleForm({ mode, initialData }: ArticleFormProps) {
       }
 
       const response = await fetch(
-        mode === "create" ? "/api/articles" : `/api/articles/${initialData.id}`,
+        mode === "create" ? "/api/articles" : `/api/articles/${initialData!.id}`,
         {
           method: mode === "create" ? "POST" : "PUT",
 
@@ -189,7 +189,7 @@ export default function ArticleForm({ mode, initialData }: ArticleFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-8">
       <ArticleBasicInfo form={form} updateField={updateField} />
 
       <ArticleCategory

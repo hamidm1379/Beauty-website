@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, ChevronDown, Folder } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
@@ -105,46 +105,29 @@ export default function ArticlesFilter({ categories }: Props) {
 
   return (
     <motion.section
-      initial={{
-        opacity: 0,
-        y: 30,
-      }}
       whileInView={{
         opacity: 1,
         y: 0,
       }}
+      initial={false}
       viewport={{ once: true }}
       transition={{
         duration: 0.5,
       }}
       className="
-        rounded-4xl
-
+        rounded-3xl
         border
         border-gray-100
-
         bg-white
-
-        p-6
-
+        p-4
         shadow-sm
+        sm:rounded-4xl
+        sm:p-6
       "
     >
-      {/* Top */}
+      {/* Mobile: all three in a row / Desktop: stacked */}
 
-      <div
-        className="
-          flex
-
-          flex-col
-
-          gap-5
-
-          lg:flex-row
-          lg:items-center
-          lg:justify-between
-        "
-      >
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
         {/* Search */}
 
         <form
@@ -152,20 +135,19 @@ export default function ArticlesFilter({ categories }: Props) {
             e.preventDefault();
             handleSearch();
           }}
-          className="relative flex-1"
+          className="relative w-full sm:flex-1"
         >
           <Search
             className="
+              pointer-events-none
               absolute
-
-              right-5
+              right-4
               top-1/2
-
               -translate-y-1/2
-
               text-gray-400
+              sm:right-5
             "
-            size={20}
+            size={18}
           />
 
           <input
@@ -194,43 +176,57 @@ export default function ArticlesFilter({ categories }: Props) {
             onKeyDown={handleKeyDown}
             placeholder="جستجوی مقاله..."
             className="
-              h-14
+              h-12
               w-full
-
               rounded-2xl
-
               border
               border-gray-200
-
               bg-gray-50
-
-              pr-14
+              pr-11
               pl-4
-
+              text-sm
               outline-none
-
               transition-all
-
               focus:border-pink-300
               focus:bg-white
               focus:ring-4
               focus:ring-pink-100
+              sm:h-14
+              sm:pr-14
+              sm:pl-24
+              sm:text-base
             "
           />
           <button
             type="submit"
-            className="absolute left-2 top-2 rounded-xl bg-pink-500 px-5 py-2 text-white cursor-pointer"
+            className="
+              absolute
+              left-1.5
+              top-2
+              cursor-pointer
+              rounded-xl
+              bg-pink-500
+              px-3
+              py-2
+              text-xs
+              text-white
+              sm:left-2
+              sm:top-2.25
+              sm:px-5
+              sm:text-sm
+            "
           >
             جستجو
           </button>
         </form>
 
-        {/* Sort */}
+        {/* Category */}
 
-        <div className="relative">
-          <SlidersHorizontal
+        <div className="relative w-full sm:w-auto sm:min-w-40">
+          <Folder
             size={18}
             className="
+              pointer-events-none
               absolute
               right-4
               top-1/2
@@ -242,6 +238,67 @@ export default function ArticlesFilter({ categories }: Props) {
           <ChevronDown
             size={18}
             className="
+              pointer-events-none
+              absolute
+              left-4
+              top-1/2
+              -translate-y-1/2
+              text-gray-400
+            "
+          />
+
+          <select
+            value={active}
+            onChange={(e) => handleCategory(e.target.value)}
+            className="
+              h-12
+              w-full
+              cursor-pointer
+              appearance-none
+              rounded-2xl
+              border
+              border-gray-200
+              bg-gray-50
+              pr-12
+              pl-10
+              text-sm
+              outline-none
+              transition
+              focus:border-pink-300
+              focus:ring-4
+              focus:ring-pink-100
+              sm:h-14
+              sm:text-base
+            "
+          >
+            <option value="همه">همه دسته‌ها</option>
+            {categories.map((item) => (
+              <option key={item.id} value={item.slug}>
+                {item.title}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Sort */}
+
+        <div className="relative w-full sm:w-auto sm:min-w-44">
+          <SlidersHorizontal
+            size={18}
+            className="
+              pointer-events-none
+              absolute
+              right-4
+              top-1/2
+              -translate-y-1/2
+              text-gray-400
+            "
+          />
+
+          <ChevronDown
+            size={18}
+            className="
+              pointer-events-none
               absolute
               left-4
               top-1/2
@@ -254,29 +311,24 @@ export default function ArticlesFilter({ categories }: Props) {
             value={sort}
             onChange={(e) => handleSort(e.target.value)}
             className="
-              h-14
+              h-12
+              w-full
               cursor-pointer
-              min-w-55
-
               appearance-none
-
               rounded-2xl
-
               border
               border-gray-200
-
               bg-gray-50
-
               pr-12
               pl-10
-
+              text-sm
               outline-none
-
               transition
-
               focus:border-pink-300
               focus:ring-4
               focus:ring-pink-100
+              sm:h-14
+              sm:text-base
             "
           >
             {sorts.map((item) => (
@@ -286,67 +338,6 @@ export default function ArticlesFilter({ categories }: Props) {
             ))}
           </select>
         </div>
-      </div>
-
-      {/* Categories */}
-
-      <div
-        className="
-          mt-7
-
-          flex
-
-          flex-wrap
-
-          gap-3
-        "
-      >
-        <motion.button
-          layout
-          whileHover={{ y: -2, scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => handleCategory("همه")}
-          className={`cursor-pointer rounded-full px-5 py-3 text-sm font-medium transition-all ${
-            active === "همه"
-              ? "bg-pink-500 text-white shadow-lg"
-              : "bg-pink-50 text-gray-700 hover:bg-pink-100"
-          }`}
-        >
-          همه
-        </motion.button>
-        {categories.map((item) => (
-          <motion.button
-            key={item.id}
-            layout
-            whileHover={{
-              y: -2,
-              scale: 1.05,
-            }}
-            whileTap={{
-              scale: 0.95,
-            }}
-            onClick={() => handleCategory(item.slug)}
-            className={`
-              rounded-full
-              cursor-pointer    
-              px-5
-              py-3
-
-              text-sm
-              font-medium
-
-              transition-all
-
-              ${
-                active === item.slug
-                  ? "bg-pink-500 text-white shadow-lg"
-                  : "bg-pink-50 text-gray-700 hover:bg-pink-100"
-              }
-            `}
-          >
-            {item.title}
-          </motion.button>
-        ))}
       </div>
     </motion.section>
   );

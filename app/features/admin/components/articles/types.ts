@@ -1,5 +1,5 @@
 /** وضعیت فرم مقاله در پنل ادمین. */
-export type ArticleStatus = "DRAFT" | "PUBLISHED";
+export type ArticleStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
 /** نوع داده‌ی یک فیلد فرم مقاله. */
 export type ArticleFieldValue =

@@ -39,7 +39,7 @@ export default function CheckoutClient({
   }
 
   return (
-    <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_380px]">
+    <section className="mt-4 sm:mt-6 md:mt-8 grid gap-4 sm:gap-6 md:gap-8 lg:grid-cols-[1fr_380px]">
       {/* Left */}
       <div className="space-y-8">
         <ShippingForm

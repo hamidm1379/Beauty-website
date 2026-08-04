@@ -20,9 +20,9 @@ export default function RelatedArticles({
   }
 
   return (
-    <section className="mt-24">
+    <section className="mt-12 md:mt-24">
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">
+        <h2 className="text-xl sm:text-xl md:text-2xl font-bold">
           مقالات مرتبط
         </h2>
 
@@ -32,6 +32,8 @@ export default function RelatedArticles({
             text-pink-500
             transition
             hover:text-pink-700
+            text-sm
+            sm:text-md
           "
         >
           مشاهده همه

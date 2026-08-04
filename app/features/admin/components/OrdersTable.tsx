@@ -115,11 +115,11 @@ export default function OrdersTable() {
     >
       {/* Header */}
 
-      <div className="flex items-center justify-between border-b border-gray-100 p-6">
+      <div className="flex items-center justify-between border-b border-gray-100 p-4 sm:p-6">
         <div>
-          <h2 className="text-xl font-black text-gray-900">آخرین سفارش‌ها</h2>
+          <h2 className="text-lg font-black text-gray-900 sm:text-xl">آخرین سفارش‌ها</h2>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 sm:mt-2 sm:text-sm">
             آخرین سفارش‌های ثبت شده در فروشگاه
           </p>
         </div>
@@ -131,17 +131,21 @@ export default function OrdersTable() {
             gap-2
             rounded-2xl
             bg-pink-50
-            px-4
-            py-3
-            text-sm
+            px-3
+            py-2
+            text-xs
             font-semibold
             text-pink-600
             transition
             hover:bg-pink-100
+            sm:px-4
+            sm:py-3
+            sm:text-sm
           "
         >
           مشاهده همه
-          <ChevronLeft size={16} />
+          <ChevronLeft size={14} className="sm:hidden" />
+          <ChevronLeft size={16} className="hidden sm:block" />
         </button>
       </div>
 
@@ -261,7 +265,7 @@ export default function OrdersTable() {
 
       {/* Mobile */}
 
-      <div className="space-y-4 p-5 lg:hidden">
+      <div className="space-y-4 p-4 lg:hidden sm:p-5">
         {orders.map((order, index) => {
           const status = statusMap[order.status];
           const Icon = status.icon;
@@ -281,10 +285,12 @@ export default function OrdersTable() {
                 delay: index * 0.06,
               }}
               className="
-                rounded-3xl
+                rounded-2xl
                 border
                 border-gray-100
-                p-5
+                p-4
+                sm:rounded-3xl
+                sm:p-5
               "
             >
               <div className="flex items-center justify-between">

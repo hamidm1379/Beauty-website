@@ -70,29 +70,27 @@ export default async function OrdersPage({ searchParams }: Props) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5 sm:space-y-8">
       <div>
-        <h1 className="text-3xl font-black text-gray-900">سفارش‌ها</h1>
-        <p className="mt-2 text-gray-500">مدیریت و بررسی سفارش‌های کاربران</p>
+        <h1 className="text-xl sm:text-3xl font-black text-gray-900">سفارش‌ها</h1>
+        <p className="mt-1.5 sm:mt-2 text-xs sm:text-base text-gray-500">مدیریت و بررسی سفارش‌های کاربران</p>
       </div>
 
       {/* نوار آمار خلاصه */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="flex items-center gap-4 rounded-3xl border border-gray-100 bg-white p-5 shadow-sm"
+            className="flex items-center gap-3 sm:gap-4 rounded-2xl sm:rounded-3xl border border-gray-100 bg-white p-3 sm:p-5 shadow-sm"
           >
-            <div
-              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${stat.accent}`}
-            >
-              <stat.icon size={22} />
+            <div className={`flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl ${stat.accent}`}>
+              <stat.icon className="h-4 w-4 sm:h-[22px] sm:w-[22px]" />
             </div>
             <div>
-              <p className="text-2xl font-black text-gray-900">
+              <p className="text-lg sm:text-2xl font-black text-gray-900">
                 {stat.value.toLocaleString("fa-IR")}
               </p>
-              <p className="text-sm text-gray-500">{stat.label}</p>
+              <p className="text-xs sm:text-sm text-gray-500">{stat.label}</p>
             </div>
           </div>
         ))}
@@ -100,7 +98,7 @@ export default async function OrdersPage({ searchParams }: Props) {
 
       <OrderFilters />
 
-      <p className="text-sm text-gray-500">
+      <p className="text-xs sm:text-sm text-gray-500">
         {total.toLocaleString("fa-IR")} سفارش یافت شد
       </p>
 
@@ -108,17 +106,13 @@ export default async function OrdersPage({ searchParams }: Props) {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map(
             (pageNum) => (
               <Link
                 key={pageNum}
                 href={buildPageHref(pageNum)}
-                className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-medium transition ${
-                  pageNum === currentPage
-                    ? "bg-pink-600 text-white"
-                    : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
-                }`}
+                className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium transition ${pageNum === currentPage ? "bg-pink-600 text-white" : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50"}`}
               >
                 {pageNum.toLocaleString("fa-IR")}
               </Link>

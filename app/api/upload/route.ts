@@ -17,6 +17,7 @@ const ALLOWED_FOLDERS = [
   "users",
   "article-categories",
   "articles",
+  "settings",
 ];
 
 export async function POST(request: NextRequest) {

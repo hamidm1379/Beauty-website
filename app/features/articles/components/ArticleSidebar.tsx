@@ -67,10 +67,7 @@ interface Props {
   suggestedArticles: ArticleWithCategory[];
 }
 
-export default function ArticleSidebar({
-  article,
-  suggestedArticles,
-}: Props) {
+export default function ArticleSidebar({ article, suggestedArticles }: Props) {
   const [copied, setCopied] = useState(false);
 
   const shareUrl = `${siteConfig.url}/articles/${article.slug}`;
@@ -114,89 +111,57 @@ export default function ArticleSidebar({
   ] as const;
 
   return (
-    <aside className=" top-24 space-y-6">
-
+    <aside className="top-24 space-y-4 md:space-y-6">
       {/* اطلاعات مقاله */}
-
-      <div className="rounded-3xl bg-white p-6 shadow-sm">
-
-        <h3 className="mb-6 text-lg font-bold">
+      <div className="rounded-3xl bg-white p-4 shadow-sm md:p-6">
+        <h3 className="mb-4 text-base font-bold md:mb-6 md:text-lg">
           اطلاعات مقاله
         </h3>
 
-        <div className="space-y-5">
-
-          <div className="flex items-center gap-3">
-            <CalendarDays
-              size={18}
-              className="text-pink-500"
-            />
-
-            <span className="text-sm text-gray-600">
+        <div className="space-y-3 md:space-y-5">
+          <div className="flex items-center gap-2 md:gap-3">
+            <CalendarDays size={16} className="text-pink-500 md:size-4.5" />
+            <span className="text-xs text-gray-600 md:text-sm">
               {article.publishedAt
-                ? new Date(
-                    article.publishedAt
-                  ).toLocaleDateString("fa-IR")
+                ? new Date(article.publishedAt).toLocaleDateString("fa-IR")
                 : "-"}
             </span>
           </div>
-
-          <div className="flex items-center gap-3">
-            <Eye
-              size={18}
-              className="text-pink-500"
-            />
-
-            <span className="text-sm text-gray-600">
+                {/*
+          <div className="flex items-center gap-2 md:gap-3">
+            <Eye size={16} className="text-pink-500 md:size-4.5" />
+            <span className="text-xs text-gray-600 md:text-sm">
               {article.views.toLocaleString()} بازدید
             </span>
-          </div>
+          </div> */}
 
-          <div className="flex items-center gap-3">
-            <FolderOpen
-              size={18}
-              className="text-pink-500"
-            />
-
-            <span className="text-sm text-gray-600">
+          <div className="flex items-center gap-2 md:gap-3">
+            <FolderOpen size={16} className="text-pink-500 md:size-4.5" />
+            <span className="text-xs text-gray-600 md:text-sm">
               {article.category.title}
             </span>
           </div>
-
         </div>
-
       </div>
 
       {/* مقالات پیشنهادی */}
-
       {suggestedArticles.length > 0 && (
-        <div className="rounded-3xl bg-white p-6 shadow-sm">
-
-          <div className="mb-5 flex items-center gap-2">
-            <Sparkles
-              size={18}
-              className="text-pink-500"
-            />
-
-            <h3 className="text-lg font-bold">
-              مقالات پیشنهادی
-            </h3>
+        <div className="rounded-3xl bg-white p-4 shadow-sm md:p-6">
+          <div className="mb-4 flex items-center gap-2 md:mb-5">
+            <Sparkles size={16} className="text-pink-500 md:size-4.5" />
+            <h3 className="text-base font-bold md:text-lg">مقالات پیشنهادی</h3>
           </div>
 
-          <ul className="space-y-4">
-
+          <ul className="space-y-3 md:space-y-4">
             {suggestedArticles.map((item) => (
               <li key={item.id}>
                 <Link
                   href={`/articles/${item.slug}`}
-                  className="group flex gap-3 transition hover:opacity-90"
+                  className="group flex gap-2 transition hover:opacity-90 md:gap-3"
                 >
-                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-gray-100">
+                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-gray-100 md:h-14 md:w-14">
                     <Image
-                      src={
-                        item.thumbnail ??
-                        "/images/no-image.png"
-                      }
+                      src={item.thumbnail ?? "/images/no-image.png"}
                       alt={item.title}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -204,49 +169,34 @@ export default function ArticleSidebar({
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <p className="line-clamp-2 text-sm font-medium text-gray-800 transition group-hover:text-pink-500">
+                    <p className="line-clamp-2 text-xs font-medium text-gray-800 transition group-hover:text-pink-500 md:text-sm">
                       {item.title}
                     </p>
-
-                    <p className="mt-1 text-xs text-gray-500">
+                    <p className="mt-0.5 text-[10px] text-gray-500 md:mt-1 md:text-xs">
                       {item.category.title}
                     </p>
                   </div>
                 </Link>
               </li>
             ))}
-
           </ul>
-
         </div>
       )}
 
       {/* اشتراک گذاری */}
-
-      <div className="rounded-3xl bg-white p-6 shadow-sm">
-
-        <div className="mb-5 flex items-center gap-2">
-
-          <Share2
-            size={18}
-            className="text-pink-500"
-          />
-
-          <h3 className="font-bold">
-            اشتراک گذاری
-          </h3>
-
+      <div className="rounded-3xl bg-white p-4 shadow-sm md:p-6">
+        <div className="mb-3 flex items-center gap-2 md:mb-5">
+          <Share2 size={16} className="text-pink-500 md:size-4.5" />
+          <h3 className="text-base font-bold md:text-lg">اشتراک گذاری</h3>
         </div>
 
-        <p className="mb-4 text-sm leading-7 text-gray-500">
+        <p className="mb-3 text-xs leading-6 text-gray-500 md:mb-4 md:text-sm md:leading-7">
           این مقاله را با دوستان خود به اشتراک بگذارید.
         </p>
 
-        <div className="grid grid-cols-2 gap-3">
-
+        <div className="grid grid-cols-2 gap-2 md:gap-3">
           {shareOptions.map((option) => {
             const Icon = option.icon;
-
             return (
               <Link
                 key={option.label}
@@ -254,24 +204,22 @@ export default function ArticleSidebar({
                 rel="noopener noreferrer"
                 href={option.href}
                 className={`
-                  group flex flex-col items-center gap-2.5 rounded-2xl border
-                  px-3 py-4 transition
+                  group flex flex-col items-center gap-2 rounded-2xl border px-2 py-3 transition
+                  md:gap-2.5 md:px-3 md:py-4
                   ${option.buttonClass}
                 `}
               >
                 <span
                   className={`
-                    flex h-11 w-11 items-center justify-center rounded-full
-                    text-white shadow-sm transition
-                    group-hover:scale-105
+                    flex h-10 w-10 items-center justify-center rounded-full text-white shadow-sm transition
+                    group-hover:scale-105 md:h-11 md:w-11
                     ${option.iconBg}
                   `}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-4 w-4 md:h-5 md:w-5" />
                 </span>
-
                 <span
-                  className={`text-xs font-semibold ${option.textClass}`}
+                  className={`text-[10px] font-semibold md:text-xs ${option.textClass}`}
                 >
                   {option.label}
                 </span>
@@ -283,8 +231,8 @@ export default function ArticleSidebar({
             type="button"
             onClick={handleCopyLink}
             className={`
-              group flex flex-col items-center gap-2.5 rounded-2xl border px-3
-              py-4 transition
+              group flex flex-col items-center gap-2 rounded-2xl border px-2 py-3 transition
+              md:gap-2.5 md:px-3 md:py-4
               ${
                 copied
                   ? "border-emerald-200 bg-emerald-50"
@@ -294,31 +242,27 @@ export default function ArticleSidebar({
           >
             <span
               className={`
-                flex h-11 w-11 items-center justify-center rounded-full text-white
-                shadow-sm transition group-hover:scale-105
+                flex h-10 w-10 items-center justify-center rounded-full text-white shadow-sm transition
+                group-hover:scale-105 md:h-11 md:w-11
                 ${copied ? "bg-emerald-500" : "bg-pink-500"}
               `}
             >
               {copied ? (
-                <Check className="h-5 w-5" />
+                <Check className="h-4 w-4 md:h-5 md:w-5" />
               ) : (
-                <Copy className="h-5 w-5" />
+                <Copy className="h-4 w-4 md:h-5 md:w-5" />
               )}
             </span>
-
             <span
-              className={`text-xs font-semibold ${
+              className={`text-[10px] font-semibold md:text-xs ${
                 copied ? "text-emerald-700" : "text-pink-700"
               }`}
             >
               {copied ? "کپی شد" : "کپی لینک"}
             </span>
           </button>
-
         </div>
-
       </div>
-
     </aside>
   );
 }

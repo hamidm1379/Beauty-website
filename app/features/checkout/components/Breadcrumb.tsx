@@ -19,46 +19,12 @@ const items = [
 
 export default function Breadcrumb() {
   return (
-    <nav
-      className="
-        flex
-        flex-wrap
-        items-center
-        gap-2
-
-        rounded-3xl
-
-        border
-        border-gray-100
-
-        bg-white
-
-        px-6
-        py-4
-
-        shadow-sm
-      "
-    >
+    <nav className="flex flex-nowrap items-center gap-1 sm:gap-2 overflow-x-auto rounded-2xl sm:rounded-3xl border border-gray-100 bg-white px-2.5 py-2 sm:px-6 sm:py-4 shadow-sm">
       <Link
         href="/"
-        className="
-          flex
-          items-center
-          justify-center
-
-          rounded-xl
-
-          bg-pink-50
-
-          p-2
-
-          text-pink-500
-
-          transition
-          hover:bg-pink-100
-        "
+        className="flex shrink-0 items-center justify-center rounded-lg sm:rounded-xl bg-pink-50 p-1.5 sm:p-2 text-pink-500 transition hover:bg-pink-100"
       >
-        <Home size={18} />
+        <Home className="h-3.5 w-3.5 sm:h-[18px] sm:w-[18px]" />
       </Link>
 
       {items.map((item, index) => {
@@ -67,51 +33,18 @@ export default function Breadcrumb() {
         return (
           <div
             key={index}
-            className="flex items-center gap-2"
+            className="flex shrink-0 items-center gap-1 sm:gap-2"
           >
-            <ChevronLeft
-              size={16}
-              className="text-gray-300"
-            />
+            <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4 shrink-0 text-gray-300" />
 
             {isLast ? (
-              <span
-                className="
-                  rounded-full
-
-                  bg-pink-50
-
-                  px-4
-                  py-2
-
-                  text-sm
-                  font-bold
-
-                  text-pink-600
-                "
-              >
+              <span className="whitespace-nowrap rounded-full bg-pink-50 px-2 py-1 sm:px-4 sm:py-2 text-[11px] sm:text-sm font-bold text-pink-600">
                 {item.title}
               </span>
             ) : (
               <Link
                 href={item.href!}
-                className="
-                  rounded-full
-
-                  px-4
-                  py-2
-
-                  text-sm
-                  font-medium
-
-                  text-gray-500
-
-                  transition-all
-                  duration-300
-
-                  hover:bg-gray-50
-                  hover:text-pink-500
-                "
+                className="whitespace-nowrap rounded-full px-2 py-1 sm:px-4 sm:py-2 text-[11px] sm:text-sm font-medium text-gray-500 transition-all duration-300 hover:bg-gray-50 hover:text-pink-500"
               >
                 {item.title}
               </Link>

@@ -3,7 +3,7 @@ import FeatureCard from "../components/FeatureCard";
 
 export default function FeaturesSection() {
   return (
-    <section className="py-8 md:py-12 max-w-7xl mx-auto  px-4 lg:px-8">
+    <section className="pb-4 pt-0 md:py-12 max-w-7xl mx-auto  px-4 lg:px-8">
       <div
         className="
       overflow-hidden

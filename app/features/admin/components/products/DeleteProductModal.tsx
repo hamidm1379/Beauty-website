@@ -56,9 +56,10 @@ export default function DeleteProductModal({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="rounded-xl bg-red-50 p-2 text-red-600 transition hover:bg-red-100"
+        className="rounded-lg bg-red-50 p-1.5 text-red-600 transition hover:bg-red-100 sm:rounded-xl sm:p-2"
       >
-        <Trash2 size={18} />
+        <Trash2 size={16} className="sm:hidden" />
+        <Trash2 size={18} className="hidden sm:block" />
       </button>
 
       <AnimatePresence>
@@ -73,74 +74,55 @@ export default function DeleteProductModal({
             />
 
             <motion.div
-              initial={{
-                opacity: 0,
-                scale: 0.9,
-                y: 30,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.9,
-                y: 30,
-              }}
+              initial={{ opacity: 0, scale: 0.9, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 30 }}
               className="fixed left-1/2 top-1/2 z-50 w-[92%] max-w-md -translate-x-1/2 -translate-y-1/2"
             >
-              <div className="overflow-hidden rounded-3xl bg-white shadow-2xl">
-
-                <div className="relative bg-linear-to-r from-red-500 to-rose-500 p-8 text-center text-white">
-
+              <div className="overflow-hidden rounded-2xl bg-white shadow-2xl sm:rounded-3xl">
+                <div className="relative bg-linear-to-r from-red-500 to-rose-500 p-5 text-center text-white sm:p-8">
                   <button
                     onClick={() => setOpen(false)}
                     disabled={loading}
-                    className="absolute left-5 top-5 rounded-xl bg-white/20 p-2"
+                    className="absolute left-3 top-3 rounded-lg bg-white/20 p-1.5 sm:left-5 sm:top-5 sm:rounded-xl sm:p-2"
                   >
-                    <X size={18} />
+                    <X size={16} className="sm:hidden" />
+                    <X size={18} className="hidden sm:block" />
                   </button>
 
-                  <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white/20">
-                    <AlertTriangle size={38} />
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/20 sm:h-20 sm:w-20">
+                    <AlertTriangle size={26} className="sm:hidden" />
+                    <AlertTriangle size={38} className="hidden sm:block" />
                   </div>
 
-                  <h2 className="mt-5 text-2xl font-black">
-                    حذف محصول
-                  </h2>
+                  <h2 className="mt-3 text-lg font-black sm:mt-5 sm:text-2xl">حذف محصول</h2>
 
-                  <p className="mt-2 text-red-100">
+                  <p className="mt-1.5 text-sm text-red-100 sm:mt-2 sm:text-base">
                     این عملیات قابل بازگشت نیست.
                   </p>
                 </div>
 
-                <div className="space-y-5 p-8">
-
-                  <div className="rounded-2xl bg-red-50 p-5">
-
-                    <p className="text-sm text-gray-500">
+                <div className="space-y-4 p-5 sm:space-y-5 sm:p-8">
+                  <div className="rounded-xl bg-red-50 p-4 sm:rounded-2xl sm:p-5">
+                    <p className="text-xs text-gray-500 sm:text-sm">
                       آیا از حذف محصول زیر مطمئن هستید؟
                     </p>
 
-                    <h3 className="mt-3 text-lg font-bold">
+                    <h3 className="mt-2 text-base font-bold sm:mt-3 sm:text-lg">
                       {productTitle}
                     </h3>
-
                   </div>
 
-                  <p className="text-sm leading-7 text-gray-500">
+                  <p className="text-xs leading-6 text-gray-500 sm:text-sm sm:leading-7">
                     تمامی تصاویر محصول نیز از سرور حذف خواهند شد.
                   </p>
-
                 </div>
 
-                <div className="flex gap-4 border-t p-6">
-
+                <div className="flex gap-3 border-t p-4 sm:gap-4 sm:p-6">
                   <button
                     onClick={() => setOpen(false)}
                     disabled={loading}
-                    className="flex-1 rounded-xl border py-3 font-semibold"
+                    className="flex-1 rounded-lg border py-2 text-sm font-semibold sm:rounded-xl sm:py-3 sm:text-base"
                   >
                     انصراف
                   </button>
@@ -148,17 +130,13 @@ export default function DeleteProductModal({
                   <button
                     onClick={handleDelete}
                     disabled={loading}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-red-600 py-3 font-semibold text-white"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-red-600 py-2 text-sm font-semibold text-white sm:rounded-xl sm:py-3 sm:text-base"
                   >
-                    <Trash2 size={18} />
-
-                    {loading
-                      ? "در حال حذف..."
-                      : "حذف محصول"}
+                    <Trash2 size={16} className="sm:hidden" />
+                    <Trash2 size={18} className="hidden sm:block" />
+                    {loading ? "در حال حذف..." : "حذف محصول"}
                   </button>
-
                 </div>
-
               </div>
             </motion.div>
           </>

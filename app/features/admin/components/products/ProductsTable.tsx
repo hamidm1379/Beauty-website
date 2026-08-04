@@ -30,7 +30,7 @@ function StatusBadge({ status }: { status: ProductStatus }) {
 
   return (
     <span
-      className={`rounded-xl px-3 py-1 text-sm font-medium ${colors[status]}`}
+      className={`whitespace-nowrap rounded-xl px-2 py-0.5 text-xs font-medium sm:px-3 sm:py-1 sm:text-sm ${colors[status]}`}
     >
       {labels[status]}
     </span>
@@ -40,30 +40,30 @@ function StatusBadge({ status }: { status: ProductStatus }) {
 export default function ProductsTable({ products }: ProductsTableProps) {
   if (!products.length) {
     return (
-      <div className="rounded-3xl bg-white p-20 text-center text-gray-500 shadow-sm">
+      <div className="rounded-2xl bg-white p-10 text-center text-sm text-gray-500 shadow-sm sm:rounded-3xl sm:p-20 sm:text-base">
         هیچ محصولی یافت نشد.
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-3xl bg-white shadow-sm">
-      <table className="w-full">
+    <div className="overflow-x-auto rounded-2xl bg-white shadow-sm sm:rounded-3xl">
+      <table className="w-full min-w-[720px] text-sm sm:min-w-[900px] sm:text-base">
         <thead className="border-b bg-gray-50">
           <tr>
-            <th className="px-6 py-4 text-right">محصول</th>
+            <th className="px-3 py-2.5 text-right whitespace-nowrap sm:px-6 sm:py-4">محصول</th>
 
-            <th className="px-6 py-4 text-center">دسته بندی</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">دسته بندی</th>
 
-            <th className="px-6 py-4 text-center">برند</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">برند</th>
 
-            <th className="px-6 py-4 text-center">قیمت</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">قیمت</th>
 
-            <th className="px-6 py-4 text-center">موجودی</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">موجودی</th>
 
-            <th className="px-6 py-4 text-center">وضعیت</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">وضعیت</th>
 
-            <th className="px-6 py-4 text-center">عملیات</th>
+            <th className="px-3 py-2.5 text-center whitespace-nowrap sm:px-6 sm:py-4">عملیات</th>
           </tr>
         </thead>
 
@@ -84,17 +84,17 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                 key={product.id}
                 className="border-b transition hover:bg-gray-50"
               >
-                <td className="px-6 py-5">
-                  <div className="flex items-center gap-4">
+                <td className="px-3 py-3 sm:px-6 sm:py-5">
+                  <div className="flex items-center gap-2.5 sm:gap-4">
                     <Image
                       src={product.thumbnail || "/images/no-image.png"}
                       alt={product.title}
                       width={120}
                       height={80}
-                      className="h-16 w-20 rounded-xl border object-cover"
+                      className="h-12 w-14 shrink-0 rounded-lg border object-cover sm:h-16 sm:w-20 sm:rounded-xl"
                     />
 
-                    <div>
+                    <div className="whitespace-nowrap">
                       <h3 className="font-semibold">{product.title}</h3>
 
                       <p className="mt-1 text-xs text-gray-500">
@@ -104,26 +104,26 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                   </div>
                 </td>
 
-                <td className="px-6 py-5 text-center">
+                <td className="px-3 py-3 text-center whitespace-nowrap sm:px-6 sm:py-5">
                   {product.category.title}
                 </td>
 
-                <td className="px-6 py-5 text-center">
+                <td className="px-3 py-3 text-center whitespace-nowrap sm:px-6 sm:py-5">
                   {product.brand?.title ?? "-"}
                 </td>
 
-                <td className="px-6 py-5 text-center">
+                <td className="px-3 py-3 text-center whitespace-nowrap sm:px-6 sm:py-5">
                   {hasDiscount ? (
                     <div className="flex flex-col items-center gap-1">
-                      <span className="text-lg font-bold text-pink-600">
+                      <span className="text-base font-bold text-pink-600 sm:text-lg">
                         {finalPrice.toLocaleString()} تومان
                       </span>
 
-                      <span className="text-sm text-gray-400 line-through">
+                      <span className="text-xs text-gray-400 line-through sm:text-sm">
                         {product.price.toLocaleString()} تومان
                       </span>
 
-                      <span className="rounded-full bg-red-100 px-2 py-1 text-xs font-bold text-red-600">
+                      <span className="rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-bold text-red-600 sm:py-1 sm:text-xs">
                         {discountPercent}% تخفیف
                       </span>
                     </div>
@@ -134,19 +134,20 @@ export default function ProductsTable({ products }: ProductsTableProps) {
                   )}
                 </td>
 
-                <td className="px-6 py-5 text-center">{product.stock}</td>
+                <td className="px-3 py-3 text-center whitespace-nowrap sm:px-6 sm:py-5">{product.stock}</td>
 
-                <td className="px-6 py-5 text-center">
+                <td className="px-3 py-3 text-center whitespace-nowrap sm:px-6 sm:py-5">
                   <StatusBadge status={product.status} />
                 </td>
 
-                <td className="px-6 py-5">
-                  <div className="flex justify-center gap-3">
+                <td className="px-3 py-3 sm:px-6 sm:py-5">
+                  <div className="flex justify-center gap-2 sm:gap-3">
                     <Link
                       href={`/admin/products/${product.id}/edit`}
-                      className="rounded-xl bg-blue-50 p-2 text-blue-600 transition hover:bg-blue-100"
+                      className="rounded-lg bg-blue-50 p-1.5 text-blue-600 transition hover:bg-blue-100 sm:rounded-xl sm:p-2"
                     >
-                      <Pencil size={18} />
+                      <Pencil size={16} className="sm:hidden" />
+                      <Pencil size={18} className="hidden sm:block" />
                     </Link>
 
                     <DeleteProductModal

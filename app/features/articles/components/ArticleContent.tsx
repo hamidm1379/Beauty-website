@@ -34,7 +34,8 @@ export default function ArticleContent({
           prose-h3:text-2xl
 
           prose-p:text-gray-700
-          prose-p:leading-9
+          prose-p:leading-8
+          prose-p:text-justify
 
           prose-a:text-pink-600
           prose-a:no-underline
@@ -57,6 +58,33 @@ export default function ArticleContent({
         "
         dangerouslySetInnerHTML={{
           __html: article.content,
+        }}
+      />
+
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            .prose figure {
+              margin: 2rem auto;
+              max-width: 100%;
+            }
+            .prose figure img {
+              display: block;
+              max-width: 100%;
+              border-radius: 1rem;
+              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+              margin: 0 auto;
+            }
+            .prose figure figcaption {
+              margin-top: 0.75rem;
+              text-align: center;
+              font-size: 0.875rem;
+              line-height: 1.7;
+              color: #6b7280;
+              font-style: italic;
+              padding: 0 1rem;
+            }
+          `,
         }}
       />
     </article>

@@ -104,7 +104,7 @@ export default function BannerForm({ mode, initialData }: BannerFormProps) {
         form.mobileImageUrl,
       );
       const response = await fetch(
-        mode === "create" ? "/api/banners" : `/api/banners/${initialData.id}`,
+        mode === "create" ? "/api/banners" : `/api/banners/${initialData!.id}`,
         {
           method: mode === "create" ? "POST" : "PATCH",
 

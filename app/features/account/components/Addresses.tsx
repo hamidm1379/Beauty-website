@@ -50,9 +50,7 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
-  const [settingDefaultId, setSettingDefaultId] = useState<number | null>(
-    null,
-  );
+  const [settingDefaultId, setSettingDefaultId] = useState<number | null>(null);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -223,20 +221,21 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
   return (
     <section className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-3xl font-black text-gray-900">آدرس‌های من</h2>
-          <p className="mt-2 text-gray-500">
-            مدیریت آدرس‌های ثبت شده (
-            {addresses.length.toLocaleString("fa-IR")} از{" "}
-            {MAX_ADDRESSES.toLocaleString("fa-IR")})
+          <h2 className="text-xl sm:text-2xl font-black text-gray-900 md:text-3xl">
+            آدرس‌های من
+          </h2>
+          <p className="mt-2 text-sm text-gray-500 sm:text-base">
+            مدیریت آدرس‌های ثبت شده ({addresses.length.toLocaleString("fa-IR")}{" "}
+            از {MAX_ADDRESSES.toLocaleString("fa-IR")})
           </p>
         </div>
 
         <button
           onClick={() => (openForm ? closeForm() : openAddForm())}
           disabled={!openForm && addresses.length >= MAX_ADDRESSES}
-          className="cursor-pointer flex items-center gap-2 rounded-2xl bg-pink-500 px-5 py-3 font-bold text-white transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:bg-gray-300"
+          className="cursor-pointer flex items-center justify-center gap-2 rounded-2xl bg-pink-500 px-5 py-3 font-bold text-white transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:bg-gray-300"
         >
           {openForm ? <X size={18} /> : <Plus size={18} />}
           {openForm ? "بستن فرم" : "افزودن آدرس"}
@@ -250,13 +249,13 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
             initial={{ opacity: 0, y: 15, height: 0 }}
             animate={{ opacity: 1, y: 0, height: "auto" }}
             exit={{ opacity: 0, y: 15, height: 0 }}
-            className="overflow-hidden rounded-4xl border border-gray-100 bg-white p-8 shadow-sm"
+            className="overflow-hidden rounded-4xl border border-gray-100 bg-white p-5 shadow-sm sm:p-8"
           >
-            <h3 className="mb-8 text-2xl font-black">
+            <h3 className="mb-6 text-xl font-black sm:mb-8 sm:text-2xl">
               {editingId ? "ویرایش آدرس" : "ثبت آدرس جدید"}
             </h3>
 
-            <div className="grid gap-5 md:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
               <input
                 name="title"
                 value={form.title}
@@ -349,11 +348,11 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
               </span>
             </label>
 
-            <div className="mt-8 flex gap-3">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <button
                 onClick={handleSubmit}
                 disabled={saving}
-                className="flex cursor-pointer items-center gap-2 rounded-2xl bg-pink-500 px-8 py-3 font-bold text-white transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-pink-500 px-8 py-3 font-bold text-white transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {saving && <Loader2 size={18} className="animate-spin" />}
                 {editingId ? "ذخیره تغییرات" : "ثبت آدرس"}
@@ -373,7 +372,7 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
 
       {/* Empty state */}
       {addresses.length === 0 && !openForm && (
-        <div className="rounded-4xl border border-gray-100 bg-white p-16 text-center shadow-sm">
+        <div className="rounded-4xl border border-gray-100 bg-white p-10 text-center shadow-sm sm:p-16">
           <MapPin className="mx-auto text-gray-300" size={48} />
           <h3 className="mt-4 text-lg font-bold text-gray-700">
             هنوز آدرسی ثبت نکرده‌اید
@@ -392,33 +391,35 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
       )}
 
       {/* List */}
-      <div className="grid gap-6">
+      <div className="grid gap-4 sm:gap-6">
         {addresses.map((address) => (
           <motion.div
             key={address.id}
             layout
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className={`rounded-4xl border p-6 shadow-sm transition ${
+            className={`rounded-2xl border p-4 shadow-sm transition sm:rounded-3xl sm:p-6 md:rounded-4xl ${
               address.isDefault
                 ? "border-pink-300 bg-pink-50/40"
                 : "border-gray-100 bg-white"
             }`}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-3">
-                <MapPin className="text-pink-500" />
-                <span className="font-bold">{address.title}</span>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
+                <MapPin className="shrink-0 text-pink-500" size={18} />
+                <span className="truncate text-sm font-bold sm:text-base">
+                  {address.title}
+                </span>
 
                 {address.isDefault && (
-                  <span className="flex items-center gap-1 rounded-full bg-pink-100 px-2.5 py-1 text-[11px] font-semibold text-pink-600">
+                  <span className="flex shrink-0 items-center gap-1 rounded-full bg-pink-100 px-2.5 py-1 text-[11px] font-semibold text-pink-600">
                     <Star size={11} className="fill-pink-500" />
                     پیش‌فرض
                   </span>
                 )}
               </div>
 
-              <div className="flex items-center gap-1.5">
+              <div className="flex shrink-0 items-center gap-1.5">
                 <button
                   onClick={() => openEditForm(address)}
                   className="flex h-9 w-9 items-center justify-center rounded-xl text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
@@ -442,8 +443,10 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
               </div>
             </div>
 
-            <p className="mt-4 text-sm text-gray-600">
-              {address.receiverName} — {address.receiverPhone}
+            <p className="mt-4 flex flex-wrap items-center gap-1.5 text-sm text-gray-600">
+              <span>{address.receiverName}</span>
+              <span className="text-gray-300">—</span>
+              <span dir="ltr">{address.receiverPhone}</span>
             </p>
 
             <p className="mt-1.5 text-sm leading-6 text-gray-500">
@@ -497,8 +500,8 @@ export default function AddressList({ addresses: initialAddresses }: Props) {
 
               <p className="mt-2 text-sm leading-6 text-gray-500">
                 آیا از حذف «
-                {addresses.find((a) => a.id === confirmDeleteId)?.title}»
-                مطمئن هستید؟ این عملیات قابل بازگشت نیست.
+                {addresses.find((a) => a.id === confirmDeleteId)?.title}» مطمئن
+                هستید؟ این عملیات قابل بازگشت نیست.
               </p>
 
               <div className="mt-7 flex gap-3">

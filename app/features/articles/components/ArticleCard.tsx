@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, Calendar, Clock3, User } from "lucide-react";
+import { ArrowLeft, Calendar, Clock3 } from "lucide-react";
 
 export interface Article {
   id: string;
@@ -23,61 +23,46 @@ type Props = {
 export default function ArticleCard({ article }: Props) {
   return (
     <motion.article
-      whileHover={{ y: -8 }}
-      transition={{ duration: 0.3 }}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.25 }}
       className="
         group
-        flex
-        h-full
-        flex-col
+        flex h-full flex-col
         overflow-hidden
-        rounded-4xl
-        border
-        border-gray-100
+        rounded-3xl
+        border border-gray-100
         bg-white
         shadow-sm
-        transition-all
-        hover:shadow-2xl
+        transition-all hover:shadow-xl
       "
     >
       {/* Image */}
-      <div className="relative aspect-4/3 shrink-0 overflow-hidden ">
+      <div className="relative aspect-4/3 shrink-0 overflow-hidden">
         <Image
           src={article.image}
           alt={article.title}
           fill
           className="
             object-cover
-            transition-transform
-            duration-700
-            group-hover:scale-110
+            transition-transform duration-700
+            group-hover:scale-105
           "
         />
 
         <div
           className="
-            absolute
-            inset-0
-            bg-linear-to-t
-            from-black/40
-            via-transparent
-            to-transparent
+            absolute inset-0
+            bg-linear-to-t from-black/40 via-transparent to-transparent
           "
         />
 
         <span
           className="
-            absolute
-            right-5
-            top-5
+            absolute right-4 top-4
             rounded-full
-            bg-white/90
-            px-4
-            py-2
-            text-xs
-            font-bold
-            text-pink-600
-            backdrop-blur
+            bg-white/90 px-3 py-1.5
+            text-[10px] font-bold uppercase tracking-wide
+            text-pink-600 backdrop-blur
           "
         >
           {article.category}
@@ -85,42 +70,29 @@ export default function ArticleCard({ article }: Props) {
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 flex-col p-6">
+      <div className="flex flex-1 flex-col p-3 sm:p-5">
         {/* Meta */}
-        <div
-          className="
-            flex
-            flex-wrap
-            items-center
-            gap-4
-            text-sm
-            text-gray-500
-          "
-        >
-          <div className="flex items-center gap-2">
-            <Calendar size={16} />
+        <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-gray-500 sm:gap-3 sm:text-xs">
+          <div className="flex items-center gap-1.5">
+            <Calendar size={14} />
             تاریخ انتشار :{article.date}
           </div>
-
-          <div className="flex items-center gap-2">
-            <Clock3 size={16} />
+          {/* <div className="flex items-center gap-1.5">
+            <Clock3 size={14} />
             {article.readTime}
-          </div>
+          </div> */}
         </div>
 
         {/* Title */}
         <Link href={`/articles/${article.slug}`}>
           <h2
             className="
-            mt-5
-            line-clamp-2
-            text-2xl
-            font-bold
-            leading-9
-            text-gray-900
-            transition
-            group-hover:text-pink-500
-          "
+              mt-3 line-clamp-2
+              text-lg font-bold leading-6
+              text-gray-900
+              transition group-hover:text-pink-500
+              sm:text-xl sm:leading-7
+            "
           >
             {article.title}
           </h2>
@@ -129,32 +101,29 @@ export default function ArticleCard({ article }: Props) {
         {/* Excerpt */}
         <p
           className="
-            mt-4
-            line-clamp-3
-            leading-8
+            mt-2 line-clamp-3
+            text-sm leading-6
             text-gray-500
+            sm:text-base sm:leading-7
+            text-justify
           "
         >
           {article.excerpt}
         </p>
 
         {/* Button */}
+
         <Link
           href={`/articles/${article.slug}`}
           className="
-            mt-8
-            inline-flex
-            items-center
-            gap-2
-            self-start
-            font-bold
-            text-pink-500
-            transition
-            hover:gap-4
-          "
+    mt-4 inline-flex items-center gap-1.5 self-end
+    text-xs font-bold text-pink-500
+    transition hover:gap-3
+    sm:mt-6 sm:text-sm
+  "
         >
           ادامه مطلب
-          <ArrowLeft size={18} />
+          <ArrowLeft size={16} />
         </Link>
       </div>
     </motion.article>

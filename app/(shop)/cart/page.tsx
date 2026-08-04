@@ -51,34 +51,27 @@ export default async function CartPage() {
     });
 
   return (
-    <main className="bg-gray-50 py-8">
-      <div
-        className="mx-auto
-          w-full
-          max-w-350
-          px-4
-          sm:px-6
-          lg:px-8"
-      >
+    <main className="bg-gray-50 py-4 sm:py-6 md:py-8">
+      <div className="mx-auto w-full max-w-350 px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <Breadcrumb />
 
         {/* Hero */}
-        <div className="mt-8">
+        <div className="mt-4 sm:mt-6 md:mt-8">
           <CartHero />
         </div>
         {/* Stepper */}
-        <section className="mt-6">
+        <section className="mt-2 sm:mt-4 md:mt-6">
           <CartStepper currentStep={1} />
         </section>
 
         {/* Cart */}
-        <section className="mt-10 grid gap-8 lg:grid-cols-12 lg:items-start">
+        <section className="mt-4 sm:mt-8 md:mt-10 sm:grid gap-8 lg:grid-cols-12 lg:items-start">
           <div className="lg:col-span-8">
             <CartList items={cart.items} />
           </div>
 
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 max-sm:mt-4">
             <div className="sticky top-28">
               <OrderSummary items={cart.items} />
             </div>
@@ -87,7 +80,7 @@ export default async function CartPage() {
 
         {/* Recommended */}
         {recommendedProducts.length > 0 && (
-          <section className="mt-20">
+          <section className="mt-8 sm:mt-15 md:mt-20">
             <RecommendedProducts products={recommendedProducts} />
           </section>
         )}

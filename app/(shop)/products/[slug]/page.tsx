@@ -146,7 +146,7 @@ export default async function ProductDetailPage({ params }: Props) {
         />
 
         <main className="bg-[#fcfcfc] ">
-          <div className="mx-auto w-full max-w-7xl px-4 py-8 xl:px-0">
+          <div className="mx-auto w-full max-w-7xl px-4 pb-4 md:py-8 xl:px-0">
             {/* Breadcrumb */}
 
             <Breadcrumb product={product} />
@@ -155,20 +155,23 @@ export default async function ProductDetailPage({ params }: Props) {
 
             <section
               className="
-              mt-6
+              mt-3
+              sm:mt-6
               rounded-3xl
               border
               border-gray-100
               bg-white
-              p-6
+              p-2
+              sm:p-6
               shadow-sm
             "
             >
               <div
                 className="
                 grid
-                gap-8
-                lg:grid-cols-2
+                gap-4
+                md:gap-8
+                md:grid-cols-2
               "
               >
                 <ProductGallery product={product} />
@@ -182,13 +185,13 @@ export default async function ProductDetailPage({ params }: Props) {
 
             {/* Tabs */}
 
-            <section className="mt-8">
+            <section className="mt-4 sm:mt-8">
               <ProductTabs product={product} />
             </section>
 
             {/* Related Products */}
 
-            <section className="mt-10">
+            <section className="mt-4 sm:mt-10">
               <RelatedProducts products={relatedProductsForCard} />
             </section>
             <ProductFeatures />

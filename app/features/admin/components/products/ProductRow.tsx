@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 interface ProductRowProps {
-  product: { id: number; title: string; slug: string; thumbnail?: string | null; brand?: { title: string } | null; price: number; discountPrice?: number | null; status: string; stock: number; };
+  product: { id: number; title: string; slug: string; thumbnail?: string | null; image?: string | null; category?: { title: string } | null; brand?: { title: string } | null; price: number; discountPrice?: number | null; status: string; stock: number; };
 
   checked: boolean;
 
@@ -74,7 +74,7 @@ export default function ProductRow({
         <div className="flex items-center gap-4">
 
           <Image
-            src={product.image || "/images/no-image.png"}
+            src={product.thumbnail || product.image || "/images/no-image.png"}
             alt={product.title}
             width={60}
             height={60}

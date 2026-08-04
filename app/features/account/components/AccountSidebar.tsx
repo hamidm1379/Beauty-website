@@ -75,6 +75,8 @@ export default function AccountSidebar({
           border-gray-100
           bg-white
           shadow-sm
+          max-lg:rounded-2xl
+          max-lg:mt-10
         "
       >
         {/* Header */}
@@ -85,12 +87,14 @@ export default function AccountSidebar({
 
     flex
     items-center
-    gap-4
+    gap-1
+    lg:gap-4
 
     rounded-3xl
-
+    max-lg:rounded-2xl
     bg-white/95
-    p-4
+    p-2
+    lg:p-4
 
     shadow-xl
     backdrop-blur
@@ -101,16 +105,19 @@ export default function AccountSidebar({
       flex
       h-16
       w-16
+      max-lg:h-10
+      max-lg:w-10
       items-center
       justify-center
 
       rounded-2xl
-
+      max-lg:rounded-xl
       bg-linear-to-br
       from-pink-500
       to-rose-500
 
       text-xl
+      max-lg:text-lg
       font-black
       text-white
     "
@@ -119,13 +126,13 @@ export default function AccountSidebar({
           </div>
 
           <div className="min-w-0 flex-1">
-            <h3 className="truncate text-lg font-bold text-gray-900">
+            <h3 className="truncate text-sm lg:text-lg font-bold text-gray-900">
               {user.firstName || user.lastName
                 ? `${user.firstName ?? ""} ${user.lastName ?? ""}`
                 : "کاربر"}
             </h3>
 
-            <p className="truncate text-sm text-gray-500">{user.email}</p>
+            <p className="truncate text-xs lg:text-sm text-gray-500">{user.email}</p>
           </div>
         </div>
 
@@ -199,9 +206,11 @@ export default function AccountSidebar({
         className="
           rounded-4xl
           border
+          max-lg:rounded-2xl
           border-gray-100
           bg-white
           p-4
+          max-lg:p-2
           shadow-sm
         "
       >
@@ -233,7 +242,9 @@ export default function AccountSidebar({
 
                   px-4
                   py-4
-
+                  
+                  max-lg:px-3
+                  max-lg:py-2
                   transition-all
                   duration-300
 
@@ -244,7 +255,7 @@ export default function AccountSidebar({
                   }
                 `}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 lg:gap-4">
                   <motion.div
                     animate={{
                       rotate: active ? 8 : 0,
@@ -257,18 +268,20 @@ export default function AccountSidebar({
                       flex
                       h-11
                       w-11
+                      max-lg:h-8
+                      max-lg:w-8
                       items-center
                       justify-center
 
-                      rounded-xl
+                      max-lg:rounded-md
 
                       ${active ? "bg-white/20" : "bg-pink-50 text-pink-500"}
                     `}
                   >
-                    <Icon size={20} />
+                    <Icon className="w-4 h-4 lg:w-5 lg:h-5" />
                   </motion.div>
 
-                  <span className="font-semibold">{item.title}</span>
+                  <span className="font-semibold max-lg:text-right max-lg:text-xs">{item.title}</span>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -276,9 +289,12 @@ export default function AccountSidebar({
                     <span
                       className={`
                         rounded-full
-                        px-2.5
-                        py-1
-                        text-xs
+                        lg:px-2.5
+                        lg:py-1
+                        lg:text-xs
+                        px-1.75
+                        py-0.5
+                        text-[10px]
                         font-bold
 
                         ${
@@ -323,17 +339,21 @@ export default function AccountSidebar({
           w-full
           items-center
           justify-center
-          gap-3
+          gap-2
+          lg:gap-3
 
           rounded-3xl
-
+          max-lg:rounded-2xl
           border
           border-red-100
-
+          max-lg:text-sm
           bg-white
 
-          px-5
-          py-4
+           px-5
+            py-4
+                  
+                  max-lg:px-3
+                  max-lg:py-2
 
           font-semibold
 
@@ -346,7 +366,7 @@ export default function AccountSidebar({
           hover:bg-red-50
         "
       >
-        <LogOut size={20} />
+        <LogOut className="w-4 h-4 lg:w-5 lg:h-5" />
         خروج از حساب کاربری
       </motion.button>
     </aside>

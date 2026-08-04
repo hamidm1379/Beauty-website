@@ -27,7 +27,7 @@ export default function UserForm({ mode, user }: Props) {
       email: user?.email ?? "",
       phone: user?.phone ?? "",
       password: "",
-      role: user?.role ?? "CUSTOMER",
+      role: (user?.role as "CUSTOMER" | "ADMIN") ?? "CUSTOMER",
       isActive: user?.isActive ?? true,
     },
   });
@@ -38,7 +38,7 @@ export default function UserForm({ mode, user }: Props) {
         startTransition(async () => {
           try {
             const url =
-              mode === "create" ? "/api/users" : `/api/users/${user.id}`;
+              mode === "create" ? "/api/users" : `/api/users/${user!.id}`;
 
             const method = mode === "create" ? "POST" : "PATCH";
 
@@ -71,28 +71,28 @@ export default function UserForm({ mode, user }: Props) {
           }
         }),
       )}
-      className="space-y-8"
+      className="space-y-5 sm:space-y-8"
     >
       {/* اطلاعات اصلی */}
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
         <Input
           label="نام"
-          icon={<User size={18} />}
+          icon={<User className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />}
           error={errors.firstName?.message}
           registration={register("firstName")}
         />
 
         <Input
           label="نام خانوادگی"
-          icon={<User size={18} />}
+          icon={<User className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />}
           error={errors.lastName?.message}
           registration={register("lastName")}
         />
 
         <Input
           label="نام کاربری"
-          icon={<UserCog size={18} />}
+          icon={<UserCog className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />}
           error={errors.username?.message}
           registration={register("username")}
         />
@@ -100,14 +100,14 @@ export default function UserForm({ mode, user }: Props) {
         <Input
           label="ایمیل"
           type="email"
-          icon={<Mail size={18} />}
+          icon={<Mail className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />}
           error={errors.email?.message}
           registration={register("email")}
         />
 
         <Input
           label="شماره موبایل"
-          icon={<Phone size={18} />}
+          icon={<Phone className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />}
           error={errors.phone?.message}
           registration={register("phone")}
         />
@@ -115,7 +115,7 @@ export default function UserForm({ mode, user }: Props) {
         <Input
           label="رمز عبور"
           type="password"
-          icon={<Lock size={18} />}
+          icon={<Lock className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />}
           error={errors.password?.message}
           registration={register("password")}
         />
@@ -124,22 +124,11 @@ export default function UserForm({ mode, user }: Props) {
       {/* نقش */}
 
       <div>
-        <label className="mb-3 block font-medium">نقش کاربر</label>
+        <label className="mb-2 sm:mb-3 block text-sm sm:text-base font-medium">نقش کاربر</label>
 
         <select
           {...register("role")}
-          className="
-            h-12
-            w-full
-            rounded-2xl
-            border
-            border-gray-200
-            bg-white
-            px-4
-            outline-none
-            transition
-            focus:border-pink-500
-          "
+          className="h-10 sm:h-12 w-full rounded-xl sm:rounded-2xl border border-gray-200 bg-white px-3 sm:px-4 text-sm sm:text-base outline-none transition focus:border-pink-500"
         >
           <option value="CUSTOMER">کاربر</option>
 
@@ -149,12 +138,12 @@ export default function UserForm({ mode, user }: Props) {
 
       {/* وضعیت */}
 
-      <div className="space-y-4 rounded-2xl bg-gray-50 p-6">
-        <label className="flex items-center gap-3">
+      <div className="space-y-3 sm:space-y-4 rounded-xl sm:rounded-2xl bg-gray-50 p-4 sm:p-6">
+        <label className="flex items-center gap-2.5 sm:gap-3 text-sm sm:text-base">
           <input
             type="checkbox"
             {...register("isActive")}
-            className="h-5 w-5 accent-pink-600"
+            className="h-4 w-4 sm:h-5 sm:w-5 accent-pink-600"
           />
 
           <span>کاربر فعال باشد</span>
@@ -165,25 +154,9 @@ export default function UserForm({ mode, user }: Props) {
 
       <button
         disabled={isPending}
-        className="
-          flex
-          h-12
-          w-full
-          items-center
-          justify-center
-          gap-2
-          rounded-2xl
-          bg-linear-to-r
-          from-pink-600
-          to-rose-500
-          font-medium
-          text-white
-          transition
-          hover:scale-[1.01]
-          disabled:opacity-50
-        "
+        className="flex h-10 sm:h-12 w-full items-center justify-center gap-1.5 sm:gap-2 rounded-xl sm:rounded-2xl bg-linear-to-r from-pink-600 to-rose-500 text-sm sm:text-base font-medium text-white transition hover:scale-[1.01] disabled:opacity-50"
       >
-        <Save size={18} />
+        <Save className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
 
         {isPending
           ? "در حال ذخیره..."
@@ -197,7 +170,7 @@ export default function UserForm({ mode, user }: Props) {
 interface Props {
   mode: "create" | "edit";
 
-  user?: { id?: number; firstName: string; lastName?: string | null; email?: string | null; phone: string; role: string; isActive: boolean };
+  user?: { id?: number; firstName: string; lastName?: string | null; username?: string | null; email?: string | null; phone: string; role: string; isActive: boolean };
 }
 interface InputProps {
   label: string;
@@ -220,34 +193,21 @@ function Input({
 }: InputProps) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-medium">{label}</label>
+      <label className="mb-1.5 sm:mb-2 block text-xs sm:text-sm font-medium">{label}</label>
 
       <div className="relative">
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+        <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-gray-400">
           {icon}
         </div>
 
         <input
           type={type}
           {...registration}
-          className="
-            h-12
-            w-full
-            rounded-2xl
-            border
-            border-gray-200
-            bg-gray-50
-            pr-12
-            pl-4
-            outline-none
-            transition
-            focus:border-pink-500
-            focus:bg-white
-          "
+          className="h-10 sm:h-12 w-full rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 pr-10 sm:pr-12 pl-3 sm:pl-4 text-sm sm:text-base outline-none transition focus:border-pink-500 focus:bg-white"
         />
       </div>
 
-      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+      {error && <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-red-500">{error}</p>}
     </div>
   );
 }

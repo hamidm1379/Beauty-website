@@ -16,13 +16,11 @@ export default function ArticleMedia({
   updateField,
 }: ArticleMediaProps) {
   return (
-    <div className="rounded-3xl bg-white p-8 shadow-sm">
-      <h2 className="mb-8 text-xl font-bold">
-        تصویر شاخص
-      </h2>
+    <div className="rounded-2xl bg-white p-4 shadow-sm sm:rounded-3xl sm:p-8">
+      <h2 className="mb-4 text-base font-bold sm:mb-8 sm:text-xl">تصویر شاخص</h2>
 
       <div>
-        <label className="mb-3 block text-sm font-medium text-gray-700">
+        <label className="mb-2 block text-xs font-medium text-gray-700 sm:mb-3 sm:text-sm">
           تصویر مقاله
         </label>
 
@@ -30,12 +28,10 @@ export default function ArticleMedia({
           multiple={false}
           value={form.thumbnailFile}
           preview={form.thumbnailUrl}
-          onChange={(file) =>
-            updateField("thumbnailFile", file)
-          }
+          onChange={(file) => updateField("thumbnailFile", file as File | null)}
         />
 
-        <p className="mt-3 text-xs text-gray-500">
+        <p className="mt-2 text-[11px] text-gray-500 sm:mt-3 sm:text-xs">
           تصویر شاخص مقاله که در لیست مقالات و ابتدای صفحه مقاله نمایش داده
           می‌شود.
         </p>

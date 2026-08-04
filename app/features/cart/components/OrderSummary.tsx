@@ -123,13 +123,13 @@ export default function OrderSummary({ items }: Props) {
       initial={{ opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.45 }}
-      className="rounded-4xl border border-gray-100 bg-white p-7 shadow-xl"
+      className="rounded-2xl sm:rounded-4xl border border-gray-100 bg-white p-4 sm:p-7 shadow-xl"
     >
-      <h2 className="text-2xl font-black text-gray-900">خلاصه سفارش</h2>
+      <h2 className="text-lg sm:text-2xl font-black text-gray-900">خلاصه سفارش</h2>
 
-      <p className="mt-2 text-sm text-gray-500">اطلاعات نهایی سفارش شما</p>
+      <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-gray-500">اطلاعات نهایی سفارش شما</p>
 
-      <div className="mt-8 space-y-5">
+      <div className="mt-5 sm:mt-8 space-y-3 sm:space-y-5 text-sm sm:text-base">
         <div className="flex items-center justify-between">
           <span className="text-gray-500">مبلغ کالا</span>
 
@@ -172,45 +172,45 @@ export default function OrderSummary({ items }: Props) {
         </div> */}
       </div>
 
-      <div className="my-7 border-t border-dashed border-gray-200" />
+      <div className="my-4 sm:my-7 border-t border-dashed border-gray-200" />
 
       <div className="flex items-center justify-between">
-        <span className="text-lg font-bold">جمع کل</span>
+        <span className="text-base sm:text-lg font-bold">جمع کل</span>
 
-        <span className="text-3xl font-black text-pink-600">
+        <span className="text-xl sm:text-3xl font-black text-pink-600">
           {total.toLocaleString("fa-IR")}
         </span>
       </div>
 
-      <p className="mt-1 text-left text-sm text-gray-500">تومان</p>
+      <p className="mt-1 text-left text-xs sm:text-sm text-gray-500">تومان</p>
 
-      <div className="mt-10">
-        <label className="mb-3 flex items-center gap-2 font-semibold">
-          <TicketPercent size={18} className="text-pink-500" />
+      <div className="mt-6 sm:mt-10">
+        <label className="mb-2 sm:mb-3 flex items-center gap-2 text-sm sm:text-base font-semibold">
+          <TicketPercent className="h-4 w-4 sm:h-[18px] sm:w-[18px] text-pink-500" />
           کد تخفیف
         </label>
 
         {appliedCoupon ? (
-          <div className="flex items-center justify-between rounded-2xl border border-green-200 bg-green-50 px-4 py-3">
+          <div className="flex items-center justify-between rounded-xl sm:rounded-2xl border border-green-200 bg-green-50 px-3 py-2.5 sm:px-4 sm:py-3">
             <div className="flex items-center gap-2">
-              <CheckCircle2 size={18} className="text-green-600" />
-              <span className="font-mono text-sm font-bold text-green-700">
+              <CheckCircle2 className="h-4 w-4 sm:h-[18px] sm:w-[18px] text-green-600" />
+              <span className="font-mono text-xs sm:text-sm font-bold text-green-700">
                 {appliedCoupon.code}
               </span>
-              <span className="text-xs text-green-600">اعمال شد</span>
+              <span className="text-[11px] sm:text-xs text-green-600">اعمال شد</span>
             </div>
 
             <button
               type="button"
               onClick={handleRemoveCoupon}
-              className="flex h-7 w-7 items-center justify-center rounded-lg text-green-600 transition hover:bg-green-100"
+              className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-lg text-green-600 transition hover:bg-green-100"
               aria-label="حذف کد تخفیف"
             >
-              <X size={16} />
+              <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </button>
           </div>
         ) : (
-          <div className="flex gap-3">
+          <div className="flex gap-1 sm:gap-3">
             <input
               value={coupon}
               onChange={(e) => setCoupon(e.target.value.toUpperCase())}
@@ -222,17 +222,17 @@ export default function OrderSummary({ items }: Props) {
               }}
               placeholder="کد تخفیف..."
               disabled={applying}
-              className="h-12 flex-1 rounded-2xl border border-gray-200 px-4 uppercase outline-none transition focus:border-pink-300 focus:ring-4 focus:ring-pink-100 disabled:opacity-50"
+              className="w-full h-10 sm:h-12 flex-1 rounded-xl sm:rounded-2xl border border-gray-200 px-3 sm:px-4 text-sm sm:text-base uppercase outline-none transition focus:border-pink-300 focus:ring-4 focus:ring-pink-100 disabled:opacity-50"
             />
 
             <button
               type="button"
               onClick={handleApplyCoupon}
               disabled={applying}
-              className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-pink-100 px-5 font-semibold text-pink-600 transition hover:bg-pink-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex cursor-pointer items-center justify-center gap-2 rounded-xl sm:rounded-2xl bg-pink-100 px-4 sm:px-5 text-sm sm:text-base font-semibold text-pink-600 transition hover:bg-pink-500 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               {applying ? (
-                <Loader2 size={16} className="animate-spin" />
+                <Loader2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin" />
               ) : (
                 "اعمال"
               )}
@@ -246,22 +246,22 @@ export default function OrderSummary({ items }: Props) {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           disabled={!items.length}
-          className="mt-10 flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 py-4 text-lg font-bold text-white shadow-lg transition-all hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-6 sm:mt-10 flex w-full cursor-pointer items-center justify-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 py-3 sm:py-4 text-sm sm:text-lg font-bold text-white shadow-lg transition-all hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <CreditCard size={22} />
+          <CreditCard className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
           ادامه فرآیند خرید
-          <ArrowLeft size={20} />
+          <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
         </motion.button>
       </Link>
 
-      <div className="mt-8 rounded-2xl bg-pink-50 p-5">
-        <div className="flex items-start gap-3">
-          <ShieldCheck size={24} className="mt-1 text-pink-500" />
+      <div className="mt-5 sm:mt-8 rounded-xl sm:rounded-2xl bg-pink-50 p-3 sm:p-5">
+        <div className="flex items-start gap-2.5 sm:gap-3">
+          <ShieldCheck className="mt-1 h-5 w-5 sm:h-6 sm:w-6 shrink-0 text-pink-500" />
 
           <div>
-            <h3 className="font-bold text-gray-900">پرداخت کاملاً امن</h3>
+            <h3 className="text-sm sm:text-base font-bold text-gray-900">پرداخت کاملاً امن</h3>
 
-            <p className="mt-2 text-sm leading-7 text-gray-500">
+            <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm leading-6 sm:leading-7 text-gray-500">
               اطلاعات پرداخت شما با استفاده از پروتکل‌های امنیتی رمزنگاری
               شده و محفوظ خواهد ماند.
             </p>

@@ -117,8 +117,8 @@ export default function ProductsPagination({
   const end = Math.min(page * perPage, totalItems);
 
   return (
-    <div className="mt-10 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+    <div className="mt-10 rounded-3xl border border-gray-100 bg-white p-2 sm:p-4 md:p-6 shadow-sm">
+      <div className="flex flex-col gap-5 lg:flex-row items-center justify-between">
         {/* Info */}
 
         <div className="text-sm text-gray-500">

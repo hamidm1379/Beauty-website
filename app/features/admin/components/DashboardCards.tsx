@@ -59,7 +59,7 @@ const cards = [
 
 export default function DashboardCards() {
   return (
-    <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+    <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 sm:gap-6 xl:grid-cols-4">
       {cards.map((card, index) => {
         const Icon = card.icon;
 
@@ -86,14 +86,16 @@ export default function DashboardCards() {
               relative
               overflow-hidden
 
-              rounded-4xl
+              rounded-3xl
+              sm:rounded-4xl
 
               border
               border-gray-100
 
               bg-white
 
-              p-6
+              p-4
+              sm:p-6
 
               shadow-sm
 
@@ -128,15 +130,15 @@ export default function DashboardCards() {
 
             <div className="relative flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">
+                <p className="text-xs font-medium text-gray-500 sm:text-sm">
                   {card.title}
                 </p>
 
-                <h3 className="mt-3 text-3xl font-black text-gray-900">
+                <h3 className="mt-2 text-2xl font-black text-gray-900 sm:mt-3 sm:text-3xl">
                   {card.value}
                 </h3>
 
-                <span className="mt-1 block text-sm text-gray-400">
+                <span className="mt-1 block text-xs text-gray-400 sm:text-sm">
                   {card.suffix}
                 </span>
               </div>
@@ -144,13 +146,16 @@ export default function DashboardCards() {
               <div
                 className={`
                   flex
-                  h-16
-                  w-16
+                  h-12
+                  w-12
 
                   items-center
                   justify-center
 
-                  rounded-3xl
+                  rounded-2xl
+                  sm:h-16
+                  sm:w-16
+                  sm:rounded-3xl
 
                   ${card.bg}
                 `}
@@ -158,13 +163,16 @@ export default function DashboardCards() {
                 <div
                   className={`
                     flex
-                    h-12
-                    w-12
+                    h-9
+                    w-9
 
                     items-center
                     justify-center
 
-                    rounded-2xl
+                    rounded-xl
+                    sm:h-12
+                    sm:w-12
+                    sm:rounded-2xl
 
                     bg-linear-to-br
                     ${card.color}
@@ -174,14 +182,15 @@ export default function DashboardCards() {
                     shadow-lg
                   `}
                 >
-                  <Icon size={26} />
+                  <Icon size={20} className="sm:hidden" />
+                  <Icon size={26} className="hidden sm:block" />
                 </div>
               </div>
             </div>
 
             {/* Mini Chart */}
 
-            <div className="mt-8 flex h-14 items-end gap-1.5">
+            <div className="mt-5 flex h-10 items-end gap-1 sm:mt-8 sm:h-14 sm:gap-1.5">
               {[35, 70, 45, 82, 60, 95, 75].map(
                 (height, i) => (
                   <motion.div
@@ -213,15 +222,16 @@ export default function DashboardCards() {
 
             {/* Footer */}
 
-            <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-5">
+            <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4 sm:mt-6 sm:pt-5">
               <div
                 className={`
                   flex
                   items-center
-                  gap-2
-
-                  text-sm
+                  gap-1.5
+                  text-xs
                   font-bold
+                  sm:gap-2
+                  sm:text-sm
 
                   ${
                     card.positive
@@ -231,15 +241,15 @@ export default function DashboardCards() {
                 `}
               >
                 {card.positive ? (
-                  <ArrowUpRight size={18} />
+                  <ArrowUpRight size={16} />
                 ) : (
-                  <ArrowDownRight size={18} />
+                  <ArrowDownRight size={16} />
                 )}
 
                 {card.change}
               </div>
 
-              <span className="text-xs text-gray-400">
+              <span className="text-[10px] text-gray-400 sm:text-xs">
                 نسبت به هفته گذشته
               </span>
             </div>

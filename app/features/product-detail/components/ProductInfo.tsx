@@ -180,101 +180,66 @@ export default function ProductInfo({
       {/* Brand */}
       <span
         className="
-      w-fit
-      rounded-full
-      bg-pink-50
-      px-3
-      py-1
-      text-sm
-      font-medium
-      text-pink-600
-    "
+          w-fit rounded-full
+          bg-pink-50 px-2.5 py-1
+          text-xs font-medium text-pink-600
+          sm:px-3 sm:text-sm
+        "
       >
         {product.brand?.title ?? "بدون برند"}
       </span>
+
       {/* Title */}
       <h1
         className="
-      mt-4
-      text-3xl
-      font-extrabold
-      leading-10
-      text-gray-900
-    "
+          mt-3 text-lg sm:text-xl font-extrabold leading-8 text-gray-900
+          sm:mt-4 md:text-2xl sm:leading-9
+          lg:text-3xl lg:leading-10
+        "
       >
         {product.title}
       </h1>
 
       {/* Price */}
-
-      <div className="mt-8">
+      <div className=" sm:mt-4 md:mt-8">
         {hasDiscount && (
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <span
               className="
-          rounded-xl
-          bg-pink-500
-          px-3
-          py-1
-          text-sm
-          font-bold
-          text-white
-        "
+                rounded-xl bg-pink-500
+                px-2.5 py-1 text-xs font-bold text-white
+                sm:px-3 sm:text-sm
+              "
             >
               ٪{discountPercent.toLocaleString("fa-IR")}
             </span>
 
-            <p
-              className="
-          text-lg
-          text-gray-400
-          line-through
-        "
-            >
+            <p className="text-base text-gray-400 line-through sm:text-lg">
               {product.price.toLocaleString("fa-IR")}
             </p>
           </div>
         )}
 
-        <div
-          className="
-      mt-2
-      text-4xl
-      font-extrabold
-      text-gray-900
-    "
-        >
+        <div className="mt-2 text-xl sm:text-2xl font-extrabold text-gray-900 md:text-3xl lg:text-4xl">
           {finalPrice.toLocaleString("fa-IR")}
 
-          <span
-            className="
-        mr-2
-        text-lg
-        font-medium
-      "
-          >
+          <span className="mr-1.5 text-sm font-medium sm:mr-2 sm:text-lg">
             تومان
           </span>
         </div>
       </div>
+
       {/* Description */}
-      <p
-        className="
-      mt-8
-      max-w-xl
-      leading-8
-      text-gray-500
-    "
-      >
+      <p className="mt-2 max-w-xl text-sm leading-7 text-gray-500 sm:mt-8 sm:text-base sm:leading-8">
         {product.shortDescription ?? "توضیحاتی برای این محصول ثبت نشده است."}
       </p>
 
       {/* Variants */}
       {product.variants && product.variants.length > 0 && (
-        <div className="mt-8">
-          <h3 className="mb-3 font-bold">رنگ‌بندی</h3>
+        <div className="mt-6 sm:mt-8">
+          <h3 className="mb-3 text-sm font-bold sm:text-base">رنگ‌بندی</h3>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2.5 sm:gap-3">
             {product.variants.map((variant) => (
               <button
                 key={variant.id}
@@ -283,14 +248,16 @@ export default function ProductInfo({
                 title={variant.colorName}
                 className={`
                   flex
-                  h-11
-                  w-11
+                  h-10
+                  w-10
                   items-center
                   justify-center
                   rounded-full
                   border-2
                   transition-all
                   duration-200
+                  sm:h-11
+                  sm:w-11
                   ${
                     selectedVariantId === variant.id
                       ? "border-pink-500 ring-2 ring-pink-200"
@@ -298,13 +265,13 @@ export default function ProductInfo({
                   }
                   ${
                     variant.stock === 0
-                      ? "opacity-40  cursor-pointer"
+                      ? "opacity-40 cursor-pointer"
                       : "cursor-pointer"
                   }
                 `}
               >
                 <span
-                  className="h-7 w-7 rounded-full border border-black/10"
+                  className="h-6 w-6 rounded-full border border-black/10 sm:h-7 sm:w-7"
                   style={{ backgroundColor: variant.colorCode }}
                 />
               </button>
@@ -312,7 +279,7 @@ export default function ProductInfo({
           </div>
 
           {selectedVariantId && (
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-xs text-gray-500 sm:text-sm">
               {" "}
               کد :
               {
@@ -323,32 +290,27 @@ export default function ProductInfo({
           )}
         </div>
       )}
+
       {/* Buttons */}
-      <div className="mt-10 flex gap-4">
+      <div className="mt-auto flex flex-col gap-3 pt-8 sm:flex-row sm:gap-4 sm:pt-10">
         <button
           onClick={addToCart}
           disabled={product.stock === 0}
           className={`
-        flex
-        flex-1
-        items-center
-        justify-center
-        gap-3
-        rounded-2xl
-        py-4
-        text-lg
-        font-bold
-        transition-all
-        duration-300
-        ${
-          product.stock === 0
-            ? "cursor-not-allowed bg-gray-300 text-white"
-            : "cursor-pointer bg-pink-500 text-white hover:bg-pink-600 hover:shadow-xl"
-        }
-      `}
+      order-1 flex flex-1
+      items-center justify-center gap-2.5
+      rounded-2xl py-3.5
+      text-base font-bold
+      transition-all duration-300
+      sm:order-none sm:gap-3 sm:py-4 sm:text-lg
+      ${
+        product.stock === 0
+          ? "cursor-not-allowed bg-gray-300 text-white"
+          : "cursor-pointer bg-pink-500 text-white hover:bg-pink-600 hover:shadow-xl"
+      }
+    `}
         >
-          <ShoppingCart size={22} />
-
+          <ShoppingCart className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
           {product.stock === 0 ? "ناموجود" : "افزودن به سبد خرید"}
         </button>
 
@@ -356,34 +318,24 @@ export default function ProductInfo({
           onClick={toggleFavorite}
           disabled={favoriteLoading}
           className="
-        flex
-        h-14
-        w-14
-        cursor-pointer
-        items-center
-        justify-center
-
-        rounded-2xl
-
-        border
-        border-gray-200
-
-        bg-white
-
-        transition-all
-        duration-300
-
-        hover:border-pink-400
-        hover:bg-pink-50
-        disabled:cursor-not-allowed
-        disabled:opacity-60
-      "
+      order-2 flex h-12 w-full
+      cursor-pointer items-center justify-center gap-2
+      rounded-2xl border border-gray-200
+      bg-white
+      transition-all duration-300
+      hover:border-pink-400 hover:bg-pink-50
+      disabled:cursor-not-allowed disabled:opacity-60
+      sm:order-none sm:h-14 sm:w-14 sm:gap-0
+    "
         >
           <Heart
-            className={`h-6 w-6 ${
+            className={`h-5 w-5 sm:h-6 sm:w-6 ${
               favorite ? "fill-pink-500 text-pink-500" : "text-gray-500"
             }`}
           />
+          <span className="text-sm font-medium text-gray-600 sm:hidden">
+            {favorite ? "در علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
+          </span>
         </button>
       </div>
     </section>

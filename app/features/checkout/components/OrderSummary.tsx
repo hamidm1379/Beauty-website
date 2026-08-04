@@ -172,203 +172,74 @@ export default function OrderSummary({
       transition={{
         duration: 0.5,
       }}
-      className="
-      sticky
-      top-6
-      overflow-hidden
-      rounded-4xl
-      border
-      border-gray-100
-      bg-white
-      shadow-xl
-      shadow-pink-100/30
-      "
+      className="sticky top-6 overflow-hidden rounded-2xl sm:rounded-4xl border border-gray-100 bg-white shadow-xl shadow-pink-100/30"
     >
-      <div
-        className="
-        relative
-        overflow-hidden
-        bg-linear-to-r
-        from-pink-500
-        via-rose-500
-        to-fuchsia-500
-        p-6
-        text-white
-        "
-      >
-        <div
-          className="
-        flex
-        items-center
-        gap-4
-        "
-        >
-          <div
-            className="
-          flex
-          h-14
-          w-14
-          items-center
-          justify-center
-          rounded-2xl
-          bg-white/15
-          "
-          >
-            <ShoppingBag size={28} />
+      <div className="relative overflow-hidden bg-white border-b border-gray-100 p-4 sm:p-6 text-gray-900">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex h-11 w-11 sm:h-14 sm:w-14 items-center justify-center rounded-xl sm:rounded-2xl bg-pink-50">
+            <ShoppingBag className="h-5 w-5 sm:h-7 sm:w-7 text-pink-500" />
           </div>
 
           <div>
-            <h2
-              className="
-            text-2xl
-            font-black
-            "
-            >
+            <h2 className="text-lg sm:text-2xl font-black text-gray-900">
               خلاصه سفارش
             </h2>
 
-            <p
-              className="
-            mt-1
-            text-pink-100
-            "
-            >
+            <p className="mt-1 text-xs sm:text-base text-gray-500">
               بررسی مبلغ قابل پرداخت
             </p>
           </div>
         </div>
       </div>
 
-      <div
-        className="
-      space-y-6
-      p-6
-      "
-      >
-        <p
-          className="
-        text-sm
-        text-gray-500
-        "
-        >
+      <div className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+        <p className="text-xs sm:text-sm text-gray-500">
           {items.length.toLocaleString("fa-IR")} قلم کالا در سبد خرید شما
         </p>
 
-        <div className="space-y-5">
-          <div
-            className="
-          flex
-          justify-between
-          "
-          >
+        <div className="space-y-3 sm:space-y-5 text-sm sm:text-base">
+          <div className="flex justify-between">
             <span className="text-gray-500">مجموع خرید</span>
 
             <span className="font-bold">{formatPrice(subtotal)} تومان</span>
           </div>
 
-          <div
-            className="
-          flex
-          justify-between
-          "
-          >
-            <span
-              className="
-            flex
-            items-center
-            gap-2
-            text-gray-500
-            "
-            >
-              <Truck size={16} />
+          <div className="flex justify-between">
+            <span className="flex items-center gap-1.5 sm:gap-2 text-gray-500">
+              <Truck className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               هزینه ارسال
             </span>
 
-            <span
-              className="
-            font-bold
-            text-green-600
-            "
-            >
-              رایگان
-            </span>
+            <span className="font-bold text-green-600">رایگان</span>
           </div>
 
           {productDiscount > 0 && (
-            <div
-              className="
-          flex
-          justify-between
-          "
-            >
-              <span
-                className="
-            flex
-            items-center
-            gap-2
-            text-gray-500
-            "
-              >
-                <Tag size={16} />
+            <div className="flex justify-between">
+              <span className="flex items-center gap-1.5 sm:gap-2 text-gray-500">
+                <Tag className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 تخفیف محصولات
               </span>
 
-              <span
-                className="
-            font-bold
-            text-pink-500
-            "
-              >
+              <span className="font-bold text-pink-500">
                 -{formatPrice(productDiscount)}
               </span>
             </div>
           )}
 
           {couponCode && couponDiscount > 0 && (
-            <div
-              className="
-          flex
-          justify-between
-          "
-            >
+            <div className="flex justify-between">
               <span>تخفیف کد {couponCode}</span>
 
-              <span
-                className="
-            text-pink-500
-            font-bold
-            "
-              >
+              <span className="font-bold text-pink-500">
                 -{formatPrice(couponDiscount)}
               </span>
             </div>
           )}
 
-          <div
-            className="
-          border-t
-          border-dashed
-          pt-5
-          flex
-          justify-between
-          "
-          >
-            <span
-              className="
-            font-bold
-            text-lg
-            "
-            >
-              مبلغ نهایی
-            </span>
+          <div className="flex justify-between border-t border-dashed pt-4 sm:pt-5">
+            <span className="text-base sm:text-lg font-bold">مبلغ نهایی</span>
 
-            <span
-              className="
-            text-2xl
-            font-black
-            text-pink-600
-            "
-            >
+            <span className="text-xl sm:text-2xl font-black text-pink-600">
               {formatPrice(total)}
             </span>
           </div>
@@ -383,31 +254,14 @@ export default function OrderSummary({
           }}
           onClick={handleContinue}
           disabled={!items.length || submitting}
-          className="
-          flex
-          w-full
-          items-center
-          justify-center
-          gap-3
-          rounded-2xl
-          bg-linear-to-r
-          from-pink-500
-          via-rose-500
-          to-fuchsia-500
-          px-6
-          py-4
-          font-bold
-          text-white
-          shadow-lg
-          disabled:opacity-50
-          "
+          className="cursor-pointer flex w-full items-center justify-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl bg-linear-to-r from-pink-500 via-rose-500 to-fuchsia-500 px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base font-bold text-white shadow-lg disabled:opacity-50"
         >
           {submitting ? (
-            <Loader2 size={18} className="animate-spin" />
+            <Loader2 className="h-4 w-4 sm:h-4.5 sm:w-4.5 animate-spin" />
           ) : (
             <>
               ثبت سفارش
-              <ArrowLeft size={18} />
+              <ArrowLeft className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
             </>
           )}
         </motion.button>

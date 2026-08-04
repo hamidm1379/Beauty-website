@@ -25,9 +25,9 @@ interface StatCardProps {
 // ----------------------------------------------------------------------
 function StatCard({ label, value, colorClass }: StatCardProps) {
   return (
-    <div className={`rounded-2xl px-5 py-3 ${colorClass}`}>
-      <p className="text-xs text-gray-500">{label}</p>
-      <h3 className="mt-1 text-xl font-black">{value}</h3>
+    <div className={`rounded-xl px-3 py-2 sm:rounded-2xl sm:px-5 sm:py-3 ${colorClass}`}>
+      <p className="text-[11px] text-gray-500 sm:text-xs">{label}</p>
+      <h3 className="mt-0.5 text-base font-black sm:mt-1 sm:text-xl">{value}</h3>
     </div>
   );
 }
@@ -41,8 +41,8 @@ export default function ProductsHeader({
   outOfStockProducts,
   totalCategories,
 }: ProductsHeaderProps) {
-  // Format numbers with Persian locale (client-safe due to suppressHydrationWarning)
   const format = (n: number) => n.toLocaleString("fa-IR");
+
   async function exportExcel() {
     try {
       const response = await fetch("/api/products/export");
@@ -52,15 +52,11 @@ export default function ProductsHeader({
       }
 
       const blob = await response.blob();
-
       const url = window.URL.createObjectURL(blob);
-
       const link = document.createElement("a");
 
       link.href = url;
-
       link.download = "products.xlsx";
-
       link.click();
 
       window.URL.revokeObjectURL(url);
@@ -70,36 +66,38 @@ export default function ProductsHeader({
       toast.error("خطا در دریافت فایل.");
     }
   }
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="overflow-hidden rounded-4xl border border-gray-100 bg-white shadow-sm"
+      className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm sm:rounded-3xl md:rounded-4xl"
     >
-      <div className="p-8">
+      <div className="p-4 sm:p-6 md:p-8">
         {/* ---- Top section ---- */}
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
           {/* Left column */}
-          <div>
+          <div className="min-w-0">
             {/* Breadcrumb */}
-            <nav className="flex items-center gap-2 text-sm text-gray-400">
+            <nav className="flex items-center gap-1.5 text-xs text-gray-400 sm:gap-2 sm:text-sm">
               <Link href="/admin" className="transition hover:text-pink-500">
                 داشبورد
               </Link>
-              <ChevronLeft size={15} />
+              <ChevronLeft size={13} className="shrink-0 sm:size-[15px]" />
               <span className="font-medium text-gray-900">محصولات</span>
             </nav>
 
             {/* Title + icon */}
-            <div className="mt-5 flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-pink-100 text-pink-600">
-                <Package size={30} />
+            <div className="mt-3 flex items-center gap-3 sm:mt-5 sm:gap-4">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-pink-100 text-pink-600 sm:h-16 sm:w-16 sm:rounded-3xl">
+                <Package size={22} className="sm:hidden" />
+                <Package size={30} className="hidden sm:block" />
               </div>
-              <div>
-                <h1 className="text-3xl font-black text-gray-900">
+              <div className="min-w-0">
+                <h1 className="text-lg font-black text-gray-900 sm:text-2xl md:text-3xl">
                   مدیریت محصولات
                 </h1>
-                <p className="mt-2 text-gray-500">
+                <p className="mt-1 text-xs text-gray-500 sm:mt-2 sm:text-base">
                   مدیریت، افزودن، ویرایش و حذف محصولات فروشگاه
                 </p>
               </div>
@@ -107,24 +105,29 @@ export default function ProductsHeader({
           </div>
 
           {/* Right column – action buttons */}
-          <div className="flex flex-wrap items-center gap-4">
-            <button onClick={exportExcel} className="flex items-center gap-2 rounded-2xl border border-gray-200 px-5 py-3 font-semibold text-gray-700 transition hover:border-pink-300 hover:text-pink-600">
-              <Download size={18} />
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+            <button
+              onClick={exportExcel}
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:border-pink-300 hover:text-pink-600 sm:w-auto sm:rounded-2xl sm:px-5 sm:py-3 sm:text-base"
+            >
+              <Download size={16} className="sm:hidden" />
+              <Download size={18} className="hidden sm:block" />
               خروجی Excel
             </button>
 
             <Link
               href="/admin/products/new"
-              className="flex items-center gap-2 rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 px-6 py-3 font-semibold text-white shadow-lg shadow-pink-500/20 transition-all hover:-translate-y-0.5 hover:shadow-xl"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-pink-500 to-rose-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-pink-500/20 transition-all hover:-translate-y-0.5 hover:shadow-xl sm:w-auto sm:rounded-2xl sm:px-6 sm:py-3 sm:text-base"
             >
-              <Plus size={20} />
+              <Plus size={18} className="sm:hidden" />
+              <Plus size={20} className="hidden sm:block" />
               افزودن محصول
             </Link>
           </div>
         </div>
 
         {/* ---- Bottom stats ---- */}
-        <div className="mt-8 flex flex-wrap items-center gap-4">
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-8 sm:flex sm:flex-wrap sm:items-center sm:gap-4">
           <StatCard
             label="تعداد محصولات"
             value={format(totalProducts)}

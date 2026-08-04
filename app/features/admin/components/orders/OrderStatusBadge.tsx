@@ -49,10 +49,11 @@ export default function OrderStatusBadge({ status }: { status: OrderStatus }) {
     <span
       className={`
 rounded-full
-px-4
-py-2
-text-xs
-font-bold
+px-2
+py-1
+text-[10px]
+font-semibold
+w-16.25
 ${item?.class}
 `}
     >
