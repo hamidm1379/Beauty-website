@@ -114,7 +114,7 @@ export default async function BrandDetailsPage({
       />
 
       <main className="bg-[#fcfcfc]">
-        <div className="mx-auto max-w-7xl px-4 py-10">
+        <div className="mx-auto w-full max-w-7xl px-4 pb-4 md:py-8 xl:px-0">
           <div className="mx-auto max-w-5xl">
             {/* Hero */}
 
@@ -122,14 +122,14 @@ export default async function BrandDetailsPage({
 
             {/* Content */}
 
-            <div className="mt-10">
+            <div className="mt-6 sm:mt-10">
               <BrandContent content={brand.content} />
             </div>
           </div>
 
           {/* Related Brands */}
 
-          <section className="mt-20">
+          <section className="mt-10 sm:mt-20">
             <RelatedBrands
               brands={relatedBrands}
             />

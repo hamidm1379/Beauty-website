@@ -121,35 +121,18 @@ export default function BrandPagination({
   const end = Math.min(page * perPage, totalItems);
 
   return (
-    <div className="mt-10 rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        {/* Info */}
-
-        <div className="text-sm text-gray-500">
-          نمایش
-          <span className="mx-1 font-bold text-pink-600">
-            {start.toLocaleString("fa-IR")}
-          </span>
-          تا
-          <span className="mx-1 font-bold text-pink-600">
-            {end.toLocaleString("fa-IR")}
-          </span>
-          از
-          <span className="mx-1 font-bold text-gray-900">
-            {totalItems.toLocaleString("fa-IR")}
-          </span>
-          برند
-        </div>
-
+    <div className="mt-6 sm:mt-10 rounded-2xl sm:rounded-3xl border border-gray-100 bg-white p-3 sm:p-6 shadow-sm">
+      <div className="flex flex-col gap-3 sm:gap-5 lg:flex-row items-center lg:justify-between">
+        
         {/* Pagination */}
 
-        <div className="flex items-center gap-2 rounded-3xl border border-gray-100 p-2">
+        <div className="flex max-w-full items-center gap-1 sm:gap-2 overflow-x-auto rounded-2xl sm:rounded-3xl border border-gray-100 p-1.5 sm:p-2">
           <button
             onClick={() => changePage(page - 1)}
             disabled={page === 1}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl text-gray-500 transition hover:bg-pink-50 hover:text-pink-600 disabled:opacity-40"
+            className="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl text-gray-500 transition hover:bg-pink-50 hover:text-pink-600 disabled:opacity-40"
           >
-            <ChevronRight size={18} />
+            <ChevronRight className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
           </button>
 
           {pages.map((item, index) => {
@@ -157,7 +140,7 @@ export default function BrandPagination({
               return (
                 <span
                   key={index}
-                  className="flex h-11 w-11 items-center justify-center"
+                  className="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center text-sm sm:text-base"
                 >
                   ...
                 </span>
@@ -168,11 +151,7 @@ export default function BrandPagination({
               <button
                 key={item.value}
                 onClick={() => changePage(item.value)}
-                className={`flex h-11 w-11 items-center justify-center rounded-2xl font-semibold transition ${
-                  page === item.value
-                    ? "bg-pink-500 text-white shadow"
-                    : "hover:bg-pink-50 hover:text-pink-600"
-                }`}
+                className={`flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl text-sm sm:text-base font-semibold transition ${page === item.value ? "bg-pink-500 text-white shadow" : "hover:bg-pink-50 hover:text-pink-600"}`}
               >
                 {item.value.toLocaleString("fa-IR")}
               </button>
@@ -182,28 +161,15 @@ export default function BrandPagination({
           <button
             onClick={() => changePage(page + 1)}
             disabled={page === totalPages}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl text-gray-500 transition hover:bg-pink-50 hover:text-pink-600 disabled:opacity-40"
+            className="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl text-gray-500 transition hover:bg-pink-50 hover:text-pink-600 disabled:opacity-40"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
           </button>
         </div>
 
         {/* Per Page */}
 
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500">تعداد نمایش</span>
-
-          <select
-            value={perPage}
-            onChange={(e) => changeLimit(Number(e.target.value))}
-            className="h-11 rounded-2xl border border-gray-200 px-4 outline-none focus:border-pink-500"
-          >
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-        </div>
+        
       </div>
     </div>
   );

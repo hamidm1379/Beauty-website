@@ -3,12 +3,20 @@ import { Plus, Percent, Tag } from "lucide-react";
 
 import { couponService } from "@/lib/services/coupon.service";
 import CouponRowActions from "@/app/features/admin/components/coupons/CouponRowActions";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 type Props = {
   searchParams: Promise<{ page?: string }>;
 };
 
 export default async function CouponsPage({ searchParams }: Props) {
+  const session = await auth();
+
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    redirect("/admin/orders");
+  }
+
   const { page } = await searchParams;
   const currentPage = Number(page) || 1;
 

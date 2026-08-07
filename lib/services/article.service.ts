@@ -1,5 +1,7 @@
 import { articleRepository } from "@/lib/repositories/article.repository";
 import { prisma } from "../prisma";
+import fs from "fs/promises";
+import path from "path";
 
 class ArticleService {
    async getRelatedBrands(
@@ -123,6 +125,27 @@ class ArticleService {
       seoKeywords: string;
     }>,
   ) {
+    const existing = await this.getById(id);
+
+    // Delete old thumbnail if a new one is provided and differs from the current
+    if (data.thumbnail && existing.thumbnail && data.thumbnail !== existing.thumbnail) {
+      try {
+        const filePath = path.join(
+          process.cwd(),
+          "public",
+          existing.thumbnail.replace(/^\/+/, ""),
+        );
+        await fs.unlink(filePath);
+      } catch {
+        // File may not exist, ignore
+      }
+    }
+
+    // Delete old content images if content is being replaced
+    if (data.content && data.content !== existing.content) {
+      await this.deleteContentImages(existing.content);
+    }
+
     return prisma.article.update({
       where: { id },
       data,
@@ -130,13 +153,61 @@ class ArticleService {
   }
 
   async delete(id: number) {
-    await this.getById(id);
+    const existing = await this.getById(id);
+
+    // Delete thumbnail file
+    if (existing.thumbnail) {
+      try {
+        const filePath = path.join(
+          process.cwd(),
+          "public",
+          existing.thumbnail.replace(/^\/+/, ""),
+        );
+        await fs.unlink(filePath);
+      } catch {
+        // File may not exist, ignore
+      }
+    }
+
+    // Delete content images
+    if (existing.content) {
+      await this.deleteContentImages(existing.content);
+    }
 
     return articleRepository.delete(id);
   }
 
   async count() {
     return articleRepository.count();
+  }
+
+  private extractImagesFromContent(content: string): string[] {
+    const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*>/gi;
+    const images: string[] = [];
+    let match;
+    while ((match = imgRegex.exec(content)) !== null) {
+      const src = match[1];
+      if (src && src.startsWith("/")) {
+        images.push(src);
+      }
+    }
+    return images;
+  }
+
+  private async deleteContentImages(content: string) {
+    const images = this.extractImagesFromContent(content);
+    for (const imgPath of images) {
+      try {
+        const filePath = path.join(
+          process.cwd(),
+          "public",
+          imgPath.replace(/^\/+/, ""),
+        );
+        await fs.unlink(filePath);
+      } catch {
+        // File may not exist, ignore
+      }
+    }
   }
 
   private generateSlug(title: string) {

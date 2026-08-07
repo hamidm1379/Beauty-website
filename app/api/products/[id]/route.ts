@@ -151,6 +151,26 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     });
 
     const newImages = formData.getAll("images") as File[];
+    const removedImages = formData.getAll("removedImages") as string[];
+
+    // Delete specifically removed images
+    if (removedImages.length > 0) {
+      for (const imageUrl of removedImages) {
+        if (!imageUrl || imageUrl.trim() === "") continue;
+        try {
+          await fs.unlink(path.join(process.cwd(), "public", imageUrl));
+        } catch {}
+      }
+
+      // Remove from database
+      await prisma.productImage.deleteMany({
+        where: {
+          productId,
+          image: { in: removedImages },
+        },
+      });
+    }
+
     if (variantsRaw) {
       try {
         const variants = JSON.parse(variantsRaw) as {

@@ -1,10 +1,10 @@
 import { orderRepository } from "@/lib/repositories/order.repository";
 import { cartService } from "@/lib/services/cart.service";
 
-import { OrderStatus, PaymentStatus } from "@prisma/client";
+import { OrderStatus } from "@prisma/client";
 
 function generateOrderNumber() {
-  return `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  return `${Date.now()}`;
 }
 
 class OrderService {
@@ -37,7 +37,6 @@ class OrderService {
   }
   async getAdminOrders(params?: {
     status?: OrderStatus;
-    paymentStatus?: PaymentStatus;
     search?: string;
     page?: number;
     limit?: number;
@@ -50,8 +49,6 @@ class OrderService {
    */
   async getOrderCount(params?: {
     status?: OrderStatus;
-
-    paymentStatus?: PaymentStatus;
   }) {
     return orderRepository.count(params);
   }
@@ -74,23 +71,6 @@ class OrderService {
   }
 
   /**
-   * تغییر وضعیت پرداخت
-   */
-  async changePaymentStatus(
-    id: number,
-
-    paymentStatus: PaymentStatus,
-  ) {
-    const order = await orderRepository.findById(id);
-
-    if (!order) {
-      throw new Error("سفارش پیدا نشد");
-    }
-
-    return orderRepository.updatePaymentStatus(id, paymentStatus);
-  }
-
-  /**
    * تغییر اطلاعات مدیریتی سفارش
    */
   async updateAdminInfo(
@@ -100,8 +80,6 @@ class OrderService {
       trackingCode?: string;
 
       notes?: string;
-
-      paymentRef?: string;
     },
   ) {
     const order = await orderRepository.findById(id);
@@ -192,8 +170,6 @@ class OrderService {
       orderNumber: generateOrderNumber(),
 
       status: OrderStatus.PENDING,
-
-      paymentStatus: PaymentStatus.PENDING,
 
       subtotal,
 

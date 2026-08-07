@@ -25,16 +25,16 @@ interface Props {
 
 const statusMap = {
   PENDING: {
-    title: "در انتظار پرداخت",
+    title: "در حال بررسی",
     color: "amber",
     icon: Clock3,
     progress: "20%",
   },
-  PAID: {
-    title: "پرداخت شده",
+  CONFIRMED: {
+    title: "تایید شده",
     color: "blue",
     icon: Package,
-    progress: "45%",
+    progress: "35%",
   },
   PROCESSING: {
     title: "در حال آماده سازی",
@@ -43,6 +43,12 @@ const statusMap = {
     progress: "40%",
   },
   SHIPPED: {
+    title: "ارسال شده",
+    color: "blue",
+    icon: Truck,
+    progress: "65%",
+  },
+  IN_TRANSIT: {
     title: "در حال ارسال",
     color: "blue",
     icon: Truck,
@@ -488,55 +494,44 @@ export default function RecentOrders({ orders }: Props) {
                       وضعیت سفارش
                     </h3>
 
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-5">
-                        <p className="text-xs text-gray-500 sm:text-sm">
-                          وضعیت سفارش
-                        </p>
-                        <div
-                          className={`
+                    <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-5">
+                      <p className="text-xs text-gray-500 sm:text-sm">
+                        وضعیت سفارش
+                      </p>
+                      <div
+                        className={`
                       mt-3 inline-flex rounded-full px-3 py-1.5 text-xs font-bold sm:px-4 sm:py-2 sm:text-sm
                       ${
                         selectedOrder.status === "DELIVERED"
                           ? "bg-green-100 text-green-600"
                           : selectedOrder.status === "CANCELLED"
                             ? "bg-red-100 text-red-600"
-                            : selectedOrder.status === "SHIPPED"
+                            : selectedOrder.status === "SHIPPED" || selectedOrder.status === "IN_TRANSIT"
                               ? "bg-blue-100 text-blue-600"
                               : "bg-amber-100 text-amber-600"
                       }
                     `}
-                        >
-                          {
-                            statusMap[
-                              selectedOrder.status as keyof typeof statusMap
-                            ]?.title
-                          }
-                        </div>
-                      </div>
-
-                      <div className="rounded-2xl border border-gray-100 bg-white p-4 sm:p-5">
-                        <p className="text-xs text-gray-500 sm:text-sm">
-                          وضعیت پرداخت
-                        </p>
-                        <div
-                          className={`
-                      mt-3 inline-flex rounded-full px-3 py-1.5 text-xs font-bold sm:px-4 sm:py-2 sm:text-sm
-                      ${
-                        selectedOrder.paymentStatus === "PAID"
-                          ? "bg-green-100 text-green-600"
-                          : "bg-yellow-100 text-yellow-600"
-                      }
-                    `}
-                        >
-                          {selectedOrder.paymentStatus === "PAID"
-                            ? "پرداخت شده"
-                            : "در انتظار پرداخت"}
-                        </div>
+                      >
+                        {
+                          statusMap[
+                            selectedOrder.status as keyof typeof statusMap
+                          ]?.title
+                        }
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Disclaimer */}
+              <div className="px-4 pb-2 sm:px-8">
+                <p className="text-xs text-gray-400 sm:text-sm">
+                  در صورت بروز هرگونه مشکل، از طریق صفحه{" "}
+                  <Link href="/contactus" className="text-pink-500 hover:underline">
+                    تماس با ما
+                  </Link>{" "}
+                  پیگیری کنید.
+                </p>
               </div>
 
               {/* Modal Footer */}

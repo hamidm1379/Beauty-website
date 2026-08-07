@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { orderService } from "@/lib/services/order.service";
+import { settingService } from "@/lib/services/setting.service";
 
 import OrderDetails from "@/app/features/admin/components/orders/OrderDetails";
 
@@ -21,5 +22,17 @@ export default async function Page({ params }: Props) {
     notFound();
   }
 
-  return <OrderDetails order={order} />;
+  const [siteLogo, siteName] = await Promise.all([
+    settingService.getValue("siteLogo"),
+    settingService.getValue("siteName"),
+  ]);
+  
+
+  return (
+    <OrderDetails
+      order={order}
+      siteLogo={siteLogo}
+      siteName={siteName ?? "Erikeh"}
+    />
+  );
 }

@@ -10,17 +10,10 @@ const STATUS_OPTIONS = [
   { value: "CONFIRMED", label: "تایید شده" },
   { value: "PROCESSING", label: "در حال پردازش" },
   { value: "SHIPPED", label: "ارسال شده" },
+  { value: "IN_TRANSIT", label: "در حال ارسال" },
   { value: "DELIVERED", label: "تحویل شده" },
   { value: "CANCELLED", label: "لغو شده" },
   { value: "RETURNED", label: "مرجوع شده" },
-];
-
-const PAYMENT_STATUS_OPTIONS = [
-  { value: "", label: "همه وضعیت‌های پرداخت" },
-  { value: "PENDING", label: "در انتظار پرداخت" },
-  { value: "PAID", label: "پرداخت‌شده" },
-  { value: "FAILED", label: "ناموفق" },
-  { value: "REFUNDED", label: "بازگشت وجه" },
 ];
 
 export default function OrderFilters() {
@@ -31,7 +24,6 @@ export default function OrderFilters() {
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
 
   const status = searchParams.get("status") ?? "";
-  const paymentStatus = searchParams.get("paymentStatus") ?? "";
 
   function updateParams(updates: Record<string, string>) {
     const params = new URLSearchParams(searchParams.toString());
@@ -65,7 +57,7 @@ export default function OrderFilters() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
-  const hasActiveFilters = !!(search || status || paymentStatus);
+  const hasActiveFilters = !!(search || status);
 
   function resetFilters() {
     setSearch("");
@@ -110,19 +102,6 @@ export default function OrderFilters() {
           className="h-10 sm:h-12 rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 text-xs sm:text-sm outline-none transition focus:border-pink-400 focus:bg-white lg:w-56"
         >
           {STATUS_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-
-        {/* Payment Status */}
-        <select
-          value={paymentStatus}
-          onChange={(e) => updateParams({ paymentStatus: e.target.value })}
-          className="h-10 sm:h-12 rounded-xl sm:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 text-xs sm:text-sm outline-none transition focus:border-pink-400 focus:bg-white lg:w-56"
-        >
-          {PAYMENT_STATUS_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>

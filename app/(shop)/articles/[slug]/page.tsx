@@ -97,12 +97,12 @@ export default async function Page({ params }: Props) {
         }}
       />
       <main className="bg-[#fcfcfc]">
-        <div className="mx-auto max-w-7xl px-4 py-2 md:py-10">
+        <div className="mx-auto w-full max-w-7xl px-4 pb-4 md:py-8 xl:px-0">
           <Breadcrumb article={article} />
 
-          <div className="mt-4 md:mt-10 grid gap-4 md:gap-10 lg:grid-cols-12">
+          <div className="mt-2 grid gap-6 sm:mt-6 md:gap-10 lg:grid-cols-12">
             <div className="lg:col-span-8">
-              <div className="mb-5">
+              <div className="mb-4 sm:mb-6">
                 <ArticleHero article={article} />
               </div>
               <ArticleContent article={article} />
@@ -116,7 +116,7 @@ export default async function Page({ params }: Props) {
             </aside>
           </div>
 
-          <section className="mt-1 md:mt-20">
+          <section className="mt-6 sm:mt-10 md:mt-20">
             <RelatedArticles articles={relatedArticles} />
           </section>
         </div>

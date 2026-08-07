@@ -1,4 +1,6 @@
 import { userService } from "@/lib/services/user.service";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 import UsersHeader from "@/app/features/admin/components/users/UsersHeader";
 import UsersToolbar from "@/app/features/admin/components/users/UsersToolbar";
@@ -16,6 +18,12 @@ interface UsersPageProps {
 }
 
 export default async function UsersPage({ searchParams }: UsersPageProps) {
+  const session = await auth();
+
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    redirect("/admin/orders");
+  }
+
   const params = await searchParams;
 
   const page = Number(params.page ?? 1);

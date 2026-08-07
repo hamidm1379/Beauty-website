@@ -183,12 +183,14 @@ class UserRepository {
   async countAdmins() {
     return prisma.user.count({
       where: {
-        role: UserRole.ADMIN,
+        role: {
+          in: [UserRole.ADMIN, UserRole.SUPPORT],
+        },
       },
     });
   }
   async getStats() {
-    const [totalUsers, activeUsers, adminUsers, verifiedPhones] =
+    const [totalUsers, activeUsers, adminUsers, supportUsers, verifiedPhones] =
       await prisma.$transaction([
         prisma.user.count(),
 
@@ -206,6 +208,12 @@ class UserRepository {
 
         prisma.user.count({
           where: {
+            role: UserRole.SUPPORT,
+          },
+        }),
+
+        prisma.user.count({
+          where: {
             phoneVerified: true,
           },
         }),
@@ -215,6 +223,7 @@ class UserRepository {
       totalUsers,
       activeUsers,
       adminUsers,
+      supportUsers,
       verifiedPhones,
     };
   }

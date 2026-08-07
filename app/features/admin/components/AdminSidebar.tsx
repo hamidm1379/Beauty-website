@@ -26,6 +26,14 @@ import SidebarItem from "@/app/features/admin/components/SidebarItem";
 import LogoutButton from "@/app/features/admin/components/LogoutButton";
 import { AnimatePresence } from "framer-motion";
 
+const SUPPORT_ALLOWED_HREFS = [
+  "/admin/orders",
+  "/admin/articles",
+  "/admin/article-categories",
+  "/admin/comments",
+  "/admin/contact",
+];
+
 const menu = [
   {
     title: "داشبورد",
@@ -122,12 +130,13 @@ const menu = [
 ];
 
 interface Props {
+  role?: string;
   ordersBadge?: number;
   open?: boolean;
   onClose?: () => void;
 }
 
-export default function AdminSidebar({ ordersBadge = 0, open = false, onClose }: Props) {
+export default function AdminSidebar({ role, ordersBadge = 0, open = false, onClose }: Props) {
   const [openMenus, setOpenMenus] = useState<string[]>(["محصولات"]);
   const pathname = usePathname();
 
@@ -194,22 +203,50 @@ export default function AdminSidebar({ ordersBadge = 0, open = false, onClose }:
 
         <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-4 sm:py-5">
           <div className="space-y-1.5 sm:space-y-2">
-            {menu.map((item) => {
-              const badge =
-                item.href === "/admin/orders" && ordersBadge > 0
-                  ? String(ordersBadge)
-                  : undefined;
+            {menu
+              .filter((item) => {
+                if (role !== "SUPPORT") return true;
+                if (item.href) {
+                  return SUPPORT_ALLOWED_HREFS.some(
+                    (allowed) => item.href === allowed || item.href?.startsWith(allowed + "/")
+                  );
+                }
+                if (item.children) {
+                  return item.children.some((child) =>
+                    SUPPORT_ALLOWED_HREFS.some(
+                      (allowed) => child.href === allowed || child.href.startsWith(allowed + "/")
+                    )
+                  );
+                }
+                return false;
+              })
+              .map((item) => {
+                const badge =
+                  item.href === "/admin/orders" && ordersBadge > 0
+                    ? String(ordersBadge)
+                    : undefined;
 
-              return (
-                <div key={item.title}>
-                  <SidebarItem
-                    item={{ ...item, badge }}
-                    open={openMenus.includes(item.title)}
-                    onToggle={() => toggleMenu(item.title)}
-                  />
-                </div>
-              );
-            })}
+                const filteredItem = role === "SUPPORT" && item.children
+                  ? {
+                      ...item,
+                      children: item.children.filter((child) =>
+                        SUPPORT_ALLOWED_HREFS.some(
+                          (allowed) => child.href === allowed || child.href.startsWith(allowed + "/")
+                        )
+                      ),
+                    }
+                  : item;
+
+                return (
+                  <div key={item.title}>
+                    <SidebarItem
+                      item={{ ...filteredItem, badge }}
+                      open={openMenus.includes(item.title)}
+                      onToggle={() => toggleMenu(item.title)}
+                    />
+                  </div>
+                );
+              })}
           </div>
         </div>
 

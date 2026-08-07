@@ -1,20 +1,19 @@
 import Link from "next/link";
-import { Phone, Mail } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 
-const contactItems = [
-  {
-    icon: Phone,
-    title: "۰۲۱-۱۲۳۴۵۶۷۸",
-    href: "tel:02112345678",
-  },
-  {
-    icon: Mail,
-    title: "support@ziba.com",
-    href: "mailto:support@ziba.com",
-  },
-];
+import type { ContactInfo as ContactInfoData } from "@/lib/services/contact.service";
+import SocialIcon from "@/app/shared/components/SocialIcon";
 
-export default function ContactInfo() {
+interface Props {
+  data: ContactInfoData;
+}
+
+export default function ContactInfo({ data }: Props) {
+  const { phones, email, address, socials } = data;
+
+  const hasAnything =
+    phones.length > 0 || email || address || socials.length > 0;
+
   return (
     <aside
       className="
@@ -46,68 +45,183 @@ export default function ContactInfo() {
         اطلاعات تماس
       </h2>
 
-      <div className="mt-5 sm:mt-6 md:mt-8 space-y-5 sm:space-y-7">
-        {contactItems.map((item, index) => {
-          const Icon = item.icon;
+      {hasAnything ? (
+        <div className="mt-5 sm:mt-6 md:mt-8 space-y-5 sm:space-y-7">
+          {/* Phones */}
+          {phones.map((phone, index) => (
+            <Link
+              key={`phone-${index}`}
+              href={`tel:${phone.replace(/\s/g, "")}`}
+              className="block transition hover:translate-x-1"
+            >
+              <div className="flex items-start gap-4">
+                <div
+                  className="
+                    flex
+                    h-11
+                    w-11
 
-          const content = (
-            <div className="flex items-start gap-4">
-              <div
-                className="
-                  flex
-                  h-11
-                  w-11
+                    items-center
+                    justify-center
 
-                  items-center
-                  justify-center
+                    rounded-2xl
 
-                  rounded-2xl
+                    bg-pink-50
 
-                  bg-pink-50
+                    text-pink-500
+                  "
+                >
+                  <Phone size={20} />
+                </div>
 
-                  text-pink-500
-                "
-              >
-                <Icon size={20} />
+                <p
+                  className="
+                    leading-7
+                    my-auto
+                    text-gray-600
+                  "
+                  dir="ltr"
+                >
+                  {phone}
+                </p>
               </div>
+            </Link>
+          ))}
 
-              <p
-                className="
-                  leading-7
-                  my-auto
-                  text-gray-600
-                "
-              >
-                {item.title}
+          {/* Email */}
+          {email && (
+            <Link
+              href={`mailto:${email}`}
+              className="block transition hover:translate-x-1"
+            >
+              <div className="flex items-start gap-4">
+                <div
+                  className="
+                    flex
+                    h-11
+                    w-11
+
+                    items-center
+                    justify-center
+
+                    rounded-2xl
+
+                    bg-pink-50
+
+                    text-pink-500
+                  "
+                >
+                  <Mail size={20} />
+                </div>
+
+                <p
+                  className="
+                    leading-7
+                    my-auto
+                    text-gray-600
+                  "
+                  dir="ltr"
+                >
+                  {email}
+                </p>
+              </div>
+            </Link>
+          )}
+
+          {/* Address */}
+          {address && (
+            <div>
+              <div className="flex items-start gap-4">
+                <div
+                  className="
+                    flex
+                    h-11
+                    w-11
+
+                    items-center
+                    justify-center
+
+                    rounded-2xl
+
+                    bg-pink-50
+
+                    text-pink-500
+                  "
+                >
+                  <MapPin size={20} />
+                </div>
+
+                <p
+                  className="
+                    leading-7
+                    my-auto
+                    text-gray-600
+                  "
+                >
+                  {address}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Social networks — only filled ones */}
+          {socials.length > 0 && (
+            <div className="border-t border-gray-100 pt-5 sm:pt-7">
+              <p className="mb-4 text-center text-sm text-gray-500">
+                ما را در شبکه‌های اجتماعی دنبال کنید
               </p>
+
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {socials.map((social) => (
+                  <Link
+                    key={social.platform}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    title={social.label}
+                    className="
+                      flex
+                      h-11
+                      w-11
+
+                      items-center
+                      justify-center
+
+                      rounded-2xl
+
+                      border
+                      border-gray-100
+
+                      bg-gray-50
+
+                      text-gray-500
+
+                      transition
+                      duration-300
+
+                      hover:-translate-y-1
+                      hover:border-pink-200
+                      hover:bg-pink-500
+                      hover:text-white
+                      hover:shadow-lg
+                    "
+                  >
+                    <SocialIcon
+                      platform={social.platform}
+                      className="h-5 w-5"
+                    />
+                  </Link>
+                ))}
+              </div>
             </div>
-          );
-
-          if (item.href) {
-            return (
-              <Link
-                key={index}
-                href={item.href}
-                className="
-                  block
-
-                  transition
-
-                  hover:translate-x-1
-                "
-              >
-                {content}
-              </Link>
-            );
-          }
-
-          return (
-            <div key={index}>
-              {content}
-            </div>
-          );
-        })}
-      </div>
+          )}
+        </div>
+      ) : (
+        <p className="mt-6 text-center text-sm text-gray-400">
+          اطلاعاتی برای نمایش وجود ندارد.
+        </p>
+      )}
     </aside>
   );
 }

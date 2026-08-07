@@ -12,6 +12,7 @@ import {
 
 interface ProductsHeaderProps {
   title?: string;
+  description?: string;
   totalProducts?: number;
 }
 
@@ -304,6 +305,7 @@ function BeautyIllustration() {
 
 export default function ProductsHeader({
   title = "محصولات فروشگاه",
+  description = "مجموعه‌ای از بهترین محصولات آرایشی، مراقبت پوست و مو از برندهای معتبر دنیا با تضمین اصالت کالا و ارسال سریع.",
   totalProducts = 245,
 }: ProductsHeaderProps) {
   return (
@@ -353,8 +355,7 @@ export default function ProductsHeader({
             </div>
 
             <p className="mt-2 sm:mt-4 max-w-2xl leading-8 text-gray-500 max-sm:text-sm">
-              مجموعه‌ای از بهترین محصولات آرایشی، مراقبت پوست و مو از
-              برندهای معتبر دنیا با تضمین اصالت کالا و ارسال سریع.
+              {description}
             </p>
 
             {/* Trust badges */}

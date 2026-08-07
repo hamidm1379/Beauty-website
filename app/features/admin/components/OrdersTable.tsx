@@ -29,44 +29,6 @@ interface StatusInfo {
   icon: LucideIcon;
 }
 
-const orders: Order[] = [
-  {
-    id: "#ORD-10254",
-    customer: "محمد احمدی",
-    date: "1405/04/11",
-    amount: "2,850,000",
-    status: "completed",
-  },
-  {
-    id: "#ORD-10253",
-    customer: "علی رضایی",
-    date: "1405/04/11",
-    amount: "1,490,000",
-    status: "shipping",
-  },
-  {
-    id: "#ORD-10252",
-    customer: "سارا کریمی",
-    date: "1405/04/10",
-    amount: "890,000",
-    status: "pending",
-  },
-  {
-    id: "#ORD-10251",
-    customer: "مهدی نادری",
-    date: "1405/04/10",
-    amount: "3,650,000",
-    status: "cancelled",
-  },
-  {
-    id: "#ORD-10250",
-    customer: "نگار حسینی",
-    date: "1405/04/09",
-    amount: "1,250,000",
-    status: "completed",
-  },
-];
-
 const statusMap: Record<Status, StatusInfo> = {
   completed: {
     label: "تکمیل شده",
@@ -93,7 +55,11 @@ const statusMap: Record<Status, StatusInfo> = {
   },
 };
 
-export default function OrdersTable() {
+interface Props {
+  orders: Order[];
+}
+
+export default function OrdersTable({ orders }: Props) {
   return (
     <motion.section
       initial={{
@@ -106,7 +72,9 @@ export default function OrdersTable() {
       }}
       className="
         overflow-hidden
-        rounded-4xl
+        rounded-2xl
+        sm:rounded-3xl
+        lg:rounded-4xl
         border
         border-gray-100
         bg-white
@@ -115,11 +83,13 @@ export default function OrdersTable() {
     >
       {/* Header */}
 
-      <div className="flex items-center justify-between border-b border-gray-100 p-4 sm:p-6">
+      <div className="flex items-center justify-between border-b border-gray-100 p-3 sm:p-4 lg:p-6">
         <div>
-          <h2 className="text-lg font-black text-gray-900 sm:text-xl">آخرین سفارش‌ها</h2>
+          <h2 className="text-base font-black text-gray-900 sm:text-lg lg:text-xl">
+            آخرین سفارش‌ها
+          </h2>
 
-          <p className="mt-1 text-xs text-gray-500 sm:mt-2 sm:text-sm">
+          <p className="mt-0.5 text-[10px] text-gray-500 sm:mt-1 sm:text-xs lg:mt-2 lg:text-sm">
             آخرین سفارش‌های ثبت شده در فروشگاه
           </p>
         </div>
@@ -128,24 +98,30 @@ export default function OrdersTable() {
           className="
             flex
             items-center
-            gap-2
-            rounded-2xl
+            gap-1.5
+            rounded-xl
             bg-pink-50
-            px-3
-            py-2
-            text-xs
+            px-2.5
+            py-1.5
+            text-[10px]
             font-semibold
             text-pink-600
             transition
             hover:bg-pink-100
-            sm:px-4
-            sm:py-3
-            sm:text-sm
+            sm:gap-2
+            sm:rounded-2xl
+            sm:px-3
+            sm:py-2
+            sm:text-xs
+            lg:px-4
+            lg:py-3
+            lg:text-sm
           "
         >
           مشاهده همه
-          <ChevronLeft size={14} className="sm:hidden" />
-          <ChevronLeft size={16} className="hidden sm:block" />
+          <ChevronLeft size={12} className="sm:hidden" />
+          <ChevronLeft size={14} className="hidden sm:block lg:hidden" />
+          <ChevronLeft size={16} className="hidden lg:block" />
         </button>
       </div>
 
@@ -171,7 +147,7 @@ export default function OrdersTable() {
 
           <tbody>
             {orders.map((order, index) => {
-              const status = statusMap[order.status];
+              const status = statusMap[order.status] ?? statusMap.pending;
               const Icon = status.icon;
 
               return (
@@ -199,7 +175,9 @@ export default function OrdersTable() {
 
                   <td className="px-6 py-5 text-gray-500">{order.date}</td>
 
-                  <td className="px-6 py-5 font-bold">{order.amount} تومان</td>
+                  <td className="px-6 py-5 font-bold">
+                    {order.amount} تومان
+                  </td>
 
                   <td className="px-6 py-5">
                     <span
@@ -265,9 +243,9 @@ export default function OrdersTable() {
 
       {/* Mobile */}
 
-      <div className="space-y-4 p-4 lg:hidden sm:p-5">
+      <div className="space-y-3 p-3 sm:space-y-4 sm:p-4 lg:hidden">
         {orders.map((order, index) => {
-          const status = statusMap[order.status];
+          const status = statusMap[order.status] ?? statusMap.pending;
           const Icon = status.icon;
 
           return (
@@ -285,35 +263,41 @@ export default function OrdersTable() {
                 delay: index * 0.06,
               }}
               className="
-                rounded-2xl
+                rounded-xl
                 border
                 border-gray-100
-                p-4
-                sm:rounded-3xl
-                sm:p-5
+                p-3
+                sm:rounded-2xl
+                sm:p-4
               "
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5 sm:gap-3">
                   <div
                     className="
                       flex
-                      h-12
-                      w-12
+                      h-10
+                      w-10
                       items-center
                       justify-center
-                      rounded-2xl
+                      rounded-xl
                       bg-pink-100
                       text-pink-500
+                      sm:h-12
+                      sm:w-12
+                      sm:rounded-2xl
                     "
                   >
-                    <ShoppingBag size={22} />
+                    <ShoppingBag size={18} className="sm:hidden" />
+                    <ShoppingBag size={22} className="hidden sm:block" />
                   </div>
 
                   <div>
-                    <h3 className="font-bold">{order.id}</h3>
+                    <h3 className="text-sm font-bold">{order.id}</h3>
 
-                    <p className="text-sm text-gray-500">{order.customer}</p>
+                    <p className="text-xs text-gray-500 sm:text-sm">
+                      {order.customer}
+                    </p>
                   </div>
                 </div>
 
@@ -321,45 +305,62 @@ export default function OrdersTable() {
                   className={`
                     inline-flex
                     items-center
-                    gap-2
+                    gap-1.5
                     rounded-full
-                    px-3
-                    py-2
-                    text-xs
+                    px-2
+                    py-1
+                    text-[10px]
                     font-bold
+                    sm:gap-2
+                    sm:px-3
+                    sm:py-2
+                    sm:text-xs
                     ${status.color}
                   `}
                 >
-                  <Icon size={14} />
+                  <Icon size={12} className="sm:hidden" />
+                  <Icon size={14} className="hidden sm:block" />
                   {status.label}
                 </span>
               </div>
 
-              <div className="mt-5 flex items-center justify-between">
+              <div className="mt-3 flex items-center justify-between sm:mt-4">
                 <div>
-                  <p className="text-xs text-gray-400">تاریخ سفارش</p>
+                  <p className="text-[10px] text-gray-400 sm:text-xs">
+                    تاریخ سفارش
+                  </p>
 
-                  <p className="mt-1 text-sm font-medium">{order.date}</p>
+                  <p className="mt-0.5 text-xs font-medium sm:text-sm">
+                    {order.date}
+                  </p>
                 </div>
 
                 <div className="text-left">
-                  <p className="text-xs text-gray-400">مبلغ</p>
+                  <p className="text-[10px] text-gray-400 sm:text-xs">
+                    مبلغ
+                  </p>
 
-                  <p className="mt-1 font-bold">{order.amount} تومان</p>
+                  <p className="mt-0.5 text-sm font-bold sm:text-base">
+                    {order.amount} تومان
+                  </p>
                 </div>
               </div>
 
-              <div className="mt-5 flex gap-3">
+              <div className="mt-3 flex gap-2 sm:mt-4 sm:gap-3">
                 <button
                   className="
                     flex-1
-                    rounded-2xl
+                    rounded-xl
                     bg-pink-500
-                    py-3
+                    py-2.5
+                    text-xs
                     font-semibold
                     text-white
                     transition
                     hover:bg-pink-600
+                    sm:rounded-2xl
+                    sm:py-3
+                    sm:text-sm
                   "
                 >
                   مشاهده سفارش
@@ -368,18 +369,21 @@ export default function OrdersTable() {
                 <button
                   className="
                     flex
-                    h-12
-                    w-12
+                    h-10
+                    w-10
                     items-center
                     justify-center
-                    rounded-2xl
+                    rounded-xl
                     border
                     border-gray-200
                     transition
                     hover:bg-gray-50
+                    sm:h-12
+                    sm:w-12
+                    sm:rounded-2xl
                   "
                 >
-                  <MoreHorizontal size={20} />
+                  <MoreHorizontal size={18} />
                 </button>
               </div>
             </motion.div>

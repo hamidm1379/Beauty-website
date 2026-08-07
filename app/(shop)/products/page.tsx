@@ -7,6 +7,7 @@ import ProductsPagination from "@/app/features/products/sections/ProductsPaginat
 import { categoryRepository } from "@/lib/repositories/category.repository";
 import { productService } from "@/lib/services/product.service";
 import { brandRepository } from "@/lib/repositories/brand.repository";
+import { settingService } from "@/lib/services/setting.service";
 interface Props {
   searchParams: Promise<{
     page?: string;
@@ -22,6 +23,7 @@ export default async function ProductsPage({ searchParams }: Props) {
   const allCategories = await categoryRepository.findAll();
   const brands = await brandRepository.findAll();
   const page = Number(params.page ?? 1);
+  const productsPageText = await settingService.getValue("productsPageText");
 
   const category =
     typeof params.category === "string" ? params.category : undefined;
@@ -41,7 +43,7 @@ export default async function ProductsPage({ searchParams }: Props) {
     <main className="bg-gray-50">
       <div className="mx-auto max-w-7xl pb-8 px-4 md:py-8 lg:px-8">
         {/* Title */}
-        <ProductsHeader />
+        <ProductsHeader description={productsPageText ?? undefined} />
 
         <div className="mb-6">
           <MobileFilter categories={allCategories} brands={brands} />

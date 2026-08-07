@@ -12,7 +12,7 @@ export default function BrandHero({ total, search }: Props) {
       className="
         relative
         overflow-hidden
-        rounded-3xl
+      
 
         text-white
       "
@@ -26,7 +26,6 @@ export default function BrandHero({ total, search }: Props) {
           priority
           className="
             object-cover
-
             scale-110
             animate-[heroZoom_8s_ease-out_forwards]
           "
@@ -35,7 +34,7 @@ export default function BrandHero({ total, search }: Props) {
         <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/30 to-black/60" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center px-6 py-20 lg:py-28">
+      <div className="relative z-10 flex flex-col items-center px-4 py-12 sm:px-6 sm:py-20 lg:py-28">
         {/* <span
           className="
             inline-flex
@@ -56,10 +55,12 @@ export default function BrandHero({ total, search }: Props) {
 
         <h1
           className="
-            mt-6
+            mt-4
             text-center
-            text-4xl
+            text-3xl
             font-black
+            sm:mt-6
+            sm:text-4xl
             lg:text-6xl
 
             opacity-0
@@ -72,12 +73,16 @@ export default function BrandHero({ total, search }: Props) {
         <p
           className="
             mx-auto
-            mt-5
+            mt-3
             max-w-2xl
 
             text-center
+            text-sm
+            leading-7
             text-white/90
-            leading-8
+            sm:mt-5
+            sm:text-base
+            sm:leading-8
 
             opacity-0
             animate-[fadeUp_0.6s_ease-out_0.4s_forwards]
@@ -90,12 +95,15 @@ export default function BrandHero({ total, search }: Props) {
         {/* Search bar — styled like the reference: white pill with divided sections */}
         <div
           className="
-            mt-10
+            mt-6
             w-full
             max-w-3xl
-            rounded-2xl
+            rounded-xl
+            sm:mt-10
+            sm:rounded-2xl
             bg-white
-            p-2
+            p-1.5
+            sm:p-2
             shadow-2xl
             opacity-0
             animate-[fadeUp_0.6s_ease-out_0.55s_forwards]

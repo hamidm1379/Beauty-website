@@ -14,7 +14,7 @@ type Props = {
 export default async function AdminContactPage({ searchParams }: Props) {
   const session = await auth();
 
-  if (!session?.user?.id || session.user.role !== "ADMIN") {
+  if (!session?.user?.id || !["ADMIN", "SUPPORT"].includes(session.user.role as string)) {
     redirect("/");
   }
 

@@ -1,4 +1,6 @@
 import { articleCategoryRepository } from "@/lib/repositories/article-category.repository";
+import fs from "fs/promises";
+import path from "path";
 
 class ArticleCategoryService {
   async getCategories() {
@@ -59,7 +61,7 @@ class ArticleCategoryService {
       seoDescription?: string;
     },
   ) {
-    await this.getById(id);
+    const existing = await this.getById(id);
 
     if (data.slug) {
       const exist = await articleCategoryRepository.findBySlug(data.slug);
@@ -69,11 +71,39 @@ class ArticleCategoryService {
       }
     }
 
+    // Delete old image if a new one is provided and differs from the current
+    if (data.image && existing.image && data.image !== existing.image) {
+      try {
+        const filePath = path.join(
+          process.cwd(),
+          "public",
+          existing.image.replace(/^\/+/, ""),
+        );
+        await fs.unlink(filePath);
+      } catch {
+        // File may not exist, ignore
+      }
+    }
+
     return articleCategoryRepository.update(id, data);
   }
 
   async delete(id: number) {
-    await this.getById(id);
+    const existing = await this.getById(id);
+
+    // Delete image file
+    if (existing.image) {
+      try {
+        const filePath = path.join(
+          process.cwd(),
+          "public",
+          existing.image.replace(/^\/+/, ""),
+        );
+        await fs.unlink(filePath);
+      } catch {
+        // File may not exist, ignore
+      }
+    }
 
     return articleCategoryRepository.delete(id);
   }

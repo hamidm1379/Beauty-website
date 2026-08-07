@@ -19,6 +19,12 @@ class SettingRepository {
     return setting?.value ?? null;
   }
 
+  async findByKeys(keys: string[]) {
+    return prisma.setting.findMany({
+      where: { key: { in: keys } },
+    });
+  }
+
   async upsert(key: string, value: string | null, group: string) {
     return prisma.setting.upsert({
       where: { key },

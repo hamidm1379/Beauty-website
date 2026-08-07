@@ -30,13 +30,12 @@ const features = [
 
 export default function ProductFeatures() {
   return (
-    <section className="mt-4 border-t border-gray-100 pt-6 sm:mt-10 sm:pt-8">
+    <section className="mt-4 border-t border-gray-100 pt-3 sm:mt-10 sm:pt-8">
       <div
         className="
           grid
-          grid-cols-1
-          gap-3
-          sm:grid-cols-2
+          grid-cols-2
+          gap-1.5
           sm:gap-4
           lg:grid-cols-4
         "
@@ -52,16 +51,16 @@ export default function ProductFeatures() {
 
                 flex
                 items-center
-                gap-3
+                gap-1
 
-                rounded-xl
+                rounded-lg
 
                 border
                 border-gray-100
 
                 bg-gray-50
 
-                p-3.5
+                p-1.5
 
                 transition-all
                 duration-300
@@ -78,14 +77,14 @@ export default function ProductFeatures() {
               <div
                 className="
                   flex
-                  h-11
-                  w-11
+                  h-8
+                  w-8
                   shrink-0
 
                   items-center
                   justify-center
 
-                  rounded-xl
+                  rounded-lg
 
                   bg-pink-100
 
@@ -100,8 +99,8 @@ export default function ProductFeatures() {
               >
                 <Icon
                   className="
-                    h-5
-                    w-5
+                    h-3.75
+                    w-3.75
 
                     text-pink-500
 
@@ -116,11 +115,11 @@ export default function ProductFeatures() {
               </div>
 
               <div className="min-w-0">
-                <h4 className="truncate text-sm font-bold text-gray-800 sm:text-base">
+                <h4 className="truncate text-[10px] font-bold text-gray-800 sm:text-base">
                   {feature.title}
                 </h4>
 
-                <p className="mt-0.5 truncate text-xs text-gray-500 sm:mt-1 sm:text-sm">
+                <p className="mt-px truncate text-[10px] text-gray-500 sm:mt-1 sm:text-sm">
                   {feature.description}
                 </p>
               </div>

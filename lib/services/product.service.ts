@@ -224,7 +224,7 @@ class ProductService {
         }),
 
         productRepository.count({
-          OR: [
+          AND: [
             {
               status: ProductStatus.ACTIVE,
             },

@@ -27,7 +27,8 @@ export default function BrandHeroDetail({ brand }: Props) {
     <section
       className="
       overflow-hidden
-      rounded-4xl
+      rounded-2xl
+      sm:rounded-4xl
       border
       border-gray-100
       bg-white
@@ -37,8 +38,10 @@ export default function BrandHeroDetail({ brand }: Props) {
       <div
         className="
         grid
-        gap-8
-        p-8
+        gap-4
+        p-4
+        sm:gap-8
+        sm:p-8
         lg:grid-cols-[280px_1fr]
         "
       >
@@ -52,7 +55,8 @@ export default function BrandHeroDetail({ brand }: Props) {
           items-center
           justify-center
           overflow-hidden
-          rounded-3xl
+          rounded-2xl
+          sm:rounded-3xl
           border
           border-gray-100
           bg-gray-50
@@ -63,10 +67,10 @@ export default function BrandHeroDetail({ brand }: Props) {
               src={brand.thumbnail}
               alt={brand.title}
               fill
-              className="object-contain p-8"
+              className="object-contain p-6 sm:p-8"
             />
           ) : (
-            <div className="text-sm text-gray-400">
+            <div className="text-xs text-gray-400 sm:text-sm">
               تصویری ثبت نشده است.
             </div>
           )}
@@ -79,13 +83,16 @@ export default function BrandHeroDetail({ brand }: Props) {
 
           <div
             className="
-            mb-5
+            mb-3
             flex
             flex-wrap
             items-center
-            gap-2
-            text-sm
+            gap-1.5
+            text-xs
             text-gray-500
+            sm:mb-5
+            sm:gap-2
+            sm:text-sm
             "
           >
             <Link
@@ -95,7 +102,7 @@ export default function BrandHeroDetail({ brand }: Props) {
               خانه
             </Link>
 
-            <ChevronLeft size={15} />
+            <ChevronLeft size={14} className="sm:size-[15]" />
 
             <Link
               href="/brands"
@@ -104,7 +111,7 @@ export default function BrandHeroDetail({ brand }: Props) {
               برندها
             </Link>
 
-            <ChevronLeft size={15} />
+            <ChevronLeft size={14} className="sm:size-[15]" />
 
             <span className="text-gray-700">
               {brand.title}
@@ -115,10 +122,11 @@ export default function BrandHeroDetail({ brand }: Props) {
 
           <h1
             className="
-            text-3xl
+            text-2xl
             font-black
             leading-relaxed
             text-gray-900
+            sm:text-3xl
             lg:text-5xl
             "
           >
@@ -130,10 +138,14 @@ export default function BrandHeroDetail({ brand }: Props) {
           {brand.excerpt && (
             <p
               className="
-              mt-5
+              mt-3
               max-w-3xl
-              leading-8
+              text-sm
+              leading-7
               text-gray-600
+              sm:mt-5
+              sm:text-base
+              sm:leading-8
               "
             >
               {brand.excerpt}
@@ -144,23 +156,28 @@ export default function BrandHeroDetail({ brand }: Props) {
 
           <div
             className="
-            mt-8
+            mt-5
             flex
             flex-wrap
             items-center
-            gap-5
-            text-sm
+            gap-3
+            text-xs
             text-gray-500
+            sm:mt-8
+            sm:gap-5
+            sm:text-sm
             "
           >
             <span
               className="
               rounded-full
               bg-pink-50
-              px-4
-              py-2
+              px-3
+              py-1.5
               font-medium
               text-pink-600
+              sm:px-4
+              sm:py-2
               "
             >
               {brand.category.title}
@@ -174,8 +191,8 @@ export default function BrandHeroDetail({ brand }: Props) {
             </div> */}
 
             {brand.publishedAt && (
-              <div className="flex items-center gap-2">
-                <CalendarDays size={18} />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <CalendarDays size={16} className="sm:size-[18]" />
 
                 {new Date(
                   brand.publishedAt,

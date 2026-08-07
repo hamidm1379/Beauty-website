@@ -17,6 +17,7 @@ export default async function Header() {
     <HeaderClient
       cartCount={cartCount}
       isLoggedIn={!!session?.user}
+      role={session?.user?.role as string}
     />
   );
 }

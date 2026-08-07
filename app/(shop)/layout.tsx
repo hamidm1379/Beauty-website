@@ -2,12 +2,15 @@
 
 import Header from "@/app/shared/components/Header";
 import Footer from "@/app/shared/components/Footer";
+import { contactService } from "@/lib/services/contact.service";
 
 interface Props {
   children: React.ReactNode;
 }
 
-export default function ShopLayout({ children }: Props) {
+export default async function ShopLayout({ children }: Props) {
+  const footerData = await contactService.getFooterData();
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -16,7 +19,7 @@ export default function ShopLayout({ children }: Props) {
         {children}
       </main>
 
-      <Footer />
+      <Footer data={footerData} />
     </div>
   );
 }

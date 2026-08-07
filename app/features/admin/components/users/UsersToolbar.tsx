@@ -52,6 +52,7 @@ export default function UsersToolbar() {
           >
             <option value="">همه نقش‌ها</option>
             <option value="ADMIN">مدیر</option>
+            <option value="SUPPORT">پشتیبانی</option>
             <option value="CUSTOMER">کاربر</option>
           </select>
 

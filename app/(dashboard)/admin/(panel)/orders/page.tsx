@@ -1,7 +1,7 @@
 import { ClipboardList, Clock, PackageCheck } from "lucide-react";
 import Link from "next/link";
 
-import { OrderStatus, PaymentStatus as PaymentStatusEnum } from "@prisma/client";
+import { OrderStatus } from "@prisma/client";
 
 import { orderService } from "@/lib/services/order.service";
 
@@ -11,21 +11,19 @@ import OrderFilters from "@/app/features/admin/components/orders/OrderFilters";
 type Props = {
   searchParams: Promise<{
     status?: string;
-    paymentStatus?: string;
     search?: string;
     page?: string;
   }>;
 };
 
 export default async function OrdersPage({ searchParams }: Props) {
-  const { status, paymentStatus, search, page } = await searchParams;
+  const { status, search, page } = await searchParams;
 
   const currentPage = Number(page) || 1;
 
   const [result, totalCount, pendingCount, deliveredCount] = await Promise.all([
     orderService.getAdminOrders({
       status: status as OrderStatus | undefined,
-      paymentStatus: paymentStatus as PaymentStatusEnum | undefined,
       search,
       page: currentPage,
       limit: 10,
@@ -62,7 +60,6 @@ export default async function OrdersPage({ searchParams }: Props) {
     const params = new URLSearchParams();
 
     if (status) params.set("status", status);
-    if (paymentStatus) params.set("paymentStatus", paymentStatus);
     if (search) params.set("search", search);
     params.set("page", String(pageNum));
 

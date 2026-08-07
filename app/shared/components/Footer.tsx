@@ -4,9 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Send, MessageCircle, Mail, ArrowLeft, Star } from "lucide-react";
+import { Mail, ArrowLeft, Star } from "lucide-react";
 import enamad from "@/public/images.png";
 import { toast } from "sonner";
+
+import SocialIcon from "@/app/shared/components/SocialIcon";
+import type { FooterData } from "@/lib/services/contact.service";
 
 const quickLinks = [
   { href: "/", label: "صفحه اصلی" },
@@ -26,12 +29,6 @@ const infoLinks = [
   { href: "/aboutus", label: "درباره ما" },
   { href: "/articles", label: "مقالات" },
   { href: "/faq", label: "سوالات متداول" },
-];
-
-const socials = [
-  // { icon: Instagram, href: "#", label: "اینستاگرام" },
-  { icon: Send, href: "#", label: "تلگرام" },
-  { icon: MessageCircle, href: "#", label: "واتساپ" },
 ];
 
 function FooterLinkGroup({
@@ -162,7 +159,8 @@ function TwinklingStars() {
   );
 }
 
-export default function Footer() {
+export default function Footer({ data }: { data: FooterData }) {
+  const { siteName, aboutUs, socials } = data;
   const [email, setEmail] = useState("");
 
   const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
@@ -267,39 +265,45 @@ export default function Footer() {
                 }}
                 className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-linear-to-br from-pink-500 to-rose-400"
               />
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-800">زیبارو</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-800">{siteName}</h3>
             </div>
 
             <p className="text-sm sm:text-base leading-6 sm:leading-8 text-gray-500">
-              فروشگاه اینترنتی زیبارو، مرجع تخصصی فروش محصولات آرایشی و بهداشتی
-              اصل با بهترین قیمت و ارسال سریع.
+              {aboutUs}
             </p>
 
-            <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-3">
-              {socials.map(({ icon: Icon, href, label }, i) => (
-                <motion.a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  animate={{ y: [0, -5, 0] }}
-                  transition={{
-                    duration: 2.4,
-                    delay: i * 0.25,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  whileHover={{
-                    scale: 1.15,
-                    rotate: -8,
-                    boxShadow: "0 8px 20px -4px rgba(236, 72, 153, 0.45)",
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  className="relative flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors duration-300 hover:border-pink-500 hover:bg-pink-500 hover:text-white"
-                >
-                  <Icon size={18} />
-                </motion.a>
-              ))}
-            </div>
+            {socials.length > 0 && (
+              <div className="mt-4 sm:mt-6 flex items-center gap-2 sm:gap-3">
+                {socials.map((social, i) => (
+                  <motion.a
+                    key={social.platform}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{
+                      duration: 2.4,
+                      delay: i * 0.25,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    whileHover={{
+                      scale: 1.15,
+                      rotate: -8,
+                      boxShadow: "0 8px 20px -4px rgba(236, 72, 153, 0.45)",
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    className="relative flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors duration-300 hover:border-pink-500 hover:bg-pink-500 hover:text-white"
+                  >
+                    <SocialIcon
+                      platform={social.platform}
+                      className="h-[18px] w-[18px]"
+                    />
+                  </motion.a>
+                ))}
+              </div>
+            )}
           </motion.div>
 
           <FooterLinkGroup

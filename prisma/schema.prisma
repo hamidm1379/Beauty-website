@@ -97,6 +97,7 @@ model ProductImage {
 enum UserRole {
   CUSTOMER
   ADMIN
+  SUPPORT
 }
 
 model User {
@@ -287,7 +288,7 @@ model Cart {
 model ProductVariant{
   id            Int @id @default(autoincrement())
   productId     Int
-  product       Product @relation(fields: [productId], references: [id])
+  product       Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   title         String
   price         Int?
   stock         Int
@@ -343,6 +344,10 @@ model Order {
 
   paymentStatus PaymentStatus @default(PENDING)
 
+  authority String?
+
+  refId String?
+
   subtotal Int
 
   discount Int @default(0)
@@ -352,8 +357,6 @@ model Order {
   total Int
 
   trackingCode String?
-
-  paymentRef String?
 
   notes String?
 
@@ -394,8 +397,8 @@ model OrderItem {
   orderId Int
   order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  productId Int
-  product   Product @relation(fields: [productId], references: [id])
+  productId Int?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 
   variantId    Int?
   variantTitle String?   
@@ -552,6 +555,7 @@ enum OrderStatus {
   CONFIRMED
   PROCESSING
   SHIPPED
+  IN_TRANSIT
   DELIVERED
   CANCELLED
   RETURNED

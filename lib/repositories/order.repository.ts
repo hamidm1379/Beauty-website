@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { OrderStatus, PaymentStatus, Prisma } from "@prisma/client";
+import { OrderStatus, Prisma } from "@prisma/client";
 
 class OrderRepository {
   async findByOrderNumber(orderNumber: string, userId: number) {
@@ -101,14 +101,12 @@ class OrderRepository {
    */
   async findAll(params?: {
     status?: OrderStatus;
-    paymentStatus?: PaymentStatus;
     search?: string;
     page?: number;
     limit?: number;
   }) {
     const {
       status,
-      paymentStatus,
       search,
       page = 1,
       limit = 10,
@@ -116,7 +114,6 @@ class OrderRepository {
 
     const where: Prisma.OrderWhereInput = {
       ...(status && { status }),
-      ...(paymentStatus && { paymentStatus }),
       ...(search?.trim() && {
         OR: [
           { orderNumber: { contains: search } },
@@ -172,17 +169,11 @@ class OrderRepository {
    */
   async count(params?: {
     status?: OrderStatus;
-
-    paymentStatus?: PaymentStatus;
   }) {
     return prisma.order.count({
       where: {
         ...(params?.status && {
           status: params.status,
-        }),
-
-        ...(params?.paymentStatus && {
-          paymentStatus: params.paymentStatus,
         }),
       },
     });
@@ -208,25 +199,6 @@ class OrderRepository {
   }
 
   /**
-   * تغییر وضعیت پرداخت
-   */
-  async updatePaymentStatus(
-    id: number,
-
-    paymentStatus: PaymentStatus,
-  ) {
-    return prisma.order.update({
-      where: {
-        id,
-      },
-
-      data: {
-        paymentStatus,
-      },
-    });
-  }
-
-  /**
    * تغییر اطلاعات مدیریتی سفارش
    * مثل کد رهگیری و توضیحات
    */
@@ -237,8 +209,6 @@ class OrderRepository {
       trackingCode?: string;
 
       notes?: string;
-
-      paymentRef?: string;
     },
   ) {
     return prisma.order.update({
@@ -342,7 +312,7 @@ class OrderRepository {
         },
 
         where: {
-          paymentStatus: "PAID",
+          status: "DELIVERED",
         },
       }),
     ]);

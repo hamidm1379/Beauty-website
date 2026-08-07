@@ -1,4 +1,4 @@
-import type { OrderStatus, PaymentStatus as PaymentStatusEnum } from "@prisma/client";
+import type { OrderStatus } from "@prisma/client";
 
 /** یک آیتم سفارش برای نمایش در پنل ادمین. */
 export interface AdminOrderItem {
@@ -26,13 +26,18 @@ export interface OrderUser {
 /** آدرس ارسال سفارش. */
 export interface OrderAddress {
   id: number;
-  recipientName: string;
-  phone: string;
-  fullAddress: string;
+  title: string;
+  receiverName: string;
+  receiverPhone: string;
+  province: string;
+  city: string;
   postalCode: string;
-  province?: string;
-  city?: string;
-  addressLine?: string;
+  addressLine: string;
+  plaque?: string | null;
+  unit?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  isDefault: boolean;
 }
 
 /** سفارش برای نمایش در پنل ادمین. */
@@ -40,7 +45,6 @@ export interface AdminOrder {
   id: number;
   orderNumber: string;
   status: OrderStatus;
-  paymentStatus: PaymentStatusEnum;
   subtotal: number;
   discount: number;
   shippingCost: number;

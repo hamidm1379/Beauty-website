@@ -19,16 +19,16 @@ export default function RelatedBrands({ brands }: Props) {
   if (brands.length === 0) return null;
 
   return (
-    <section className="mt-20">
+    <section className="mt-10 sm:mt-20">
       {/* Header */}
 
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-5 flex items-center justify-between sm:mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-lg font-bold text-gray-900 sm:text-2xl">
             برندهای مشابه
           </h2>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 sm:mt-2 sm:text-sm">
             سایر برندهای محبوب فروشگاه را مشاهده کنید.
           </p>
         </div>
@@ -38,34 +38,39 @@ export default function RelatedBrands({ brands }: Props) {
           className="
             flex
             items-center
-            gap-2
+            gap-1.5
 
-            rounded-2xl
+            rounded-xl
 
             border
             border-gray-200
 
-            px-4
-            py-2
+            px-3
+            py-1.5
 
-            text-sm
+            text-xs
             font-medium
 
             transition
 
             hover:border-pink-500
             hover:text-pink-500
+            sm:gap-2
+            sm:rounded-2xl
+            sm:px-4
+            sm:py-2
+            sm:text-sm
           "
         >
           مشاهده همه
 
-          <ArrowLeft size={16} />
+          <ArrowLeft size={14} className="sm:size-[16]" />
         </Link>
       </div>
 
       {/* Grid */}
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
         {brands.map((brand) => (
           <Link
             key={brand.id}
@@ -75,7 +80,7 @@ export default function RelatedBrands({ brands }: Props) {
 
               overflow-hidden
 
-              rounded-3xl
+              rounded-2xl
 
               border
               border-gray-100
@@ -89,11 +94,12 @@ export default function RelatedBrands({ brands }: Props) {
 
               hover:-translate-y-1
               hover:shadow-lg
+              sm:rounded-3xl
             "
           >
             {/* Image */}
 
-            <div className="relative flex aspect-square items-center justify-center bg-gray-50 p-8">
+            <div className="relative flex aspect-square items-center justify-center bg-gray-50 p-6 sm:p-8">
               {brand.thumbnail ? (
                 <Image
                   src={brand.thumbnail}
@@ -101,7 +107,8 @@ export default function RelatedBrands({ brands }: Props) {
                   fill
                   className="
                     object-contain
-                    p-8
+                    p-6
+                    sm:p-8
                   "
                 />
               ) : (
@@ -111,19 +118,21 @@ export default function RelatedBrands({ brands }: Props) {
 
             {/* Content */}
 
-            <div className="border-t border-gray-100 p-5">
+            <div className="border-t border-gray-100 p-3 sm:p-5">
               <h3
                 className="
                   line-clamp-1
 
                   text-center
                   font-bold
+                  text-sm
 
                   text-gray-900
 
                   transition
 
                   group-hover:text-pink-500
+                  sm:text-base
                 "
               >
                 {brand.title}

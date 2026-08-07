@@ -17,9 +17,10 @@ export function useSidebarToggle() {
 
 interface Props {
   children: React.ReactNode;
+  role: string;
 }
 
-export default function AdminShell({ children }: Props) {
+export default function AdminShell({ children, role }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggle = useCallback(() => {
@@ -32,7 +33,7 @@ export default function AdminShell({ children }: Props) {
 
   return (
     <SidebarContext.Provider value={{ toggle }}>
-      <AdminSidebar open={sidebarOpen} onClose={close} />
+      <AdminSidebar role={role} open={sidebarOpen} onClose={close} />
 
       <div className="flex-1 lg:mr-72.5">
         {children}

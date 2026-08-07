@@ -7,6 +7,7 @@ export default async function AdminHeader() {
   return (
     <AdminHeaderClient
       username={session?.user?.username ?? session?.user?.name ?? ""}
+      role={(session?.user?.role as string) ?? "ADMIN"}
     />
   );
 }

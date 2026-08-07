@@ -1,15 +1,10 @@
 "use client";
 
 import FAQItem from "@/app/features/faq/components/FAQItem";
-
-interface FAQ {
-  id: number;
-  question: string;
-  answer: string;
-}
+import type { FaqItem } from "@/lib/services/faq.service";
 
 interface Props {
-  faqs: FAQ[];
+  faqs: FaqItem[];
 }
 
 export default function FAQAccordion({ faqs }: Props) {

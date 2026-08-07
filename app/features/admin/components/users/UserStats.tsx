@@ -3,6 +3,7 @@ import {
   UserCheck,
   ShieldCheck,
   BadgeCheck,
+  Headphones,
 } from "lucide-react";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
     totalUsers: number;
     activeUsers: number;
     adminUsers: number;
+    supportUsers: number;
     verifiedPhones: number;
   };
 }
@@ -40,10 +42,10 @@ export default function UserStats({
     },
 
     {
-      title: "شماره تایید شده",
-      value: stats.verifiedPhones,
-      icon: BadgeCheck,
-      color: "from-sky-500 to-cyan-500",
+      title: "پشتیبانی",
+      value: stats.supportUsers,
+      icon: Headphones,
+      color: "from-amber-500 to-orange-500",
     },
   ];
 

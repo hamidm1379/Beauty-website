@@ -26,6 +26,11 @@ const statusMap: Record<OrderStatus, StatusStyle> = {
     class: "bg-indigo-100 text-indigo-600",
   },
 
+  IN_TRANSIT: {
+    title: "در حال ارسال",
+    class: "bg-cyan-100 text-cyan-600",
+  },
+
   DELIVERED: {
     title: "تحویل شده",
     class: "bg-green-100 text-green-600",

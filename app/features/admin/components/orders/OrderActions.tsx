@@ -2,10 +2,22 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 import { OrderStatus } from "@prisma/client";
 
 import { getErrorMessage } from "@/lib/utils/errors";
+
+const STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [
+  { value: "PENDING", label: "در انتظار" },
+  { value: "CONFIRMED", label: "تایید شده" },
+  { value: "PROCESSING", label: "پردازش" },
+  { value: "SHIPPED", label: "ارسال شده" },
+  { value: "IN_TRANSIT", label: "در حال ارسال" },
+  { value: "DELIVERED", label: "تحویل شده" },
+  { value: "CANCELLED", label: "لغو شده" },
+  { value: "RETURNED", label: "مرجوع شده" },
+];
 
 export default function OrderActions({
   orderId,
@@ -20,7 +32,7 @@ export default function OrderActions({
     try {
       setLoading(true);
 
-      const res = await fetch(`/api/admin/orders/${orderId}`, {
+      const res = await fetch(`/api/admin/orders/${orderId}/status`, {
         method: "PATCH",
 
         headers: {
@@ -51,26 +63,13 @@ export default function OrderActions({
       disabled={loading}
       value={status}
       onChange={(e) => changeStatus(e.target.value as OrderStatus)}
-      className="
-rounded-xl
-border
-border-gray-200
-px-3
-py-2
-text-sm
-"
+      className="flex h-10 items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none transition focus:border-pink-400 focus:bg-white sm:h-12 sm:rounded-2xl sm:px-4 sm:text-base"
     >
-      <option value="PENDING">در انتظار</option>
-
-      <option value="CONFIRMED">تایید شده</option>
-
-      <option value="PROCESSING">پردازش</option>
-
-      <option value="SHIPPED">ارسال شده</option>
-
-      <option value="DELIVERED">تحویل شده</option>
-
-      <option value="CANCELLED">لغو</option>
+      {STATUS_OPTIONS.map((opt) => (
+        <option key={opt.value} value={opt.value}>
+          {opt.label}
+        </option>
+      ))}
     </select>
   );
 }

@@ -117,7 +117,7 @@ class UserService {
   async changeStatus(id: number, isActive: boolean) {
     const user = await this.getUser(id);
 
-    if (user.role === UserRole.ADMIN && !isActive) {
+    if ((user.role === UserRole.ADMIN || user.role === UserRole.SUPPORT) && !isActive) {
       const admins = await userRepository.countAdmins();
 
       if (admins <= 1) {
@@ -134,7 +134,10 @@ class UserService {
   async changeRole(id: number, role: UserRole) {
     const user = await this.getUser(id);
 
-    if (user.role === UserRole.ADMIN && role === UserRole.CUSTOMER) {
+    if (
+      (user.role === UserRole.ADMIN || user.role === UserRole.SUPPORT) &&
+      role === UserRole.CUSTOMER
+    ) {
       const admins = await userRepository.countAdmins();
 
       if (admins <= 1) {
@@ -151,7 +154,7 @@ class UserService {
   async deleteUser(id: number) {
     const user = await this.getUser(id);
 
-    if (user.role === UserRole.ADMIN) {
+    if (user.role === UserRole.ADMIN || user.role === UserRole.SUPPORT) {
       const admins = await userRepository.countAdmins();
 
       if (admins <= 1) {

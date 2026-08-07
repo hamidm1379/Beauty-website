@@ -126,7 +126,7 @@ export default function WishlistCard({ wishlist: initialWishlist }: Props) {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {wishlist.map((item, index) => {
             const { product } = item;
             const { hasDiscount, finalPrice } = calculateDiscount(
@@ -143,19 +143,22 @@ export default function WishlistCard({ wishlist: initialWishlist }: Props) {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
                 whileHover={{ y: -6 }}
-                className="
-                  group
-                  overflow-hidden
-                  rounded-[22px]
-                  border
-                  border-gray-100
-                  bg-white
-                  shadow-sm
-                  transition-all
-                  hover:border-pink-200
-                  hover:shadow-xl
-                  sm:rounded-[28px]
-                "
+                  className="
+                    group
+                    flex
+                    h-full
+                    flex-col
+                    overflow-hidden
+                    rounded-2xl
+                    border
+                    border-gray-100
+                    bg-white
+                    shadow-sm
+                    transition-all
+                    hover:border-pink-200
+                    hover:shadow-xl
+                    sm:rounded-[28px]
+                  "
               >
                 {/* Image */}
                 <Link
@@ -168,12 +171,13 @@ export default function WishlistCard({ wishlist: initialWishlist }: Props) {
                     width={500}
                     height={500}
                     className="
-                      aspect-square
+                      aspect-[5/4]
                       w-full
                       object-cover
                       transition
                       duration-500
                       group-hover:scale-110
+                      sm:aspect-square
                     "
                   />
 
@@ -186,11 +190,12 @@ export default function WishlistCard({ wishlist: initialWishlist }: Props) {
                     disabled={isItemPending}
                     className="
                       absolute
-                      left-3
-                      top-3
+                      left-2
+                      top-2
                       flex
-                      h-9
-                      w-9
+                      h-8
+                      w-8
+                      cursor-pointer
                       items-center
                       justify-center
                       rounded-full
@@ -199,46 +204,48 @@ export default function WishlistCard({ wishlist: initialWishlist }: Props) {
                       shadow
                       backdrop-blur
                       disabled:opacity-50
-                      sm:left-4
-                      sm:top-4
-                      sm:h-11
-                      sm:w-11
+                      sm:left-3
+                      sm:top-3
+                      sm:h-9
+                      sm:w-9
                     "
                   >
-                    <Heart size={16} className="fill-pink-500 sm:hidden" />
-                    <Heart size={18} className="hidden fill-pink-500 sm:block" />
+                    <Heart size={14} className="fill-pink-500 sm:hidden" />
+                    <Heart size={16} className="hidden fill-pink-500 sm:block" />
                   </button>
                 </Link>
 
                 {/* Body */}
-                <div className="p-3 sm:p-6">
-                  <span className="text-xs text-pink-500 sm:text-sm">
+                <div className="flex flex-1 flex-col p-2.5 sm:p-3">
+                  <span className="text-[10px] font-medium text-pink-500 sm:text-xs">
                     {product.brand?.title ?? "بدون برند"}
                   </span>
 
                   <Link href={`/products/${product.slug}`}>
-                    <h3 className="mt-2 line-clamp-2 h-12 text-sm font-bold leading-6 text-gray-900 hover:text-pink-600 sm:h-14 sm:text-lg sm:leading-7">
+                    <h3 className="mt-1 line-clamp-2 text-xs font-bold leading-4.5 text-gray-900 hover:text-pink-600 sm:mt-2 sm:text-sm sm:leading-5">
                       {product.title}
                     </h3>
                   </Link>
 
-                  <div className="mt-3 flex flex-wrap items-end justify-between gap-2 sm:mt-5">
+                  <div className="mt-2 flex items-end justify-between gap-1.5 sm:mt-3">
                     <div>
                       {hasDiscount && (
-                        <p className="text-xs text-gray-400 line-through sm:text-sm">
+                        <p className="text-[11px] text-gray-400 line-through sm:text-sm">
                           {product.price.toLocaleString("fa-IR")}
                         </p>
                       )}
-                      <h4 className="text-lg font-black text-pink-600 sm:text-2xl">
-                        {finalPrice.toLocaleString("fa-IR")}
-                      </h4>
-                      <span className="text-xs text-gray-500 sm:text-sm">
-                        تومان
-                      </span>
+                      <p className="flex items-baseline gap-1">
+                        <span className="text-sm font-black text-pink-600 sm:text-xl">
+                          {finalPrice.toLocaleString("fa-IR")}
+                        </span>
+                        <span className="text-[10px] font-medium text-gray-500 sm:text-sm">
+                          تومان
+                        </span>
+                      </p>
                     </div>
 
                     <span
-                      className={`shrink-0 rounded-full px-3 py-1 text-xs font-bold ${
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold sm:px-3 sm:py-1 sm:text-xs ${
                         product.stock > 0
                           ? "bg-green-100 text-green-600"
                           : "bg-red-100 text-red-500"
@@ -249,32 +256,40 @@ export default function WishlistCard({ wishlist: initialWishlist }: Props) {
                   </div>
 
                   {/* Buttons */}
-                  <div className="mt-4 flex gap-2 sm:mt-6 sm:gap-3">
+                  <div className="mt-auto flex gap-2 pt-2.5 sm:pt-3">
                     <Link
                       href={`/products/${product.slug}`}
                       className="
+                        flex
                         flex-1
+                        cursor-pointer
+                        items-center
+                        justify-center
+                        gap-1.5
                         rounded-xl
                         bg-linear-to-r
                         from-pink-500
                         to-rose-500
-                        py-2.5
-                        text-center
-                        text-sm
-                        font-semibold
+                        px-2
+                        py-2
+                        text-xs
+                        font-bold
                         text-white
+                        shadow-sm
+                        shadow-pink-500/20
                         transition
-                        hover:shadow-lg
+                        hover:shadow-md
+                        hover:shadow-pink-500/30
+                        active:scale-[0.98]
+                        sm:gap-2
                         sm:rounded-2xl
-                        sm:py-3
-                        sm:text-base
+                        sm:px-4
+                        sm:py-2.5
+                        sm:text-sm
                       "
                     >
-                      <span className="flex items-center justify-center gap-1.5 sm:gap-2">
-                        <ShoppingBag size={16} className="sm:hidden" />
-                        <ShoppingBag size={18} className="hidden sm:block" />
-                        <span className="truncate">مشاهده محصول</span>
-                      </span>
+                      <ShoppingBag size={15} className="shrink-0" />
+                      <span className="truncate">مشاهده محصول</span>
                     </Link>
 
                     <motion.button
@@ -283,9 +298,10 @@ export default function WishlistCard({ wishlist: initialWishlist }: Props) {
                       disabled={isItemPending}
                       className="
                         flex
-                        h-10
-                        w-10
+                        h-9
+                        w-9
                         shrink-0
+                        cursor-pointer
                         items-center
                         justify-center
                         rounded-xl
@@ -296,15 +312,15 @@ export default function WishlistCard({ wishlist: initialWishlist }: Props) {
                         hover:border-red-200
                         hover:bg-red-50
                         hover:text-red-500
+                        active:scale-95
                         disabled:cursor-not-allowed
                         disabled:opacity-50
-                        sm:h-12
-                        sm:w-12
+                        sm:h-11
+                        sm:w-11
                         sm:rounded-2xl
                       "
                     >
-                      <Trash2 size={16} className="sm:hidden" />
-                      <Trash2 size={18} className="hidden sm:block" />
+                      <Trash2 size={15} />
                     </motion.button>
                   </div>
                 </div>

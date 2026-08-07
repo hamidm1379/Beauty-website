@@ -7,7 +7,7 @@ import { contactService } from "@/lib/services/contact.service";
 async function requireAdmin() {
   const session = await auth();
 
-  if (!session?.user?.id || session.user.role !== "ADMIN") {
+  if (!session?.user?.id || !["ADMIN", "SUPPORT"].includes(session.user.role as string)) {
     throw new Error("دسترسی غیرمجاز.");
   }
 

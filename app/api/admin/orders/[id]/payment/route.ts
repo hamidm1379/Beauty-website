@@ -1,34 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { orderService } from "@/lib/services/order.service";
-
-import { PaymentStatus } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
 import { getErrorMessage } from "@/lib/utils/errors";
 
 export async function PATCH(
   req: NextRequest,
-
   {
     params,
   }: {
-    params: {
+    params: Promise<{
       id: string;
-    };
+    }>;
   },
 ) {
   try {
+    const { id } = await params;
     const body = await req.json();
 
-    const result = await orderService.changePaymentStatus(
-      Number(params.id),
-
-      body.paymentStatus as PaymentStatus,
-    );
+    const order = await prisma.order.update({
+      where: { id: Number(id) },
+      data: { paymentStatus: body.paymentStatus },
+    });
 
     return NextResponse.json({
       success: true,
 
-      data: result,
+      data: order,
     });
   } catch (error) {
     return NextResponse.json(

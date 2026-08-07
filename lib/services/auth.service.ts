@@ -22,7 +22,7 @@ class AuthService {
       throw new Error("حساب کاربری غیرفعال شده است.");
     }
 
-    if (user.role !== UserRole.ADMIN) {
+    if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPPORT) {
       throw new Error("شما اجازه ورود به پنل مدیریت را ندارید.");
     }
 

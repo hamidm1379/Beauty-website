@@ -68,7 +68,7 @@ export default function ArticleToolbar({
           {categories.map((category) => (
             <option
               key={category.id}
-              value={category.id}
+              value={category.slug}
             >
               {category.title}
             </option>

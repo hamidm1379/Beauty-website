@@ -246,7 +246,10 @@ export default function SearchInput({ className = "" }: Props) {
                           {item.discountPrice ? (
                             <>
                               <span className="font-bold text-pink-500">
-                                {item.discountPrice.toLocaleString("fa-IR")}
+                                {Math.round(
+                                  item.price -
+                                    (item.price * item.discountPrice) / 100,
+                                ).toLocaleString("fa-IR")}
                               </span>
                               <span className="mr-1 text-gray-300 line-through">
                                 {item.price.toLocaleString("fa-IR")}

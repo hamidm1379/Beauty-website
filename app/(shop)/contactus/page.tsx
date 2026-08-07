@@ -1,11 +1,14 @@
 import ContactForm from "@/app/features/contactus/components/ContactForm";
 import ContactImage from "@/app/features/contactus/components/ContactImage";
 import ContactInfo from "@/app/features/contactus/components/ContactInfo";
+import { contactService } from "@/lib/services/contact.service";
 // import ContactMap from "@/app/features/contactus/components/ContactMap";
 
 
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const contactInfo = await contactService.getInfo();
+
   return (
     <main className="bg-[#fcfcfc]">
       <div className="mx-auto max-w-7xl px-4 py-6 md:py-8">
@@ -35,7 +38,7 @@ export default function ContactPage() {
             lg:grid-cols-[280px_1fr_360px]
           "
         >
-          <ContactInfo />
+          <ContactInfo data={contactInfo} />
 
           <ContactForm />
 

@@ -66,6 +66,7 @@ interface FormState {
   imageFiles: File[];
   thumbnail: string;
   imageUrls: string[];
+  removedImageUrls: string[];
   categoryId: string;
   brandId: string;
   status: "ACTIVE" | "DRAFT" | "INACTIVE";
@@ -85,6 +86,7 @@ const INITIAL_FORM_STATE: FormState = {
   imageFiles: [],
   thumbnail: "",
   imageUrls: [],
+  removedImageUrls: [],
   categoryId: "",
   brandId: "",
   status: "ACTIVE",
@@ -151,6 +153,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       thumbnail: initialData.thumbnail ?? "",
       imageUrls:
         initialData.images?.map((img) => img.image).filter(Boolean) ?? [],
+      removedImageUrls: [],
       categoryId: initialData.categoryId.toString(),
       brandId: initialData.brandId.toString(),
       status: initialData.status,
@@ -234,6 +237,14 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
     }));
   }
 
+  function handleRemovePreviewImage(url: string) {
+    setForm((prev) => ({
+      ...prev,
+      imageUrls: prev.imageUrls.filter((u) => u !== url),
+      removedImageUrls: [...prev.removedImageUrls, url],
+    }));
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -261,9 +272,15 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
       // تصاویر قبلی
       formData.append("oldThumbnail", form.thumbnail);
 
-      form.imageUrls.forEach((image) => {
+      (form.imageUrls ?? []).forEach((image) => {
         formData.append("oldImages", image);
       });
+
+      // تصاویر حذف شده
+      (form.removedImageUrls ?? []).forEach((image) => {
+        formData.append("removedImages", image);
+      });
+
       formData.append("shortDescription", form.shortDescription ?? "");
 
       // تصویر اصلی جدید
@@ -592,6 +609,7 @@ export default function ProductForm({ mode, initialData }: ProductFormProps) {
           value={form.imageFiles}
           previews={form.imageUrls}
           onChange={handleImagesChange}
+          onRemovePreview={handleRemovePreviewImage}
         />
       </div>
 

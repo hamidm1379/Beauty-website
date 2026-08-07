@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, ShoppingCart, User, X } from "lucide-react";
+import { LayoutDashboard, Menu, ShoppingCart, User, X } from "lucide-react";
 
 import SearchInput from "./SearchInput";
 
@@ -18,13 +18,15 @@ const menuItems = [
 interface Props {
   cartCount: number;
   isLoggedIn: boolean;
+  role?: string;
 }
 
 function isActivePath(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
-export default function HeaderClient({ cartCount, isLoggedIn }: Props) {
+export default function HeaderClient({ cartCount, isLoggedIn, role }: Props) {
+  const isAdminOrSupport = role === "ADMIN" || role === "SUPPORT";
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -112,6 +114,20 @@ export default function HeaderClient({ cartCount, isLoggedIn }: Props) {
                     حساب کاربری
                   </span>
                 </Link>
+
+                {/* Admin Panel */}
+                {isAdminOrSupport && (
+                  <Link
+                    href="/admin"
+                    className="flex h-11 items-center gap-2 rounded-2xl bg-blue-50 px-3 text-blue-700 transition hover:bg-blue-100"
+                  >
+                    <LayoutDashboard size={21} />
+
+                    <span className="hidden text-sm font-medium md:block">
+                      پنل مدیریت
+                    </span>
+                  </Link>
+                )}
               </>
             ) : (
               <Link
@@ -147,6 +163,18 @@ export default function HeaderClient({ cartCount, isLoggedIn }: Props) {
                   </li>
                 );
               })}
+
+              {isLoggedIn && isAdminOrSupport && (
+                <li>
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-2 rounded-xl px-4 py-3 text-blue-600 hover:bg-blue-50"
+                  >
+                    <LayoutDashboard size={20} />
+                    <span className="font-medium">پنل مدیریت</span>
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         )}

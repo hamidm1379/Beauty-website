@@ -8,6 +8,8 @@ import ProductPagination from "@/app/features/admin/components/products/ProductP
 import { productService } from "@/lib/services/product.service";
 import { categoryService } from "@/lib/services/category.service";
 import { brandService } from "@/lib/services/brand.service";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 interface ProductsPageProps {
   searchParams: Promise<{
@@ -24,6 +26,12 @@ interface ProductsPageProps {
 export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
+  const session = await auth();
+
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    redirect("/admin/orders");
+  }
+
   const params = await searchParams;
   
   const filters = {

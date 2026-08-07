@@ -15,7 +15,29 @@ import {
   CalendarDays,
 } from "lucide-react";
 
-const data = [
+interface DashboardData {
+  totalRevenue: number;
+  totalOrders: number;
+}
+
+interface Props {
+  data: DashboardData;
+}
+
+function formatRevenue(toman: number): string {
+  if (toman >= 1_000_000_000) {
+    return `${(toman / 1_000_000_000).toFixed(1)}M`;
+  }
+  if (toman >= 1_000_000) {
+    return `${(toman / 1_000_000).toFixed(1)}M`;
+  }
+  if (toman >= 1_000) {
+    return `${(toman / 1_000).toFixed(0)}K`;
+  }
+  return toman.toLocaleString("fa-IR");
+}
+
+const fallbackData = [
   { month: "فر", revenue: 12 },
   { month: "ار", revenue: 18 },
   { month: "خر", revenue: 15 },
@@ -30,7 +52,7 @@ const data = [
   { month: "اس", revenue: 61 },
 ];
 
-export default function RevenueChart() {
+export default function RevenueChart({ data }: Props) {
   return (
     <motion.section
       initial={{
@@ -44,7 +66,9 @@ export default function RevenueChart() {
       className="
         overflow-hidden
 
-        rounded-4xl
+        rounded-2xl
+        sm:rounded-3xl
+        lg:rounded-4xl
 
         border
         border-gray-100
@@ -56,25 +80,26 @@ export default function RevenueChart() {
     >
       {/* Header */}
 
-      <div className="border-b border-gray-100 p-4 sm:p-6">
+      <div className="border-b border-gray-100 p-3 sm:p-4 lg:p-6">
         <div className="flex items-start justify-between">
           <div>
             <span
               className="
-                text-xs
+                text-[10px]
                 font-semibold
                 text-pink-500
-                sm:text-sm
+                sm:text-xs
+                lg:text-sm
               "
             >
               گزارش فروش
             </span>
 
-            <h2 className="mt-1.5 text-lg font-black text-gray-900 sm:mt-2 sm:text-2xl">
+            <h2 className="mt-1 text-sm font-black text-gray-900 sm:mt-1.5 sm:text-lg lg:mt-2 lg:text-2xl">
               درآمد سال جاری
             </h2>
 
-            <p className="mt-1.5 text-xs text-gray-500 sm:mt-2 sm:text-sm">
+            <p className="mt-1 text-[10px] text-gray-500 sm:mt-1.5 sm:text-xs lg:mt-2 lg:text-sm">
               روند فروش فروشگاه در ۱۲ ماه اخیر
             </p>
           </div>
@@ -113,52 +138,52 @@ export default function RevenueChart() {
       {/* Stats */}
 
       <div className="grid grid-cols-3 border-b border-gray-100">
-        <div className="p-3 sm:p-6">
-          <p className="text-[10px] text-gray-500 sm:text-sm">
+        <div className="p-2 sm:p-3 lg:p-6">
+          <p className="text-[9px] text-gray-500 sm:text-[10px] lg:text-sm">
             درآمد کل
           </p>
 
-          <h3 className="mt-1 text-lg font-black sm:mt-2 sm:text-3xl">
-            ۴۸۰M
+          <h3 className="mt-0.5 text-sm font-black sm:mt-1 sm:text-lg lg:mt-2 lg:text-3xl">
+            {formatRevenue(data.totalRevenue)}
           </h3>
         </div>
 
-        <div className="p-3 sm:p-6">
-          <p className="text-[10px] text-gray-500 sm:text-sm">
+        <div className="p-2 sm:p-3 lg:p-6">
+          <p className="text-[9px] text-gray-500 sm:text-[10px] lg:text-sm">
             رشد
           </p>
 
-          <div className="mt-1 flex items-center gap-1 sm:mt-2 sm:gap-2">
+          <div className="mt-0.5 flex items-center gap-1 sm:mt-1 sm:gap-1.5 lg:mt-2 lg:gap-2">
             <TrendingUp
               className="text-green-500"
-              size={16}
+              size={14}
             />
 
-            <span className="text-lg font-black text-green-500 sm:text-3xl">
-              +۲۴٪
+            <span className="text-sm font-black text-green-500 sm:text-lg lg:text-3xl">
+              —
             </span>
           </div>
         </div>
 
-        <div className="p-3 sm:p-6">
-          <p className="text-[10px] text-gray-500 sm:text-sm">
+        <div className="p-2 sm:p-3 lg:p-6">
+          <p className="text-[9px] text-gray-500 sm:text-[10px] lg:text-sm">
             سفارش
           </p>
 
-          <h3 className="mt-1 text-lg font-black sm:mt-2 sm:text-3xl">
-            ۱۲,۸۵۰
+          <h3 className="mt-0.5 text-sm font-black sm:mt-1 sm:text-lg lg:mt-2 lg:text-3xl">
+            {data.totalOrders.toLocaleString("fa-IR")}
           </h3>
         </div>
       </div>
 
       {/* Chart */}
 
-      <div className="h-56 p-4 sm:h-90 sm:p-6">
+      <div className="h-44 p-3 sm:h-56 sm:p-4 lg:h-90 lg:p-6">
         <ResponsiveContainer
           width="100%"
           height="100%"
         >
-          <AreaChart data={data}>
+          <AreaChart data={fallbackData}>
             <defs>
               <linearGradient
                 id="pinkGradient"

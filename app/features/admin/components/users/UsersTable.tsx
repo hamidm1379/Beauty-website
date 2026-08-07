@@ -17,7 +17,7 @@ interface User {
   email: string | null;
   phone: string;
   avatar: string | null;
-  role: "ADMIN" | "CUSTOMER";
+  role: "ADMIN" | "CUSTOMER" | "SUPPORT";
   isActive: boolean;
   createdAt: Date;
 }
@@ -137,8 +137,14 @@ export default function UsersTable({ users }: Props) {
 
                   {/* Role */}
                   <td className="px-3 py-3 sm:px-6 sm:py-5">
-                    <span className={`rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold ${user.role === "ADMIN" ? "bg-violet-100 text-violet-700" : "bg-blue-100 text-blue-700"}`}>
-                      {user.role === "ADMIN" ? "مدیر" : "کاربر"}
+                    <span className={`rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-semibold ${
+                      user.role === "ADMIN"
+                        ? "bg-violet-100 text-violet-700"
+                        : user.role === "SUPPORT"
+                        ? "bg-amber-100 text-amber-700"
+                        : "bg-blue-100 text-blue-700"
+                    }`}>
+                      {user.role === "ADMIN" ? "مدیر" : user.role === "SUPPORT" ? "پشتیبانی" : "کاربر"}
                     </span>
                   </td>
 

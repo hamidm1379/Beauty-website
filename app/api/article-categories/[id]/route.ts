@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { articleCategoryRepository } from "@/lib/repositories/article-category.repository";
+import { articleCategoryService } from "@/lib/services/article-category.service";
 import { getErrorMessage } from "@/lib/utils/errors";
 
 export async function GET(
@@ -9,14 +9,7 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const category = await articleCategoryRepository.findById(Number(id));
-
-    if (!category) {
-      return NextResponse.json(
-        { success: false, message: "دسته‌بندی یافت نشد." },
-        { status: 404 }
-      );
-    }
+    const category = await articleCategoryService.getById(Number(id));
 
     return NextResponse.json({ success: true, data: category });
   } catch (error) {
@@ -37,18 +30,7 @@ export async function PUT(
 
     const { title, slug, image, seoTitle, seoDescription } = body;
 
-    if (slug) {
-      const existing = await articleCategoryRepository.findBySlug(slug);
-
-      if (existing && existing.id !== Number(id)) {
-        return NextResponse.json(
-          { success: false, message: "این اسلاگ قبلاً استفاده شده است." },
-          { status: 400 }
-        );
-      }
-    }
-
-    const category = await articleCategoryRepository.update(Number(id), {
+    const category = await articleCategoryService.update(Number(id), {
       title,
       slug,
       image,
@@ -60,7 +42,7 @@ export async function PUT(
   } catch (error) {
     return NextResponse.json(
       { success: false, message: getErrorMessage(error) ?? "خطایی رخ داده است." },
-      { status: 500 }
+      { status: 400 }
     );
   }
 }
@@ -72,13 +54,13 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    await articleCategoryRepository.delete(Number(id));
+    await articleCategoryService.delete(Number(id));
 
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json(
       { success: false, message: getErrorMessage(error) ?? "خطایی رخ داده است." },
-      { status: 500 }
+      { status: 400 }
     );
   }
 }

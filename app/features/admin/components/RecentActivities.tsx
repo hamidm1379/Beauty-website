@@ -15,7 +15,7 @@ const activities = [
   {
     id: 1,
     title: "سفارش جدید ثبت شد",
-    description: "محمد احمدی سفارش #ORD-10254 را ثبت کرد.",
+    description: "محمد احمدی سفارش #10254 را ثبت کرد.",
     time: "۲ دقیقه پیش",
     icon: ShoppingBag,
     color: "bg-pink-100 text-pink-600",
@@ -75,7 +75,9 @@ export default function RecentActivities() {
       }}
       className="
         overflow-hidden
-        rounded-4xl
+        rounded-2xl
+        sm:rounded-3xl
+        lg:rounded-4xl
         border
         border-gray-100
         bg-white
@@ -84,13 +86,13 @@ export default function RecentActivities() {
     >
       {/* Header */}
 
-      <div className="flex items-center justify-between border-b border-gray-100 p-4 sm:p-6">
+      <div className="flex items-center justify-between border-b border-gray-100 p-3 sm:p-4 lg:p-6">
         <div>
-          <h2 className="text-lg font-black text-gray-900 sm:text-xl">
+          <h2 className="text-base font-black text-gray-900 sm:text-lg lg:text-xl">
             فعالیت‌های اخیر
           </h2>
 
-          <p className="mt-1 text-xs text-gray-500 sm:mt-2 sm:text-sm">
+          <p className="mt-0.5 text-[10px] text-gray-500 sm:mt-1 sm:text-xs lg:mt-2 lg:text-sm">
             آخرین اتفاقات فروشگاه
           </p>
         </div>
@@ -127,22 +129,23 @@ export default function RecentActivities() {
 
       {/* Timeline */}
 
-      <div className="relative p-4 sm:p-6">
+      <div className="relative p-3 sm:p-4 lg:p-6">
         {/* Line */}
 
         <div
           className="
             absolute
-            right-9
+            right-7
             top-0
             bottom-0
             w-px
             bg-gray-200
-            sm:right-11.5
+            sm:right-9
+            lg:right-11.5
           "
         />
 
-        <div className="space-y-6 sm:space-y-8">
+        <div className="space-y-4 sm:space-y-5 lg:space-y-8">
           {activities.map((activity, index) => {
             const Icon = activity.icon;
 
@@ -160,7 +163,7 @@ export default function RecentActivities() {
                 transition={{
                   delay: index * 0.08,
                 }}
-                className="relative flex gap-4 sm:gap-5"
+                className="relative flex gap-3 sm:gap-4 lg:gap-5"
               >
                 {/* Icon */}
 
@@ -170,23 +173,27 @@ export default function RecentActivities() {
                     z-10
 
                     flex
-                    h-10
-                    w-10
+                    h-8
+                    w-8
                     shrink-0
 
                     items-center
                     justify-center
 
-                    rounded-xl
-                    sm:h-14
-                    sm:w-14
-                    sm:rounded-2xl
+                    rounded-lg
+                    sm:h-10
+                    sm:w-10
+                    sm:rounded-xl
+                    lg:h-14
+                    lg:w-14
+                    lg:rounded-2xl
 
                     ${activity.color}
                   `}
                 >
-                  <Icon size={18} className="sm:hidden" />
-                  <Icon size={24} className="hidden sm:block" />
+                  <Icon size={14} className="sm:hidden" />
+                  <Icon size={18} className="hidden sm:block lg:hidden" />
+                  <Icon size={24} className="hidden lg:block" />
                 </div>
 
                 {/* Content */}
@@ -198,16 +205,18 @@ export default function RecentActivities() {
                   className="
                     flex-1
 
-                    rounded-2xl
-                    sm:rounded-3xl
+                    rounded-xl
+                    sm:rounded-2xl
+                    lg:rounded-3xl
 
                     border
                     border-gray-100
 
                     bg-gray-50
 
-                    p-3.5
-                    sm:p-5
+                    p-2.5
+                    sm:p-3.5
+                    lg:p-5
 
                     transition-all
 
@@ -216,16 +225,16 @@ export default function RecentActivities() {
                   "
                 >
                   <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-bold text-gray-900 sm:text-base">
+                    <h3 className="text-xs font-bold text-gray-900 sm:text-sm lg:text-base">
                       {activity.title}
                     </h3>
 
-                    <span className="text-[10px] text-gray-400 sm:text-xs">
+                    <span className="text-[9px] text-gray-400 sm:text-[10px] lg:text-xs">
                       {activity.time}
                     </span>
                   </div>
 
-                  <p className="mt-2 text-xs leading-6 text-gray-500 sm:mt-3 sm:text-sm sm:leading-7">
+                  <p className="mt-1.5 text-[10px] leading-5 text-gray-500 sm:mt-2 sm:text-xs sm:leading-6 lg:mt-3 lg:text-sm lg:leading-7">
                     {activity.description}
                   </p>
                 </motion.div>

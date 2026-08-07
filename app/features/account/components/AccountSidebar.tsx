@@ -3,6 +3,7 @@
 import type { AccountUser } from "@/types/account";
 
 import { motion } from "framer-motion";
+import { signOut } from "next-auth/react";
 import {
   ShoppingBag,
   Heart,
@@ -334,6 +335,7 @@ export default function AccountSidebar({
         whileTap={{
           scale: 0.98,
         }}
+        onClick={() => signOut({ callbackUrl: "/" })}
         className="
           flex
           w-full

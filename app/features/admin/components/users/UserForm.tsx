@@ -27,7 +27,7 @@ export default function UserForm({ mode, user }: Props) {
       email: user?.email ?? "",
       phone: user?.phone ?? "",
       password: "",
-      role: (user?.role as "CUSTOMER" | "ADMIN") ?? "CUSTOMER",
+      role: (user?.role as "CUSTOMER" | "ADMIN" | "SUPPORT") ?? "CUSTOMER",
       isActive: user?.isActive ?? true,
     },
   });
@@ -133,6 +133,8 @@ export default function UserForm({ mode, user }: Props) {
           <option value="CUSTOMER">کاربر</option>
 
           <option value="ADMIN">مدیر</option>
+
+          <option value="SUPPORT">پشتیبانی</option>
         </select>
       </div>
 

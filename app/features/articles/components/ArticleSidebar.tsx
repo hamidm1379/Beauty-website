@@ -111,7 +111,7 @@ export default function ArticleSidebar({ article, suggestedArticles }: Props) {
   ] as const;
 
   return (
-    <aside className="top-24 space-y-4 md:space-y-6">
+    <aside className="space-y-4 md:space-y-6">
       {/* اطلاعات مقاله */}
       <div className="rounded-3xl bg-white p-4 shadow-sm md:p-6">
         <h3 className="mb-4 text-base font-bold md:mb-6 md:text-lg">

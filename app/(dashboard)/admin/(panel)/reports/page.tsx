@@ -7,6 +7,8 @@ import SalesChart from "@/app/features/admin/components/reports/SalesChart";
 import OrderStatusChart from "@/app/features/admin/components/reports/OrderStatusChart";
 import TopProducts from "@/app/features/admin/components/reports/TopProducts";
 import FinancialCards from "@/app/features/admin/components/reports/FinancialCards";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function ReportsPage({
   searchParams,
@@ -15,6 +17,12 @@ export default async function ReportsPage({
     range?: string;
   }>;
 }) {
+  const session = await auth();
+
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    redirect("/admin/orders");
+  }
+
   const params = await searchParams;
 
   const reports = await reportService.getReports({

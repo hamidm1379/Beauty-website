@@ -132,41 +132,51 @@ export default function ProductTabs({ product }: Props) {
               <div
                 className="
                   prose
-          prose-lg
-          max-w-none
+                  prose-sm
+                  max-w-none
+                  sm:prose-lg
 
-          prose-headings:font-bold
-          prose-headings:text-gray-900
+                  prose-headings:font-bold
+                  prose-headings:text-gray-900
 
-          prose-h2:mt-14
-          prose-h2:mb-6
-          prose-h2:text-3xl
+                  prose-h2:mt-8
+                  prose-h2:mb-4
+                  prose-h2:text-xl
+                  sm:prose-h2:mt-14
+                  sm:prose-h2:mb-6
+                  sm:prose-h2:text-3xl
 
-          prose-h3:mt-10
-          prose-h3:text-2xl
+                  prose-h3:mt-6
+                  prose-h3:text-lg
+                  sm:prose-h3:mt-10
+                  sm:prose-h3:text-2xl
 
-          prose-p:text-gray-700
-          prose-p:leading-8
-          prose-p:text-justify
+                  prose-p:text-gray-700
+                  prose-p:leading-7
+                  prose-p:text-justify
+                  sm:prose-p:leading-8
 
-          prose-a:text-pink-600
-          prose-a:no-underline
-          hover:prose-a:text-pink-700
+                  prose-a:text-pink-600
+                  prose-a:no-underline
+                  hover:prose-a:text-pink-700
 
-          prose-img:rounded-3xl
-          prose-img:shadow-md
+                  prose-img:rounded-2xl
+                  prose-img:shadow-md
+                  sm:prose-img:rounded-3xl
 
-          prose-ul:leading-9
-          prose-ol:leading-9
+                  prose-ul:leading-7
+                  prose-ol:leading-7
+                  sm:prose-ul:leading-9
+                  sm:prose-ol:leading-9
 
-          prose-blockquote:border-pink-500
-          prose-blockquote:text-gray-600
+                  prose-blockquote:border-pink-500
+                  prose-blockquote:text-gray-600
 
-          prose-strong:text-gray-900
+                  prose-strong:text-gray-900
 
-          prose-code:text-pink-600
+                  prose-code:text-pink-600
 
-          prose-pre:rounded-2xl
+                  prose-pre:rounded-2xl
                 "
               >
                 {product.description ? (

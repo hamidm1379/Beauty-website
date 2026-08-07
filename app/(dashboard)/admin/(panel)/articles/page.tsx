@@ -30,10 +30,17 @@ export default async function ArticlesPage({
     limit: Number(params.limit ?? 10),
   };
 
-  const [articlesData, categories, statistics] = await Promise.all([
+  const [articlesData, categories, statistics, brandArticlesData] = await Promise.all([
     articleService.getFilteredArticles(filters),
     articleCategoryService.getAll(),
     articleService.getStatistics(),
+    articleService.getFilteredArticles({
+      category: "brands",
+      status: "",
+      sort: "newest",
+      page: 1,
+      limit: 50,
+    }),
   ]);
 
   return (
@@ -57,6 +64,21 @@ export default async function ArticlesPage({
       <ArticlesTable
         articles={articlesData.items}
       />
+
+      {/* Brand Articles */}
+      {brandArticlesData.items.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-bold text-gray-900">مقالات برندها</h2>
+            <span className="rounded-full bg-pink-100 px-2.5 py-0.5 text-xs font-medium text-pink-600">
+              {brandArticlesData.total}
+            </span>
+          </div>
+          <ArticlesTable
+            articles={brandArticlesData.items}
+          />
+        </div>
+      )}
 
       {/* Pagination */}
       {/* <ArticlePagination

@@ -4,6 +4,8 @@ import BannersTable from "@/app/features/admin/components/banners/BannersTable";
 // import BannerPagination from "@/app/features/admin/components/banners/BannerPagination";
 
 import { bannerService } from "@/lib/services/banner.service";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 interface BannersPageProps {
   searchParams: Promise<{
@@ -19,6 +21,12 @@ interface BannersPageProps {
 export default async function BannersPage({
   searchParams,
 }: BannersPageProps) {
+  const session = await auth();
+
+  if (!session?.user?.id || session.user.role !== "ADMIN") {
+    redirect("/admin/orders");
+  }
+
   const params = await searchParams;
 
   const filters = {

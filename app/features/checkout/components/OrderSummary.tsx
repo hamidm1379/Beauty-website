@@ -149,9 +149,21 @@ export default function OrderSummary({
         throw new Error(result.message ?? "خطا در ثبت سفارش");
       }
 
-      toast.success("سفارش شما با موفقیت ثبت شد");
+      const orderId = result.data.id;
 
-      router.push(`/account`);
+      const payRes = await fetch(`/api/orders/${orderId}/pay`, {
+        method: "POST",
+      });
+
+      const payResult = await payRes.json();
+
+      if (!payRes.ok || !payResult.success) {
+        toast.error(payResult.message ?? "خطا در اتصال به درگاه پرداخت");
+        router.push(`/account`);
+        return;
+      }
+
+      window.location.href = payResult.data.gatewayUrl;
     } catch (error) {
       toast.error(getErrorMessage(error) ?? "خطا در ثبت سفارش");
     } finally {

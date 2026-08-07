@@ -48,13 +48,27 @@ class BrandService {
       logo?: string;
     },
   ) {
-    await this.getById(id);
+    const existing = await this.getById(id);
 
     if (data.slug) {
       const exist = await brandRepository.findBySlug(data.slug);
 
       if (exist && exist.id !== id) {
         throw new Error("Slug قبلاً استفاده شده است.");
+      }
+    }
+
+    // Delete old logo if a new one is provided and differs from the current
+    if (data.logo && existing.logo && data.logo !== existing.logo) {
+      try {
+        const filePath = path.join(
+          process.cwd(),
+          "public",
+          existing.logo.replace(/^\/+/, ""),
+        );
+        await fs.unlink(filePath);
+      } catch {
+        // File may not exist, ignore
       }
     }
 

@@ -16,6 +16,8 @@ interface ImageUploaderProps {
   previews?: string[];
 
   onChange: (value: File | File[] | null) => void;
+
+  onRemovePreview?: (url: string) => void;
 }
 
 export default function ImageUploader({
@@ -24,6 +26,7 @@ export default function ImageUploader({
   preview,
   previews,
   onChange,
+  onRemovePreview,
 }: ImageUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -60,7 +63,7 @@ export default function ImageUploader({
     setLocalPreviews(
       (previews ?? []).filter((item) => item && item.trim() !== ""),
     );
-  }, [value, multiple]);
+  }, [value, multiple, previews]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
@@ -136,6 +139,17 @@ export default function ImageUploader({
                   height={180}
                   className="aspect-square rounded-xl border object-cover"
                 />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onRemovePreview) {
+                      onRemovePreview(image);
+                    }
+                  }}
+                  className="absolute -right-2 -top-2 rounded-full bg-red-600 p-1.5 text-white"
+                >
+                  <Trash2 size={14} />
+                </button>
               </div>
             ))}
         </div>

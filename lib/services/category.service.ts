@@ -52,13 +52,27 @@ class CategoryService {
       image?: string;
     },
   ) {
-    await this.getById(id);
+    const existing = await this.getById(id);
 
     if (data.slug) {
       const exist = await categoryRepository.findBySlug(data.slug);
 
       if (exist && exist.id !== id) {
         throw new Error("Slug تکراری است.");
+      }
+    }
+
+    // Delete old image if a new one is provided and differs from the current
+    if (data.image && existing.image && data.image !== existing.image) {
+      try {
+        const filePath = path.join(
+          process.cwd(),
+          "public",
+          existing.image.replace(/^\/+/, ""),
+        );
+        await fs.unlink(filePath);
+      } catch (err) {
+        console.error("Delete old category image:", err);
       }
     }
 
