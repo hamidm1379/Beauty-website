@@ -42,6 +42,7 @@ export interface ContactInfo {
 /** Subset of settings consumed by the site footer. */
 export interface FooterData {
   siteName: string;
+  siteLogo: string | null;
   aboutUs: string;
   socials: SocialLink[];
 }
@@ -196,6 +197,7 @@ class ContactService {
 
     return {
       siteName: (generalMap.get("siteName") ?? "").trim() || "زیبارو",
+      siteLogo: (generalMap.get("siteLogo") ?? "").trim() || null,
       aboutUs: (generalMap.get("aboutUs") ?? "").trim(),
       socials: buildSocials(socialMap),
     };

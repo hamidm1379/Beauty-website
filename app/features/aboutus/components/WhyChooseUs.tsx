@@ -19,14 +19,12 @@ const features = [
   {
     icon: Truck,
     title: "ارسال سریع",
-    description:
-      "ارسال سفارش به سراسر کشور با بسته‌بندی ایمن و حرفه‌ای.",
+    description: "ارسال سفارش به سراسر کشور با بسته‌بندی ایمن و حرفه‌ای.",
   },
   {
     icon: Headphones,
     title: "پشتیبانی ۲۴ ساعته",
-    description:
-      "همیشه در کنار شما هستیم تا بهترین تجربه خرید را داشته باشید.",
+    description: "همیشه در کنار شما هستیم تا بهترین تجربه خرید را داشته باشید.",
   },
   {
     icon: CreditCard,
@@ -43,8 +41,7 @@ const features = [
   {
     icon: Sparkles,
     title: "برندهای لوکس",
-    description:
-      "همکاری با بهترین برندهای آرایشی و مراقبتی جهان.",
+    description: "همکاری با بهترین برندهای آرایشی و مراقبتی جهان.",
   },
 ];
 
@@ -57,7 +54,7 @@ export default function WhyChooseUs() {
         <h2
           className="
             mt-5
-            text-2xl
+            text-xl
             sm:text-3xl
             md:text-4xl
             font-black
@@ -69,16 +66,16 @@ export default function WhyChooseUs() {
 
         <p
           className="
-            mt-4
+            mt-3
             sm:mt-5
-            leading-7
+            leading-6
             sm:leading-8
             max-sm:text-justify
             text-gray-500
+            max-sm:text-sm
           "
         >
-          ما فقط محصولات آرایشی نمی‌فروشیم؛
-          بلکه تلاش می‌کنیم تجربه‌ای سریع،
+          ما فقط محصولات آرایشی نمی‌فروشیم؛ بلکه تلاش می‌کنیم تجربه‌ای سریع،
           مطمئن و لذت‌بخش از خرید آنلاین برای شما ایجاد کنیم.
         </p>
       </div>
@@ -87,17 +84,14 @@ export default function WhyChooseUs() {
 
       <div
         className="
-          mt-8
-          sm:mt-16
-
-          grid
-          gap-5
-          sm:gap-7
-
-          md:grid-cols-2
-
-          xl:grid-cols-3
-        "
+    mt-8
+    sm:mt-16
+    grid
+    gap-5
+    sm:gap-7
+    md:grid-cols-2
+    xl:grid-cols-3
+  "
       >
         {features.map((feature, index) => {
           const Icon = feature.icon;
@@ -106,150 +100,122 @@ export default function WhyChooseUs() {
             <div
               key={index}
               className="
-                group
-
-                relative
-
-                overflow-hidden
-                rounded-2xl
-                sm:rounded-3xl
-                md:rounded-4xl
-
-                border
-                border-gray-100
-
-                bg-white
-                max-sm:pb-6
-                p-4
-                sm:p-6
-                md:p-8
-
-                shadow-sm
-
-                transition-all
-                duration-500
-
-                hover:-translate-y-2
-                hover:border-pink-200
-                hover:shadow-2xl
-              "
+          group
+          relative
+          overflow-hidden
+          rounded-2xl
+          sm:rounded-3xl
+          md:rounded-4xl
+          border
+          border-gray-100
+          bg-white
+          p-4
+          sm:p-6
+          md:p-8
+          max-sm:pb-6
+          shadow-sm
+          transition-all
+          duration-500
+          hover:-translate-y-2
+          hover:border-pink-200
+          hover:shadow-2xl
+        "
             >
               {/* Gradient */}
-
               <div
                 className="
-                  absolute
-                  -right-16
-                  -top-16
-
-                  h-48
-                  w-48
-
-                  rounded-full
-
-                  bg-linear-to-br
-                  from-pink-100
-                  to-rose-100
-
-                  opacity-40
-
-                  blur-3xl
-
-                  transition-all
-                  duration-700
-
-                  group-hover:scale-150
-                "
+            absolute
+            -right-16
+            -top-16
+            h-48
+            w-48
+            rounded-full
+            bg-linear-to-br
+            from-pink-100
+            to-rose-100
+            opacity-40
+            blur-3xl
+            transition-all
+            duration-700
+            group-hover:scale-150
+          "
               />
 
-              {/* Icon */}
+              {/* Icon + Title */}
+              <div className="relative flex items-center gap-3 sm:block">
+                {/* Icon */}
+                <div
+                  className="
+              flex
+              h-10
+              w-10
+              shrink-0
+              items-center
+              justify-center
+              rounded-lg
+              bg-linear-to-br
+              from-pink-500
+              to-fuchsia-500
+              text-white
+              shadow-lg
+              transition-all
+              duration-500
+              sm:h-18
+              sm:w-18
+              sm:rounded-3xl
+              group-hover:rotate-6
+              group-hover:scale-110
+            "
+                >
+                  <Icon className="h-6 w-6 sm:h-8.5 sm:w-8.5" />
+                </div>
 
-              <div
-                className="
-                  relative
-
-                  flex
-                  h-15
-                  w-15
-                  sm:h-18
-                  sm:w-18
-
-                  items-center
-                  justify-center
-                  rounded-2xl
-                  sm:rounded-3xl
-
-                  bg-linear-to-br
-                  from-pink-500
-                  to-fuchsia-500
-
-                  text-white
-
-                  shadow-lg
-
-                  transition-all
-                  duration-500
-
-                  group-hover:rotate-6
-                  group-hover:scale-110
-                "
-              >
-                <Icon size={34} />
+                {/* Title */}
+                <h3
+                  className="
+              text-md
+              font-bold
+              text-gray-900
+              sm:mt-8
+              sm:text-2xl
+            "
+                >
+                  {feature.title}
+                </h3>
               </div>
 
-              {/* Title */}
-
-              <h3
-                className="
-                  relative
-                  mt-4
-                  sm:mt-8
-                  text-xl
-                  sm:text-2xl
-                  font-bold
-
-                  text-gray-900
-                "
-              >
-                {feature.title}
-              </h3>
-
               {/* Description */}
-
               <p
                 className="
-                  relative
-                  mt-2
-                  sm:mt-4
-                  leading-7
-                  sm:leading-8
-
-                  text-gray-500
-                "
+            relative
+            mt-3
+            leading-6
+            text-sm
+            text-gray-500
+            sm:mt-4
+            sm:text-base
+            sm:leading-8
+          "
               >
                 {feature.description}
               </p>
 
               {/* Bottom Line */}
-
               <div
                 className="
-                  mt-8
-
-                  h-1
-                  w-0
-
-                  rounded-full
-
-                  bg-linear-to-r
-                  from-pink-500
-                  to-fuchsia-500
-
-                  transition-all
-                  duration-500
-                  max-sm:hidden
-                  group-hover:w-full
-                "
+            mt-8
+            hidden
+            h-1
+            w-0
+            rounded-full
+            bg-linear-to-r
+            from-pink-500
+            to-fuchsia-500
+            transition-all
+            duration-500
+            group-hover:w-full
+            sm:block
+          "
               />
             </div>
           );

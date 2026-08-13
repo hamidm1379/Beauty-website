@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, Menu, ShoppingCart, User, X } from "lucide-react";
 
@@ -19,13 +20,14 @@ interface Props {
   cartCount: number;
   isLoggedIn: boolean;
   role?: string;
+  siteLogo?: string | null;
 }
 
 function isActivePath(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
-export default function HeaderClient({ cartCount, isLoggedIn, role }: Props) {
+export default function HeaderClient({ cartCount, isLoggedIn, role, siteLogo }: Props) {
   const isAdminOrSupport = role === "ADMIN" || role === "SUPPORT";
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -50,7 +52,18 @@ export default function HeaderClient({ cartCount, isLoggedIn, role }: Props) {
           {/* Logo */}
 
           <Link href="/">
-            <span className="text-2xl font-black text-gray-900">برق لب</span>
+            {siteLogo ? (
+              <Image
+                src={siteLogo}
+                alt="لوگو"
+                width={120}
+                height={40}
+                className="h-10 w-auto object-contain"
+                priority
+              />
+            ) : (
+              <span className="text-2xl font-black text-gray-900">برق لب</span>
+            )}
           </Link>
 
           {/* Desktop Menu */}

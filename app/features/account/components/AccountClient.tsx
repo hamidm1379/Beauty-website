@@ -13,15 +13,55 @@ import ProfileCard from "./ProfileCard";
 import RecentOrders from "./RecentOrders";
 import WishlistCard from "./WishlistCard";
 import AddressList from "./Addresses";
+import PaymentResultModal from "./PaymentResultModal";
 
 interface Props {
   user: AccountUser;
+  paymentStatus?: string | null;
+  orderNumber?: string | null;
 }
 
-export default function AccountClient({ user }: Props) {
+type PaymentModalStatus = "success" | "failed" | null;
+
+function resolvePaymentStatus(
+  raw: string | null | undefined,
+): PaymentModalStatus {
+  if (raw === "success") return "success";
+  if (raw === "failed" || raw === "error") return "failed";
+  return null;
+}
+
+export default function AccountClient({
+  user,
+  paymentStatus,
+  orderNumber,
+}: Props) {
   const [activeTab, setActiveTab] = useState("orders");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const [paymentModalStatus, setPaymentModalStatus] = useState<PaymentModalStatus>(
+    () => resolvePaymentStatus(paymentStatus),
+  );
+
+  function closePaymentModal() {
+    setPaymentModalStatus(null);
+
+    // پاک کردن پارامتر payment از URL تا با refresh دوباره مودال باز نشود
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+
+      url.searchParams.delete("payment");
+      url.searchParams.delete("order");
+
+      window.history.replaceState({}, "", url.toString());
+    }
+  }
+
+  function handleViewOrders() {
+    setActiveTab("orders");
+    closePaymentModal();
+  }
 
   return (
     <main className="bg-gray-50">
@@ -160,6 +200,14 @@ lg:block
           </AnimatePresence>
         </section>
       </div>
+
+      {/* مودال نتیجه پرداخت */}
+      <PaymentResultModal
+        status={paymentModalStatus}
+        orderNumber={orderNumber ?? null}
+        onClose={closePaymentModal}
+        onViewOrders={handleViewOrders}
+      />
     </main>
   );
 }

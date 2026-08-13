@@ -62,7 +62,6 @@ export default function OurStory() {
         </div>
 
         {/* Floating Card */}
-
       </div>
 
       {/* Content */}
@@ -97,7 +96,7 @@ export default function OurStory() {
             font-black
 
             leading-tight
-            text-2xl
+            text-xl
             sm:text-3xl
             md:text-4xl
             text-gray-900
@@ -112,23 +111,20 @@ export default function OurStory() {
           className="
             mt-6
             sm:mt-8
-            leading-8
+            leading-6
             sm:leading-9
             max-sm:text-justify
-
+            max-sm:text-sm
             text-gray-600
           "
         >
-          زیبارو با هدف ایجاد تجربه‌ای متفاوت از خرید آنلاین محصولات
-          آرایشی و مراقبتی تأسیس شد. ما معتقدیم زیبایی زمانی معنا پیدا
-          می‌کند که همراه با کیفیت، اصالت و اعتماد باشد.
-
+          اریکه با هدف ایجاد تجربه‌ای متفاوت از خرید آنلاین محصولات آرایشی و
+          مراقبتی تأسیس شد. ما معتقدیم زیبایی زمانی معنا پیدا می‌کند که همراه با
+          کیفیت، اصالت و اعتماد باشد.
           <br />
-          <br className="max-sm:hidden"/>
-
-          به همین دلیل تمامی محصولات ما از برندهای معتبر جهانی تهیه
-          شده و پیش از ارسال، از نظر اصالت و کیفیت بررسی می‌شوند تا
-          با خیالی آسوده خرید کنید.
+          <br className="max-sm:hidden" />
+          به همین دلیل تمامی محصولات ما از برندهای معتبر جهانی تهیه شده و پیش از
+          ارسال، از نظر اصالت و کیفیت بررسی می‌شوند تا با خیالی آسوده خرید کنید.
         </p>
 
         {/* Features */}
@@ -143,7 +139,7 @@ export default function OurStory() {
             {
               icon: Award,
               title: "برندهای معتبر جهانی",
-              desc: "همکاری با بهترین برندهای آرایشی دنیا.",
+              desc: "همکاری با بهترین برندهای آرایشی داخلی و خارجی.",
             },
             {
               icon: HeartHandshake,
@@ -161,7 +157,8 @@ export default function OurStory() {
 
                   flex
                   items-start
-                  gap-5
+                  gap-3
+                  sm:gap-5
                   rounded-xl
                   sm:rounded-2xl
                   md:rounded-3xl
@@ -185,7 +182,7 @@ export default function OurStory() {
                 <div
                   className="
                     flex
-                    h-[32.15px]
+                    h-12
                     w-12
                     sm:h-14
                     sm:w-14
@@ -210,11 +207,11 @@ export default function OurStory() {
                 </div>
 
                 <div>
-                  <h3 className="text-md sm:text-lg font-bold text-gray-900">
+                  <h3 className="text-sm sm:text-lg font-bold text-gray-900">
                     {item.title}
                   </h3>
 
-                  <p className="mt-1 sm:mt-2 leading-6 md:leading-7 max-sm:text-[15px] text-gray-500">
+                  <p className="mt-1 sm:mt-2 leading-6 md:leading-7 max-sm:text-[12px] text-gray-500">
                     {item.desc}
                   </p>
                 </div>

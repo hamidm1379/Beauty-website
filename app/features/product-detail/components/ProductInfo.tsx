@@ -281,7 +281,7 @@ export default function ProductInfo({
           {selectedVariantId && (
             <p className="mt-2 text-xs text-gray-500 sm:text-sm">
               {" "}
-              کد :
+              
               {
                 product.variants.find((v) => v.id === selectedVariantId)
                   ?.colorName

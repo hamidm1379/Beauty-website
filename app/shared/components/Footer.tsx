@@ -160,7 +160,7 @@ function TwinklingStars() {
 }
 
 export default function Footer({ data }: { data: FooterData }) {
-  const { siteName, aboutUs, socials } = data;
+  const { siteName, siteLogo, aboutUs, socials } = data;
   const [email, setEmail] = useState("");
 
   const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
@@ -256,15 +256,25 @@ export default function Footer({ data }: { data: FooterData }) {
             className="col-span-2 sm:col-span-1"
           >
             <div className="mb-4 sm:mb-6 flex items-center gap-2">
-              <motion.div
-                animate={{ scale: [1, 1.12, 1] }}
-                transition={{
-                  duration: 2.6,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-linear-to-br from-pink-500 to-rose-400"
-              />
+              {siteLogo ? (
+                <Image
+                  src={siteLogo}
+                  alt={siteName}
+                  width={40}
+                  height={40}
+                  className="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-contain"
+                />
+              ) : (
+                <motion.div
+                  animate={{ scale: [1, 1.12, 1] }}
+                  transition={{
+                    duration: 2.6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-linear-to-br from-pink-500 to-rose-400"
+                />
+              )}
               <h3 className="text-xl sm:text-2xl font-bold text-gray-800">{siteName}</h3>
             </div>
 

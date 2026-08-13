@@ -4,11 +4,16 @@ import CartList from "@/app/features/cart/components/CartList";
 import OrderSummary from "@/app/features/cart/components/OrderSummary";
 import RecommendedProducts from "@/app/features/cart/components/RecommendedProducts";
 import CartStepper from "@/app/features/cart/components/CartStepper";
+import CartPaymentResultModal from "@/app/features/cart/components/CartPaymentResultModal";
 import { auth } from "@/lib/auth";
 import { cartService } from "@/lib/services/cart.service";
 import { productService } from "@/lib/services/product.service";
 
-export default async function CartPage() {
+type Props = {
+  searchParams: Promise<{ payment?: string }>;
+};
+
+export default async function CartPage({ searchParams }: Props) {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -18,6 +23,8 @@ export default async function CartPage() {
       </main>
     );
   }
+
+  const { payment } = await searchParams;
 
   const cart = await cartService.getCart(Number(session.user.id));
 
@@ -85,6 +92,11 @@ export default async function CartPage() {
           </section>
         )}
       </div>
+
+      {/* مودال شکست پرداخت */}
+      <CartPaymentResultModal
+        status={payment === "failed" || payment === "error" ? "failed" : null}
+      />
     </main>
   );
 }

@@ -30,10 +30,10 @@ export default function BestSellersSlider({ products }: Props) {
         slidesPerView={4}
         spaceBetween={20}
         breakpoints={{
-          0: { slidesPerView: 2 },
-          640: { slidesPerView: 2 },
-          768: { slidesPerView: 3 },
-          1024: { slidesPerView: 4 },
+          0: { slidesPerView: 2, spaceBetween: 10 },
+          640: { slidesPerView: 2, spaceBetween: 12 },
+          768: { slidesPerView: 3, spaceBetween: 16 },
+          1024: { slidesPerView: 4, spaceBetween: 20 },
         }}
       >
         {products.map((product) => (

@@ -1,3 +1,5 @@
+import { Currency } from "lucide-react";
+
 const ZARINPAL_MERCHANT_ID = process.env.ZARINPAL_MERCHANT_ID ?? "";
 const ZARINPAL_SANDBOX = process.env.ZARINPAL_SANDBOX === "true";
 
@@ -39,6 +41,7 @@ export async function requestPayment(params: {
 }): Promise<{ authority: string; gatewayUrl: string }> {
   const body: Record<string, unknown> = {
     merchant_id: ZARINPAL_MERCHANT_ID,
+    currency: "IRT",
     amount: params.amount,
     callback_url: params.callbackUrl,
     description: params.description,
@@ -80,6 +83,7 @@ export async function verifyPayment(params: {
 }): Promise<{ refId: number; success: boolean }> {
   const body = {
     merchant_id: ZARINPAL_MERCHANT_ID,
+    currency: "IRT",
     amount: params.amount,
     authority: params.authority,
   };

@@ -85,6 +85,9 @@ export default function ProductCard({ product }: Props) {
       className="
         group
         relative
+        flex
+        h-full
+        flex-col
         overflow-hidden
         rounded-2xl
         border
@@ -98,7 +101,7 @@ export default function ProductCard({ product }: Props) {
         md:rounded-3xl
       "
     >
-      <Link href={`/products/${product.slug}`} className="block">
+      <Link href={`/products/${product.slug}`} className="flex flex-1 flex-col">
         {/* Image */}
         <div className="relative aspect-square overflow-hidden rounded-xl bg-gray-50 md:rounded-2xl">
           {/* Discount badge */}
@@ -137,46 +140,6 @@ export default function ProductCard({ product }: Props) {
             </span>
           )}
 
-          {/* Wishlist button */}
-          {/* <motion.button
-            onClick={handleWishlist}
-            whileTap={{ scale: 0.85 }}
-            aria-label="افزودن به علاقه‌مندی‌ها"
-            className="
-              absolute
-              right-2
-              top-2
-              z-10
-              flex
-              h-6
-              w-6
-              items-center
-              justify-center
-              rounded-full
-              bg-white/80
-              text-gray-400
-              opacity-0
-              backdrop-blur
-              transition-all
-              duration-300
-              group-hover:opacity-100
-              hover:bg-white
-              md:right-3
-              md:top-3
-              md:h-7
-              md:w-7
-            "
-          >
-            <Heart
-              size={13}
-              className={
-                isWishlisted
-                  ? "fill-pink-500 text-pink-500"
-                  : "fill-transparent"
-              }
-            />
-          </motion.button> */}
-
           <Image
             src={product.thumbnail || "/placeholder-product.png"}
             alt={product.title}
@@ -195,18 +158,18 @@ export default function ProductCard({ product }: Props) {
         </div>
 
         {/* Content */}
-        <div className="p-3 md:p-4">
+        <div className="flex flex-1 flex-col p-3 md:p-4">
           <p className="flex items-center gap-1 text-[10px] text-gray-400 md:text-[13px]">
             <Tag size={11} className="shrink-0" />
             {product.brand?.title || "بدون برند"}
           </p>
 
-          <h3 className="mt-0.5 md:mt-1 line-clamp-2 min-h-[1.3em] md:min-h-[2.6em] text-[13px] font-medium leading-6 text-gray-800 md:text-[16px]">
+          <h3 className="mt-0.5 line-clamp-2 min-h-[2.5em] text-[10px] sm:text-[13px] font-medium leading-6 text-gray-800 md:mt-1 md:min-h-[3em] md:text-[16px]">
             {product.title}
           </h3>
 
           {/* Price */}
-          <div className="mt-1 md:mt-3 flex items-baseline sm:gap-2">
+          <div className="mt-auto pt-1 md:pt-3 flex items-baseline sm:gap-2">
             {hasDiscount ? (
               <>
                 <p className="text-[12px] font-bold text-pink-600 md:text-[16px]">
@@ -233,7 +196,7 @@ export default function ProductCard({ product }: Props) {
       </Link>
 
       {/* Add to cart */}
-      <div className="px-4 pb-4 ">
+      <div className="px-4 pb-4">
         <Link href={`/products/${product.slug}`} className="block">
           <motion.button
             whileHover={{ scale: 1.02 }}

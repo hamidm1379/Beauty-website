@@ -158,6 +158,10 @@ class OrderService {
         productImage: item.product.thumbnail ?? null,
         purchasePrice: item.product.purchasePrice,
 
+        variantId: item.variantId ?? null,
+        variantTitle: item.variant?.title ?? null,
+        variantColor: item.variant?.colorName ?? null,
+
         product: {
           connect: {
             id: item.productId,
