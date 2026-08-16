@@ -53,9 +53,10 @@ export default function OrderStatusBadge({ status }: { status: OrderStatus }) {
   return (
     <span
       className={`
+      p-0
 rounded-full
-px-2
-py-1
+sm:px-2
+sm:py-1
 text-[10px]
 font-semibold
 w-16.25

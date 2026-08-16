@@ -129,7 +129,7 @@ export default function OrdersTable({ orders }: Props) {
                   <span className="mr-1 text-[11px] sm:text-xs text-gray-400">تومان</span>
                 </td>
 
-                <td className="p-3 sm:p-5">
+                <td className="p-0 sm:p-5">
                   <OrderStatusBadge status={order.status as OrderStatus} />
                 </td>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Minus, Plus, Trash2, Heart, ShieldCheck, ShieldAlert, Loader2 } from "lucide-react";
 
@@ -11,6 +12,7 @@ type Props = {
     product: {
       id: number;
       title: string;
+      slug: string;
       thumbnail?: string | null;
       price: number;
       discountPrice?: number | null;
@@ -64,7 +66,7 @@ export default function CartItem({
       <div className="flex flex-row gap-3 sm:gap-6">
         {/* Image */}
 
-        <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-gray-50 sm:h-40 sm:w-40 sm:rounded-3xl lg:h-44 lg:w-44">
+        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-gray-50 sm:h-40 sm:w-40 sm:rounded-3xl lg:h-44 lg:w-44">
           <Image
             src={item.product.thumbnail ?? "/placeholder-product.png"}
             alt={item.product.title}
@@ -83,9 +85,12 @@ export default function CartItem({
               {item.product.brand?.title ?? "بدون برند"}
             </span>
 
-            <h2 className="mt-1 line-clamp-2  text-xs font-bold text-gray-900 sm:mt-4 sm:line-clamp-none sm:text-xl">
+            <Link
+              href={`/products/${item.product.slug}`}
+              className="mt-1 line-clamp-2 text-xs font-bold text-gray-900 hover:text-pink-600 transition-colors sm:mt-4 sm:line-clamp-none sm:text-xl"
+            >
               {item.product.title}
-            </h2>
+            </Link>
             {item.variant && (
               <div className="mt-1 flex items-center gap-1 sm:mt-3 sm:gap-2">
                 <span
@@ -127,7 +132,7 @@ export default function CartItem({
           <div className="mt-2.5 flex flex-row flex-nowrap items-center justify-between gap-1.5 sm:mt-6 sm:gap-6">
             {/* Quantity */}
 
-            <div className="flex w-fit flex-shrink-0 items-center overflow-hidden rounded-lg border border-gray-200 sm:rounded-2xl">
+            <div className="flex w-fit shrink-0 items-center overflow-hidden rounded-lg border border-gray-200 sm:rounded-2xl">
               <button disabled={loading} onClick={onIncrease} className="cursor-pointer flex h-6 w-6 items-center justify-center hover:bg-pink-50 disabled:opacity-40 sm:h-12 sm:w-12">
                 <Plus size={12} className="sm:hidden" />
                 <Plus size={18} className="hidden sm:block" />
@@ -150,7 +155,7 @@ export default function CartItem({
 
             {/* Actions */}
 
-            <div className="flex flex-shrink-0 items-center gap-3">
+            <div className="flex shrink-0 items-center gap-3">
               <button disabled={loading} onClick={onRemove} className="cursor-pointer flex items-center gap-1 rounded-lg bg-red-50 px-2 py-1 text-[10px] font-semibold text-red-500 transition hover:bg-red-500 hover:text-white disabled:opacity-50 sm:gap-2 sm:rounded-2xl sm:px-5 sm:py-3 sm:text-base">
                 <Trash2 size={12} className="sm:hidden" />
                 <Trash2 size={18} className="hidden sm:block" />
