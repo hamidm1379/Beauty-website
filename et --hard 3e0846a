@@ -1,0 +1,45 @@
+[33mcommit 3e0846a68afd51c378e53161e264996b29f43d64[m
+Author: unknown <hamidbit99@gmail.com>
+Date:   Thu Aug 13 11:10:17 2026 +0330
+
+    commit-15
+
+ app/(shop)/account/page.tsx                        |  28 [32m++[m[31m-[m
+ app/(shop)/cart/page.tsx                           |  14 [32m+[m[31m-[m
+ app/api/orders/callback/route.ts                   |  82 [32m+++++[m[31m--[m
+ app/features/aboutus/components/AboutHero.tsx      |  39 [32m++[m[31m-[m
+ app/features/aboutus/components/OurStory.tsx       |  35 [32m++[m[31m-[m
+ app/features/aboutus/components/OurValues.tsx      | 237 [32m++++++++[m[31m----------[m
+ app/features/aboutus/components/WhyChooseUs.tsx    | 264 [32m+++++++++[m[31m------------[m
+ app/features/account/components/AccountClient.tsx  |  50 [32m+++[m[31m-[m
+ .../account/components/PaymentResultModal.tsx      | 122 [32m++++++++++[m
+ app/features/cart/components/CartItem.tsx          |  90 [32m+++[m[31m----[m
+ .../cart/components/CartPaymentResultModal.tsx     |  41 [32m++++[m
+ app/features/home/components/BestSellersSlider.tsx |   8 [32m+[m[31m-[m
+ app/features/home/components/NewProductsSlider.tsx |   5 [32m+[m
+ app/features/home/components/ProductCard.tsx       |  53 [32m+[m[31m----[m
+ .../product-detail/components/ProductInfo.tsx      |   2 [32m+[m[31m-[m
+ app/shared/components/Footer.tsx                   |  30 [32m++[m[31m-[m
+ app/shared/components/Header.tsx                   |   4 [32m+[m
+ app/shared/components/HeaderClient.tsx             |  17 [32m+[m[31m-[m
+ lib/payment.ts                                     |   4 [32m+[m
+ lib/services/cart.service.ts                       |  46 [32m++++[m
+ lib/services/contact.service.ts                    |   2 [32m+[m
+ lib/services/order.service.ts                      |   4 [32m+[m
+ lib/sms/kavenegar.ts                               |  93 [32m++++[m[31m----[m
+ package-lock.json                                  |  60 [32m+[m[31m----[m
+ package.json                                       |   3 [32m+[m[31m-[m
+ .../article-categories/1786109486987-rb9zbtq8.jpeg | Bin [31m0[m -> [32m1797674[m bytes
+ public/uploads/brands/1786116632187-kfqzg499.png   | Bin [31m0[m -> [32m35785[m bytes
+ .../uploads/categories/1786116612922-33zo66kd.png  | Bin [31m0[m -> [32m35785[m bytes
+ .../025b8693-637b-43bf-aaca-8c891b3a417a.png       | Bin [31m0[m -> [32m30727[m bytes
+ .../46e659e0-0c8d-4155-a6cc-44607d71c13f.webp      | Bin [31m0[m -> [32m16142[m bytes
+ .../786dd235-3911-4822-a12d-feca30383101.webp      | Bin [31m0[m -> [32m25838[m bytes
+ .../8011ab6c-0f29-41c4-8904-b668c497d62f.webp      | Bin [31m0[m -> [32m25838[m bytes
+ .../94a852d0-1153-47ae-abb1-90bb652d26ff.png       | Bin [31m0[m -> [32m35785[m bytes
+ .../a0b99f9b-4bbd-418f-8c1a-f6c7a5daf1ba.jpg       | Bin [31m0[m -> [32m39584[m bytes
+ .../c699ad95-3c34-4cdc-995e-05458d3b16e5.webp      | Bin [31m0[m -> [32m25838[m bytes
+ .../c83c68df-dcf2-4e9a-89f5-a6a2f9b8c706.webp      | Bin [31m0[m -> [32m16142[m bytes
+ .../d49c9271-cfb5-486b-8d2e-fe3a85edabaa.png       | Bin [31m0[m -> [32m37594[m bytes
+ .../uploads/settings/1786539369115-kacmxuwv.jpeg   | Bin [31m0[m -> [32m1797674[m bytes
+ 38 files changed, 775 insertions(+), 558 deletions(-)

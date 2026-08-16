@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "sqlite"
+  provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DATABASE_URL_UNPOOLED")
 }
@@ -590,6 +590,7 @@ enum OtpType {
   LOGIN
   REGISTER
   RESET_PASSWORD
+  PHONE_CHANGE
 }
 
 model ArticleCategory {

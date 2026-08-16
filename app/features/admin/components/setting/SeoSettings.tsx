@@ -145,7 +145,7 @@ export default function SeoSettings({ data, onSave, saving }: Props) {
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           {ogImage ? (
             <div className="relative h-32 w-full max-w-[240px] shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-white sm:h-36">
-              <Image src={ogImage} alt="OG Image" fill className="object-cover" />
+              <Image src={ogImage} alt="OG Image" fill sizes="240px" className="object-cover" />
 
               <button
                 type="button"

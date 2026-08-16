@@ -144,6 +144,8 @@ export default function ProductCard({ product }: Props) {
             src={product.thumbnail || "/placeholder-product.png"}
             alt={product.title}
             fill
+            loading="eager"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="
               rounded-xl
               object-contain
@@ -159,7 +161,7 @@ export default function ProductCard({ product }: Props) {
 
         {/* Content */}
         <div className="flex flex-1 flex-col p-3 md:p-4">
-          <p className="flex items-center gap-1 text-[10px] text-gray-400 md:text-[13px]">
+          <p className="flex min-h-[15px] items-center gap-1 text-[10px] text-gray-400 md:min-h-[19px] md:text-[13px]">
             <Tag size={11} className="shrink-0" />
             {product.brand?.title || "بدون برند"}
           </p>
@@ -169,7 +171,7 @@ export default function ProductCard({ product }: Props) {
           </h3>
 
           {/* Price */}
-          <div className="mt-auto pt-1 md:pt-3 flex items-baseline sm:gap-2">
+          <div className="mt-auto flex min-h-[22px] items-baseline pt-1 sm:gap-2 md:min-h-[28px] md:pt-3">
             {hasDiscount ? (
               <>
                 <p className="text-[12px] font-bold text-pink-600 md:text-[16px]">

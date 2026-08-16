@@ -57,7 +57,7 @@ const sections = [
     icon: Mail,
     title: "ارتباط با ما",
     content: [
-      "در صورت وجود هرگونه سوال درباره حریم خصوصی می‌توانید با تیم پشتیبانی زیبارو در ارتباط باشید.",
+      "در صورت وجود هرگونه سوال درباره حریم خصوصی می‌توانید با تیم پشتیبانی اریکه در ارتباط باشید.",
     ],
   },
 ];
@@ -65,27 +65,28 @@ const sections = [
 export default function PrivacyPage() {
   return (
     <main className="bg-gray-50">
-      <div className="mx-auto max-w-7xl px-6 py-16">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16">
         {/* Hero */}
 
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-[40px] border border-pink-100 bg-white p-12 shadow-sm"
+          className="rounded-3xl border border-pink-100 bg-white p-6 shadow-sm sm:rounded-[40px] sm:p-12"
         >
           <div className="mx-auto max-w-3xl text-center">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-pink-100 text-pink-500">
-              <ShieldCheck size={42} />
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-pink-100 text-pink-500 sm:h-20 sm:w-20 sm:rounded-3xl">
+              <ShieldCheck size={28} className="sm:hidden" />
+              <ShieldCheck size={42} className="hidden sm:block" />
             </div>
 
-            <h1 className="mt-8 text-5xl font-black text-gray-900">
+            <h1 className="mt-5 text-2xl font-black text-gray-900 sm:mt-8 sm:text-5xl">
               حریم خصوصی
             </h1>
 
-            <p className="mt-6 text-lg leading-9 text-gray-600">
+            <p className="mt-3 text-xs leading-6 text-gray-600 sm:mt-6 sm:text-lg sm:leading-9">
               حفظ اطلاعات شخصی کاربران برای فروشگاه اینترنتی
               <span className="font-bold text-pink-500">
-                {" "}زیبارو{" "}
+                {" "}اریکه{" "}
               </span>
               از مهم‌ترین اولویت‌ها است. در این صفحه توضیح داده‌ایم چه
               اطلاعاتی جمع‌آوری می‌شود، چگونه از آن استفاده می‌کنیم و چگونه از
@@ -95,111 +96,122 @@ export default function PrivacyPage() {
         </motion.div>
         {/* Sections */}
 
-<div className="mt-14 grid gap-8 lg:grid-cols-2">
-  {sections.map((section, index) => {
-    const Icon = section.icon;
+        <div className="mt-6 grid gap-4 sm:mt-14 sm:gap-8 lg:grid-cols-2">
+          {sections.map((section, index) => {
+            const Icon = section.icon;
 
-    return (
-      <motion.div
-        key={section.title}
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{
-          duration: 0.5,
-          delay: index * 0.08,
-        }}
-        whileHover={{
-          y: -6,
-        }}
-        className="
-          group
+            return (
+              <motion.div
+                key={section.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.08,
+                }}
+                whileHover={{
+                  y: -6,
+                }}
+                className="
+                  group
 
-          rounded-4xl
+                  rounded-2xl
+                  sm:rounded-4xl
 
-          border
-          border-gray-100
+                  border
+                  border-gray-100
 
-          bg-white
+                  bg-white
 
-          p-8
+                  p-4
+                  sm:p-8
 
-          shadow-sm
+                  shadow-sm
 
-          transition-all
+                  transition-all
 
-          hover:border-pink-200
-          hover:shadow-xl
-        "
-      >
-        {/* Header */}
+                  hover:border-pink-200
+                  hover:shadow-xl
+                "
+              >
+                {/* Header */}
 
-        <div className="flex items-center gap-5">
-          <div
-            className="
-              flex
+                <div className="flex items-center gap-3 sm:gap-5">
+                  <div
+                    className="
+                      flex
 
-              h-16
-              w-16
+                      h-10
+                      w-10
+                      sm:h-16
+                      sm:w-16
 
-              items-center
-              justify-center
+                      shrink-0
 
-              rounded-3xl
+                      items-center
+                      justify-center
 
-              bg-pink-100
+                      rounded-xl
+                      sm:rounded-3xl
 
-              text-pink-500
+                      bg-pink-100
 
-              transition
+                      text-pink-500
 
-              group-hover:scale-110
-            "
-          >
-            <Icon size={30} />
-          </div>
+                      transition
 
-          <div>
-            <h3 className="text-2xl font-black text-gray-900">
-              {section.title}
-            </h3>
+                      group-hover:scale-110
+                    "
+                  >
+                    <Icon size={18} className="sm:hidden" />
+                    <Icon size={30} className="hidden sm:block" />
+                  </div>
 
-            <p className="mt-2 text-sm text-gray-500">
-              توضیحات مربوط به این بخش
-            </p>
-          </div>
+                  <div>
+                    <h3 className="text-base font-black text-gray-900 sm:text-2xl">
+                      {section.title}
+                    </h3>
+
+                    <p className="mt-0.5 text-[11px] text-gray-500 sm:mt-2 sm:text-sm">
+                      توضیحات مربوط به این بخش
+                    </p>
+                  </div>
+                </div>
+
+                {/* Content */}
+
+                <ul className="mt-4 space-y-2 sm:mt-8 sm:space-y-4">
+                  {section.content.map((item) => (
+                    <li
+                      key={item}
+                      className="
+                        flex
+                        items-start
+                        gap-2
+                        sm:gap-3
+
+                        rounded-xl
+                        sm:rounded-2xl
+
+                        bg-pink-50/50
+
+                        p-2.5
+                        sm:p-4
+                      "
+                    >
+                      <div className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-pink-500 sm:h-2.5 sm:w-2.5" />
+
+                      <span className="text-xs leading-6 text-gray-700 sm:text-base sm:leading-8">
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            );
+          })}
         </div>
-
-        {/* Content */}
-
-        <ul className="mt-8 space-y-4">
-          {section.content.map((item) => (
-            <li
-              key={item}
-              className="
-                flex
-                items-start
-                gap-3
-
-                rounded-2xl
-
-                bg-pink-50/50
-
-                p-4
-              "
-            >
-              <div className="mt-1 h-2.5 w-2.5 rounded-full bg-pink-500" />
-
-              <span className="leading-8 text-gray-700">
-                {item}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </motion.div>
-    );
-  })}
-</div>
       </div>
     </main>
   );

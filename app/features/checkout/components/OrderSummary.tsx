@@ -266,7 +266,7 @@ export default function OrderSummary({
           }}
           onClick={handleContinue}
           disabled={!items.length || submitting}
-          className="cursor-pointer flex w-full items-center justify-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl bg-linear-to-r from-pink-500 via-rose-500 to-fuchsia-500 px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base font-bold text-white shadow-lg disabled:opacity-50"
+          className="cursor-pointer flex w-full items-center justify-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl bg-white border border-pink-300 px-4 py-3 sm:px-6 sm:py-4 text-sm sm:text-base font-bold text-pink-600 shadow-lg disabled:opacity-50"
         >
           {submitting ? (
             <Loader2 className="h-4 w-4 sm:h-4.5 sm:w-4.5 animate-spin" />

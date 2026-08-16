@@ -3,7 +3,23 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 
-const bubbles = [
+type Bubble = {
+  size: number;
+  top: string;
+  left: string;
+  duration: number;
+  delay: number;
+};
+
+type StarItem = {
+  size: number;
+  top: string;
+  left: string;
+  duration: number;
+  delay: number;
+};
+
+const bubbles: Bubble[] = [
   { size: 46, top: "10%", left: "6%", duration: 7, delay: 0 },
   { size: 24, top: "24%", left: "18%", duration: 5.5, delay: 0.6 },
   { size: 64, top: "62%", left: "4%", duration: 8.5, delay: 1.2 },
@@ -16,7 +32,7 @@ const bubbles = [
   { size: 22, top: "5%", left: "42%", duration: 6.2, delay: 1.1 },
 ];
 
-const stars = [
+const stars: StarItem[] = [
   { size: 16, top: "16%", left: "30%", duration: 2.2, delay: 0 },
   { size: 10, top: "36%", left: "10%", duration: 2.8, delay: 0.5 },
   { size: 14, top: "8%", left: "64%", duration: 2.4, delay: 1 },
@@ -29,15 +45,15 @@ const stars = [
 function FloatingBubbles() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {bubbles.map((b, i) => (
+      {bubbles.map((bubble) => (
         <motion.span
-          key={i}
+          key={`${bubble.top}-${bubble.left}`}
           className="absolute rounded-full"
           style={{
-            width: b.size,
-            height: b.size,
-            top: b.top,
-            left: b.left,
+            width: bubble.size,
+            height: bubble.size,
+            top: bubble.top,
+            left: bubble.left,
             background:
               "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.55) 14%, rgba(244,114,182,0.35) 45%, rgba(236,72,153,0.18) 75%, rgba(236,72,153,0.06) 100%)",
             boxShadow:
@@ -51,8 +67,8 @@ function FloatingBubbles() {
             scale: [1, 1.1, 1],
           }}
           transition={{
-            duration: b.duration,
-            delay: b.delay,
+            duration: bubble.duration,
+            delay: bubble.delay,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -65,21 +81,21 @@ function FloatingBubbles() {
 function TwinklingStars() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {stars.map((s, i) => (
+      {stars.map((star) => (
         <motion.span
-          key={i}
+          key={`${star.top}-${star.left}`}
           className="absolute"
-          style={{ top: s.top, left: s.left }}
+          style={{ top: star.top, left: star.left }}
           animate={{ opacity: [0.15, 1, 0.15], scale: [0.7, 1.15, 0.7] }}
           transition={{
-            duration: s.duration,
-            delay: s.delay,
+            duration: star.duration,
+            delay: star.delay,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         >
           <Star
-            size={s.size}
+            size={star.size}
             className="fill-pink-300 text-pink-300 drop-shadow-[0_0_4px_rgba(244,114,182,0.8)]"
           />
         </motion.span>
@@ -88,9 +104,33 @@ function TwinklingStars() {
   );
 }
 
+function LoadingDots() {
+  return (
+    <span className="flex items-center gap-0.5">
+      {[0, 1, 2].map((dot) => (
+        <motion.span
+          key={dot}
+          animate={{ opacity: [0.2, 1, 0.2], y: [0, -3, 0] }}
+          transition={{
+            duration: 1.1,
+            delay: dot * 0.18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="h-1.5 w-1.5 rounded-full bg-pink-500"
+        />
+      ))}
+    </span>
+  );
+}
+
 export default function Loading() {
   return (
-    <div className="relative flex min-h-[85vh] items-center justify-center overflow-hidden bg-linear-to-b from-pink-50/60 via-white to-white px-4 py-20">
+    <div
+      role="status"
+      aria-label="در حال بارگذاری"
+      className="relative flex min-h-[85vh] items-center justify-center overflow-hidden bg-linear-to-b from-pink-50/60 via-white to-white px-4 py-20"
+    >
       {/* Decorative glow */}
       <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-pink-200/30 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-pink-100/40 blur-3xl" />
@@ -99,19 +139,12 @@ export default function Loading() {
       <TwinklingStars />
 
       <div className="relative z-10 flex flex-col items-center text-center">
-        {/* Ring loader with pulsing logo dot in the middle */}
+        {/* Ring loader with pulsing logo dot */}
         <div className="relative flex h-28 w-28 items-center justify-center">
           <motion.span
             animate={{ rotate: 360 }}
             transition={{ duration: 1.4, repeat: Infinity, ease: "linear" }}
-            className="
-              absolute
-              inset-0
-              rounded-full
-              border-4
-              border-pink-100
-              border-t-pink-500
-            "
+            className="absolute inset-0 rounded-full border-4 border-pink-100 border-t-pink-500"
           />
 
           <motion.div
@@ -120,16 +153,7 @@ export default function Loading() {
               scale: { duration: 1.4, repeat: Infinity, ease: "easeInOut" },
               rotate: { duration: 2.2, repeat: Infinity, ease: "linear" },
             }}
-            className="
-              h-12
-              w-12
-              rounded-full
-              bg-linear-to-br
-              from-pink-500
-              to-rose-400
-              shadow-lg
-              shadow-pink-200/60
-            "
+            className="h-12 w-12 rounded-full bg-linear-to-br from-pink-500 to-rose-400 shadow-lg shadow-pink-200/60"
           />
         </div>
 
@@ -140,10 +164,10 @@ export default function Loading() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="mt-8 text-xl font-bold text-gray-800"
         >
-          زیبارو
+          اریکه شاپ
         </motion.h2>
 
-        {/* Loading text with animated dots */}
+        {/* Loading text */}
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -151,21 +175,7 @@ export default function Loading() {
           className="mt-2 flex items-center gap-1 text-gray-500"
         >
           <span>در حال بارگذاری</span>
-          <span className="flex items-center gap-0.5">
-            {[0, 1, 2].map((i) => (
-              <motion.span
-                key={i}
-                animate={{ opacity: [0.2, 1, 0.2], y: [0, -3, 0] }}
-                transition={{
-                  duration: 1.1,
-                  delay: i * 0.18,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="h-1.5 w-1.5 rounded-full bg-pink-500"
-              />
-            ))}
-          </span>
+          <LoadingDots />
         </motion.p>
       </div>
     </div>

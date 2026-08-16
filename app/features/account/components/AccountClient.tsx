@@ -40,9 +40,8 @@ export default function AccountClient({
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const [paymentModalStatus, setPaymentModalStatus] = useState<PaymentModalStatus>(
-    () => resolvePaymentStatus(paymentStatus),
-  );
+  const [paymentModalStatus, setPaymentModalStatus] =
+    useState<PaymentModalStatus>(() => resolvePaymentStatus(paymentStatus));
 
   function closePaymentModal() {
     setPaymentModalStatus(null);

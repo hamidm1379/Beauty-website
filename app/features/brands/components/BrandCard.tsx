@@ -68,6 +68,7 @@ export default function BrandCard({ brand, index = 0 }: Props) {
           src={brand.thumbnail}
           alt={brand.title}
           fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="
          object-contain
         transition-transform

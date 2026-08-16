@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef, useEffect } from "react";
 import type { AccountUser } from "@/types/account";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,9 +21,17 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
 
-import { updateProfileAction } from "@/app/features/account/actions";
+import {
+  updateProfileAction,
+  updateProfileCityAction,
+  sendPhoneChangeOtpAction,
+  verifyPhoneChangeAction,
+} from "@/app/features/account/actions";
+import { toEnglishDigits } from "@/lib/utils/normalize-digits";
 
 const profileSchema = z.object({
   firstName: z
@@ -54,18 +62,45 @@ const profileSchema = z.object({
     )
     .optional()
     .or(z.literal("")),
+  city: z
+    .string()
+    .trim()
+    .max(100, "نام شهر نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد.")
+    .optional()
+    .or(z.literal("")),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
+
+const phoneSchema = z.object({
+  phone: z
+    .string()
+    .regex(/^09\d{9}$/, "شماره موبایل معتبر نیست"),
+});
+
+const codeSchema = z.object({
+  code: z
+    .string()
+    .min(5, "کد تایید باید ۵ رقم باشد.")
+    .max(5, "کد تایید باید ۵ رقم باشد.")
+    .regex(/^\d+$/, "کد تایید فقط باید عدد باشد."),
+});
 
 interface Props {
   user: AccountUser;
 }
 
+const RESEND_SECONDS = 90;
+
 export default function ProfileCard({ user }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  const defaultAddress = user.addresses?.find(
+    (address: { isDefault: boolean; city?: string | null }) =>
+      address.isDefault
+  );
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -74,6 +109,7 @@ export default function ProfileCard({ user }: Props) {
       lastName: user.lastName ?? "",
       email: user.email ?? "",
       username: user.username ?? "",
+      city: defaultAddress?.city ?? "",
     },
   });
 
@@ -82,11 +118,6 @@ export default function ProfileCard({ user }: Props) {
     .filter(Boolean)
     .join("")
     .toUpperCase();
-
-  const defaultAddress = user.addresses?.find(
-    (address: { isDefault: boolean; city?: string | null }) =>
-      address.isDefault
-  );
 
   async function onSubmit(data: ProfileFormData) {
     const result = await updateProfileAction({
@@ -99,6 +130,14 @@ export default function ProfileCard({ user }: Props) {
     if (!result.success) {
       toast.error(result.error ?? "خطا در بروزرسانی اطلاعات.");
       return;
+    }
+
+    if (data.city !== undefined) {
+      const cityResult = await updateProfileCityAction(data.city || "");
+      if (!cityResult.success) {
+        toast.error(cityResult.error ?? "خطا در بروزرسانی شهر.");
+        return;
+      }
     }
 
     toast.success("اطلاعات با موفقیت بروزرسانی شد.");
@@ -115,6 +154,7 @@ export default function ProfileCard({ user }: Props) {
       lastName: user.lastName ?? "",
       email: user.email ?? "",
       username: user.username ?? "",
+      city: defaultAddress?.city ?? "",
     });
   }
 
@@ -163,7 +203,7 @@ export default function ProfileCard({ user }: Props) {
                 {fullName || "بدون نام"}
               </h2>
 
-              <div className="mt-1 flex items-center gap-3 text-xs text-gray-500 sm:text-sm">
+              <div className="mt-1 flex items-center gap-3 text-[10px] text-gray-500 sm:text-sm">
                 {user.emailVerified && (
                   <span className="inline-flex items-center gap-1 text-green-600">
                     <CheckCircle2 size={14} />
@@ -381,6 +421,25 @@ export default function ProfileCard({ user }: Props) {
                 </p>
               )}
             </div>
+
+            {/* City */}
+            <div className="space-y-2 sm:col-span-2">
+              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                <MapPin size={16} className="text-pink-500" />
+                شهر
+              </label>
+              <input
+                type="text"
+                className={`${inputClass} ${form.formState.errors.city ? inputErrorClass : ""}`}
+                placeholder="نام شهر خود را وارد کنید"
+                {...form.register("city")}
+              />
+              {form.formState.errors.city && (
+                <p className="text-xs text-red-500">
+                  {form.formState.errors.city.message}
+                </p>
+              )}
+            </div>
           </motion.form>
         ) : (
           <motion.div
@@ -455,6 +514,11 @@ export default function ProfileCard({ user }: Props) {
                 </motion.div>
               );
             })}
+
+            {/* Phone Change Button */}
+            <div className="sm:col-span-2">
+              <PhoneChangeSection phone={user.phone} />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -484,5 +548,324 @@ export default function ProfileCard({ user }: Props) {
         </div>
       </div>
     </motion.section>
+  );
+}
+
+function PhoneChangeSection({ phone }: { phone: string }) {
+  const [step, setStep] = useState<"idle" | "phone" | "code">("idle");
+  const [newPhone, setNewPhone] = useState("");
+  const [countdown, setCountdown] = useState(0);
+  const [sending, setSending] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const router = useRouter();
+
+  const phoneForm = useForm({
+    resolver: zodResolver(phoneSchema),
+    defaultValues: { phone: "" },
+  });
+
+  const codeForm = useForm({
+    resolver: zodResolver(codeSchema),
+    defaultValues: { code: "" },
+  });
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
+
+  function startCountdown() {
+    setCountdown(RESEND_SECONDS);
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }
+
+  async function onSendOtp(data: { phone: string }) {
+    setServerError("");
+    setSending(true);
+    try {
+      const result = await sendPhoneChangeOtpAction(data.phone);
+      if (!result.success) {
+        if (result.retryAfter) {
+          setCountdown(result.retryAfter);
+          if (timerRef.current) clearInterval(timerRef.current);
+          timerRef.current = setInterval(() => {
+            setCountdown((prev) => {
+              if (prev <= 1) {
+                if (timerRef.current) clearInterval(timerRef.current);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        }
+        setServerError(result.error ?? "خطا در ارسال کد تایید.");
+        return;
+      }
+      setNewPhone(data.phone);
+      setStep("code");
+      codeForm.reset();
+      startCountdown();
+      toast.success("کد تایید برای شما ارسال شد.");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  async function onResend() {
+    if (countdown > 0) return;
+    const result = await sendPhoneChangeOtpAction(newPhone);
+    if (!result.success) {
+      toast.error(result.error ?? "خطا در ارسال کد تایید.");
+      return;
+    }
+    startCountdown();
+    toast.success("کد تایید مجدداً ارسال شد.");
+  }
+
+  async function onVerifyCode(data: { code: string }) {
+    setVerifying(true);
+    try {
+      const result = await verifyPhoneChangeAction(newPhone, data.code);
+      if (!result.success) {
+        toast.error(result.error ?? "کد وارد شده صحیح نیست یا منقضی شده است.");
+        return;
+      }
+      toast.success("شماره موبایل با موفقیت تغییر کرد.");
+      setStep("idle");
+      setNewPhone("");
+      codeForm.reset();
+      router.refresh();
+    } finally {
+      setVerifying(false);
+    }
+  }
+
+  function cancel() {
+    setStep("idle");
+    setNewPhone("");
+    setServerError("");
+    phoneForm.reset();
+    codeForm.reset();
+    if (timerRef.current) clearInterval(timerRef.current);
+    setCountdown(0);
+  }
+
+  if (step === "idle") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-2xl border border-gray-100 bg-gray-50 p-4 transition-all hover:border-pink-200 hover:bg-white hover:shadow-md sm:p-5"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pink-100 text-pink-500 sm:h-12 sm:w-12">
+              <Phone size={20} />
+            </div>
+            <div>
+              <p className="text-[13px] font-bold text-gray-900">تغییر شماره موبایل</p>
+              <p className="mt-0.5 text-xs text-gray-500">
+                شماره فعلی: <span dir="ltr">{phone}</span>
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setStep("phone")}
+            className="flex items-center gap-0.5 sm:gap-1.5 rounded-md sm:rounded-xl bg-pink-500 px-2 py-1 sm:px-4 sm:py-2 text-[13px] sm:text-sm sm:font-bold text-white transition hover:bg-pink-600"
+          >
+            <Pencil className="h-3 w-3 sm:w-3.5 sm:h-3.5" />
+            تغییر
+          </button>
+        </div>
+      </motion.div>
+    );
+  }
+
+  if (step === "phone") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-2xl border border-pink-200 bg-pink-50/50 p-4 sm:p-5"
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <h4 className="text-sm font-bold text-gray-900">تغییر شماره موبایل</h4>
+          <button
+            type="button"
+            onClick={cancel}
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+          >
+            <X size={16} />
+          </button>
+        </div>
+
+        <form onSubmit={phoneForm.handleSubmit(onSendOtp)} className="space-y-4">
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-gray-600">
+              شماره موبایل جدید
+            </label>
+            <div
+              className={`flex h-12 items-center rounded-xl border bg-white px-3 transition-all ${
+                phoneForm.formState.errors.phone || serverError
+                  ? "border-red-400"
+                  : "border-gray-200 focus-within:border-pink-400"
+              }`}
+            >
+              <Phone size={18} className="ml-2 shrink-0 text-pink-500" />
+              <input
+                dir="ltr"
+                type="tel"
+                maxLength={11}
+                placeholder="09123456789"
+                className="w-full bg-transparent text-sm outline-none"
+                {...phoneForm.register("phone", {
+                  setValueAs: (value) => toEnglishDigits(value ?? ""),
+                  onChange: () => setServerError(""),
+                })}
+              />
+            </div>
+            {phoneForm.formState.errors.phone && (
+              <p className="text-xs text-red-500">
+                {phoneForm.formState.errors.phone.message}
+              </p>
+            )}
+            {!phoneForm.formState.errors.phone && serverError && (
+              <p className="text-xs text-red-500">{serverError}</p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={sending}
+            className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-pink-500 text-sm font-bold text-white transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {sending ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <>
+                ارسال کد تایید
+                <ArrowLeft size={16} />
+              </>
+            )}
+          </button>
+        </form>
+      </motion.div>
+    );
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl border border-pink-200 bg-pink-50/50 p-4 sm:p-5"
+    >
+      <div className="mb-4 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => {
+            setStep("phone");
+            codeForm.reset();
+            if (timerRef.current) clearInterval(timerRef.current);
+            setCountdown(0);
+          }}
+          className="flex items-center gap-1.5 text-xs font-medium text-gray-500 transition hover:text-pink-600"
+        >
+          <ArrowRight size={14} />
+          تغییر شماره
+        </button>
+        <button
+          type="button"
+          onClick={cancel}
+          className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+        >
+          <X size={16} />
+        </button>
+      </div>
+
+      <p className="mb-4 text-xs text-gray-600">
+        کد ۵ رقمی ارسال شده به شماره{" "}
+        <span dir="ltr" className="font-semibold text-gray-800">
+          {newPhone}
+        </span>{" "}
+        را وارد کنید.
+      </p>
+
+      <form onSubmit={codeForm.handleSubmit(onVerifyCode)} className="space-y-4">
+        <div className="space-y-2">
+          <div
+            className={`flex h-12 items-center rounded-xl border bg-white px-3 transition-all ${
+              codeForm.formState.errors.code
+                ? "border-red-400"
+                : "border-gray-200 focus-within:border-pink-400"
+            }`}
+          >
+            <ShieldCheck size={18} className="ml-2 shrink-0 text-pink-500" />
+            <input
+              dir="ltr"
+              inputMode="numeric"
+              maxLength={5}
+              placeholder="12345"
+              className="w-full bg-transparent text-center text-sm tracking-[0.4em] outline-none"
+              {...codeForm.register("code", {
+                setValueAs: (value) => toEnglishDigits(value ?? ""),
+              })}
+            />
+          </div>
+          {codeForm.formState.errors.code && (
+            <p className="text-xs text-red-500">
+              {codeForm.formState.errors.code.message}
+            </p>
+          )}
+
+          <div className="text-center">
+            {countdown > 0 ? (
+              <p className="text-xs text-gray-400">
+                ارسال مجدد کد تا{" "}
+                <span className="font-semibold text-gray-600">
+                  {countdown.toLocaleString("fa-IR")}
+                </span>{" "}
+                ثانیه دیگر
+              </p>
+            ) : (
+              <button
+                type="button"
+                onClick={onResend}
+                className="text-xs font-semibold text-pink-600 transition hover:text-pink-700"
+              >
+                ارسال مجدد کد
+              </button>
+            )}
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={verifying}
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-pink-500 text-sm font-bold text-white transition hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {verifying ? (
+            <Loader2 size={16} className="animate-spin" />
+          ) : (
+            <>
+              تایید و تغییر شماره
+              <ArrowLeft size={16} />
+            </>
+          )}
+        </button>
+      </form>
+    </motion.div>
   );
 }

@@ -46,7 +46,7 @@ export default function ArticleHero({ article }: Props) {
 
           {/* Excerpt */}
           {article.excerpt && (
-            <p className="mt-3 max-w-4xl text-base leading-7 text-gray-600 sm:mt-4 sm:text-lg sm:leading-9 md:mt-6">
+            <p className="mt-3 max-w-4xl text-sm leading-7 text-gray-600 sm:mt-4 sm:text-lg sm:leading-9 md:mt-6 ">
               {article.excerpt}
             </p>
           )}

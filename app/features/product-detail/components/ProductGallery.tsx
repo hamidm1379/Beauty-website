@@ -216,6 +216,7 @@ export default function ProductGallery({ product }: Props) {
               src={selectedImage}
               alt={product.title}
               fill
+              sizes="100vw"
               className="object-contain"
               onClick={(e) => e.stopPropagation()}
             />

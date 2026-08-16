@@ -49,6 +49,7 @@ function ItemCard({ item }: { item: AdminOrderItem }) {
             src={item.productImage}
             alt={item.productTitle}
             fill
+            sizes="96px"
             className="object-contain p-2"
           />
         ) : (
@@ -130,6 +131,7 @@ function ItemRow({ item }: { item: AdminOrderItem }) {
             src={item.productImage}
             alt={item.productTitle}
             fill
+            sizes="56px"
             className="object-contain p-1"
           />
         ) : (

@@ -24,6 +24,7 @@ export default function BrandHero({ total, search }: Props) {
           alt="برندهای آرایشی و بهداشتی"
           fill
           priority
+          sizes="100vw"
           className="
             object-cover
             scale-110

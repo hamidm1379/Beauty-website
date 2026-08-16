@@ -35,7 +35,7 @@ const floatingCards = [
 
 export default function ArticlesHero() {
   return (
-    <section className="relative overflow-hidden bg-[#FCF7F6] px-4 py-6 sm:px-6 sm:py-16 lg:px-12 lg:py-20">
+    <section className="relative overflow-hidden bg-[#FCF7F6] px-4 py-6 sm:px-6 sm:py-16 lg:px-12 lg:py-20 pb-0">
       <div className="mx-auto grid max-w-7xl items-center gap-6 sm:gap-12 lg:grid-cols-2 lg:gap-16">
         {/* ---------------- Left column ---------------- */}
         <div className="text-right">
@@ -79,7 +79,7 @@ export default function ArticlesHero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.7 }}
-            className="mx-auto mt-6 max-w-xl text-base leading-8 text-slate-500 max-sm:text-justify sm:mt-8 sm:text-lg sm:leading-9 lg:mx-0"
+            className="mx-auto mt-6 max-w-xl text-sm leading-8 text-slate-500 max-sm:text-justify sm:mt-8 sm:text-lg sm:leading-9 lg:mx-0"
           >
             دنیایی از مقالات تخصصی در زمینه مراقبت پوست و مو، آرایش، سبک
             زندگی و معرفی بهترین محصولات زیبایی را در مجله ما مطالعه کنید.
@@ -104,6 +104,7 @@ export default function ArticlesHero() {
                 src="/arti.png"
                 alt="مدل زیبایی با پوست سالم"
                 fill
+                sizes="(max-width: 640px) 0px, (max-width: 1024px) 320px, 400px"
                 className="object-cover"
                 priority
               />
@@ -149,7 +150,7 @@ export default function ArticlesHero() {
                 className={`absolute ${card.position} hidden w-44 items-center gap-2 rounded-xl border border-slate-100 bg-white/95 p-2 shadow-xl backdrop-blur sm:flex sm:w-48 sm:gap-3 sm:rounded-2xl sm:p-3 lg:w-56`}
               >
                 <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg sm:h-14 sm:w-14 sm:rounded-xl">
-                  <Image src={card.image} alt={card.title} fill className="object-cover" />
+                  <Image src={card.image} alt={card.title} fill sizes="56px" className="object-cover" />
                 </div>
                 <div className="text-right">
                   <p className="text-xs font-bold leading-5 text-slate-800 sm:text-sm sm:leading-6">
@@ -165,7 +166,7 @@ export default function ArticlesHero() {
           </motion.div>
 
           {/* Article cards — mobile only, stacked as a clean list below the image */}
-          <div className="mt-2 flex w-full flex-col gap-3 sm:hidden">
+          <div className="hidden mt-2 w-full flex-col gap-3 sm:hidden">
             {floatingCards.map((card) => (
               <motion.div
                 key={card.title}
@@ -175,7 +176,7 @@ export default function ArticlesHero() {
                 className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-3 shadow-md"
               >
                 <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl">
-                  <Image src={card.image} alt={card.title} fill className="object-cover" />
+                  <Image src={card.image} alt={card.title} fill sizes="56px" className="object-cover" />
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-bold leading-6 text-slate-800">

@@ -192,7 +192,7 @@ export default function ProductInfo({
       {/* Title */}
       <h1
         className="
-          mt-3 text-lg sm:text-xl font-extrabold leading-8 text-gray-900
+          mt-3 text-md sm:text-xl font-extrabold leading-8 text-gray-900
           sm:mt-4 md:text-2xl sm:leading-9
           lg:text-3xl lg:leading-10
         "
@@ -221,7 +221,7 @@ export default function ProductInfo({
         )}
 
         <div className="mt-2 text-xl sm:text-2xl font-extrabold text-gray-900 md:text-3xl lg:text-4xl">
-          {finalPrice.toLocaleString("fa-IR")}
+         <span className="text-sm sm:text-xl"> قیمت :</span> {finalPrice.toLocaleString("fa-IR")}  
 
           <span className="mr-1.5 text-sm font-medium sm:mr-2 sm:text-lg">
             تومان
@@ -230,7 +230,7 @@ export default function ProductInfo({
       </div>
 
       {/* Description */}
-      <p className="mt-2 max-w-xl text-sm leading-7 text-gray-500 sm:mt-8 sm:text-base sm:leading-8">
+      <p className="mt-2 max-w-xl text-xs leading-7 text-gray-500 sm:mt-8 sm:text-base sm:leading-8">
         {product.shortDescription ?? "توضیحاتی برای این محصول ثبت نشده است."}
       </p>
 

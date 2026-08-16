@@ -146,6 +146,7 @@ export default function TopProducts({ products }: Props) {
                       src={product.image}
                       alt={product.name}
                       fill
+                      sizes="72px"
                       className="object-cover"
                     />
                   </div>

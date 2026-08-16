@@ -291,6 +291,7 @@ function HeroImage({ image, title }: Pick<HeroSlideProps, "image" | "title">) {
           alt={title}
           fill
           priority
+          sizes="(max-width: 768px) 100vw, 500px"
           className="object-contain drop-shadow-2xl"
         />
       </motion.div>

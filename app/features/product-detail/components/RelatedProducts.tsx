@@ -104,6 +104,7 @@ export default function RelatedProducts({
 
       <Swiper
         modules={[Navigation]}
+        className="h-auto!"
         spaceBetween={12}
         navigation={{
           prevEl: ".related-prev",
@@ -137,7 +138,7 @@ export default function RelatedProducts({
         }}
       >
         {products.map((product) => (
-          <SwiperSlide key={product.id}>
+          <SwiperSlide key={product.id}  className="h-auto!">
             <ProductCard
               product={product}
             />

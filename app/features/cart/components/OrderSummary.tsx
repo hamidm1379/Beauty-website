@@ -125,9 +125,13 @@ export default function OrderSummary({ items }: Props) {
       transition={{ duration: 0.45 }}
       className="rounded-2xl sm:rounded-4xl border border-gray-100 bg-white p-4 sm:p-7 shadow-xl"
     >
-      <h2 className="text-lg sm:text-2xl font-black text-gray-900">خلاصه سفارش</h2>
+      <h2 className="text-lg sm:text-2xl font-black text-gray-900">
+        خلاصه سفارش
+      </h2>
 
-      <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-gray-500">اطلاعات نهایی سفارش شما</p>
+      <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm text-gray-500">
+        اطلاعات نهایی سفارش شما
+      </p>
 
       <div className="mt-5 sm:mt-8 space-y-3 sm:space-y-5 text-sm sm:text-base">
         <div className="flex items-center justify-between">
@@ -197,7 +201,9 @@ export default function OrderSummary({ items }: Props) {
               <span className="font-mono text-xs sm:text-sm font-bold text-green-700">
                 {appliedCoupon.code}
               </span>
-              <span className="text-[11px] sm:text-xs text-green-600">اعمال شد</span>
+              <span className="text-[11px] sm:text-xs text-green-600">
+                اعمال شد
+              </span>
             </div>
 
             <button
@@ -246,7 +252,7 @@ export default function OrderSummary({ items }: Props) {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           disabled={!items.length}
-          className="mt-6 sm:mt-10 flex w-full cursor-pointer items-center justify-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl bg-linear-to-r from-pink-500 to-rose-500 py-3 sm:py-4 text-sm sm:text-lg font-bold text-white shadow-lg transition-all hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-6 sm:mt-10 flex w-full cursor-pointer items-center justify-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl bg-white border border-pink-300 py-3 sm:py-4 text-sm sm:text-lg font-bold text-pink-600 shadow-lg transition-all hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-50"
         >
           <CreditCard className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
           ادامه فرآیند خرید
@@ -259,11 +265,13 @@ export default function OrderSummary({ items }: Props) {
           <ShieldCheck className="mt-1 h-5 w-5 sm:h-6 sm:w-6 shrink-0 text-pink-500" />
 
           <div>
-            <h3 className="text-sm sm:text-base font-bold text-gray-900">پرداخت کاملاً امن</h3>
+            <h3 className="text-sm sm:text-base font-bold text-gray-900">
+              پرداخت کاملاً امن
+            </h3>
 
             <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm leading-6 sm:leading-7 text-gray-500">
-              اطلاعات پرداخت شما با استفاده از پروتکل‌های امنیتی رمزنگاری
-              شده و محفوظ خواهد ماند.
+              اطلاعات پرداخت شما با استفاده از پروتکل‌های امنیتی رمزنگاری شده و
+              محفوظ خواهد ماند.
             </p>
           </div>
         </div>

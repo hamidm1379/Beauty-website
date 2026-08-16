@@ -8,6 +8,8 @@ import {
   ArrowLeft,
   Calendar,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Clock3,
   Eye,
   Package,
@@ -68,9 +70,18 @@ const statusMap = {
   },
 };
 
+const ITEMS_PER_PAGE = 6;
+
 export default function RecentOrders({ orders }: Props) {
   const [selectedOrder, setSelectedOrder] = useState<(typeof orders)[0] | null>(
     null,
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(orders.length / ITEMS_PER_PAGE);
+  const paginatedOrders = orders.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
   );
 
   if (!orders.length) {
@@ -117,7 +128,7 @@ export default function RecentOrders({ orders }: Props) {
       </div>
 
       <div className="space-y-4 sm:space-y-5">
-        {orders.map((order, index) => {
+        {paginatedOrders.map((order, index) => {
           const status =
             statusMap[order.status as keyof typeof statusMap] ??
             statusMap.PENDING;
@@ -220,6 +231,40 @@ export default function RecentOrders({ orders }: Props) {
           );
         })}
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-8 flex items-center justify-center gap-2">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-500 transition hover:border-pink-300 hover:text-pink-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-gray-200 disabled:hover:text-gray-500"
+          >
+            <ChevronRight size={18} />
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold transition ${
+                page === currentPage
+                  ? "bg-pink-500 text-white shadow-md"
+                  : "border border-gray-200 text-gray-600 hover:border-pink-300 hover:text-pink-600"
+              }`}
+            >
+              {page.toLocaleString("fa-IR")}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-500 transition hover:border-pink-300 hover:text-pink-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-gray-200 disabled:hover:text-gray-500"
+          >
+            <ChevronLeft size={18} />
+          </button>
+        </div>
+      )}
 
       <AnimatePresence>
         {selectedOrder && (

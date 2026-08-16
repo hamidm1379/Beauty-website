@@ -66,6 +66,7 @@ export default function ProductImages({
                 src={value}
                 alt="Preview"
                 fill
+                sizes="(max-width: 640px) 100vw, 288px"
                 className="object-cover"
               />
 

@@ -4,7 +4,23 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Home, Search, ShoppingBag, Frown, Star } from "lucide-react";
 
-const bubbles = [
+type Bubble = {
+  size: number;
+  top: string;
+  left: string;
+  duration: number;
+  delay: number;
+};
+
+type StarItem = {
+  size: number;
+  top: string;
+  left: string;
+  duration: number;
+  delay: number;
+};
+
+const bubbles: Bubble[] = [
   { size: 46, top: "10%", left: "6%", duration: 7, delay: 0 },
   { size: 24, top: "24%", left: "18%", duration: 5.5, delay: 0.6 },
   { size: 64, top: "62%", left: "4%", duration: 8.5, delay: 1.2 },
@@ -17,7 +33,7 @@ const bubbles = [
   { size: 22, top: "5%", left: "42%", duration: 6.2, delay: 1.1 },
 ];
 
-const stars = [
+const stars: StarItem[] = [
   { size: 16, top: "16%", left: "30%", duration: 2.2, delay: 0 },
   { size: 10, top: "36%", left: "10%", duration: 2.8, delay: 0.5 },
   { size: 14, top: "8%", left: "64%", duration: 2.4, delay: 1 },
@@ -29,16 +45,16 @@ const stars = [
 
 function FloatingBubbles() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {bubbles.map((b, i) => (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      {bubbles.map((bubble) => (
         <motion.span
-          key={i}
+          key={`bubble-${bubble.top}-${bubble.left}`}
           className="absolute rounded-full"
           style={{
-            width: b.size,
-            height: b.size,
-            top: b.top,
-            left: b.left,
+            width: bubble.size,
+            height: bubble.size,
+            top: bubble.top,
+            left: bubble.left,
             background:
               "radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.55) 14%, rgba(244,114,182,0.35) 45%, rgba(236,72,153,0.18) 75%, rgba(236,72,153,0.06) 100%)",
             boxShadow:
@@ -52,8 +68,8 @@ function FloatingBubbles() {
             scale: [1, 1.1, 1],
           }}
           transition={{
-            duration: b.duration,
-            delay: b.delay,
+            duration: bubble.duration,
+            delay: bubble.delay,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -65,22 +81,22 @@ function FloatingBubbles() {
 
 function TwinklingStars() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {stars.map((s, i) => (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+      {stars.map((star) => (
         <motion.span
-          key={i}
+          key={`star-${star.top}-${star.left}`}
           className="absolute"
-          style={{ top: s.top, left: s.left }}
+          style={{ top: star.top, left: star.left }}
           animate={{ opacity: [0.15, 1, 0.15], scale: [0.7, 1.15, 0.7] }}
           transition={{
-            duration: s.duration,
-            delay: s.delay,
+            duration: star.duration,
+            delay: star.delay,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         >
           <Star
-            size={s.size}
+            size={star.size}
             className="fill-pink-300 text-pink-300 drop-shadow-[0_0_4px_rgba(244,114,182,0.8)]"
           />
         </motion.span>
@@ -91,7 +107,11 @@ function TwinklingStars() {
 
 export default function NotFoundContent() {
   return (
-    <div className="relative flex min-h-[85vh] items-center justify-center overflow-hidden bg-linear-to-b from-pink-50/60 via-white to-white px-4 py-20">
+    <div
+      role="alert"
+      aria-label="صفحه یافت نشد"
+      className="relative flex min-h-[85vh] items-center justify-center overflow-hidden bg-linear-to-b from-pink-50/60 via-white to-white px-4 py-20"
+    >
       {/* Decorative glow */}
       <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-pink-200/30 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-pink-100/40 blur-3xl" />
@@ -138,7 +158,7 @@ export default function NotFoundContent() {
             from-pink-500
             to-rose-400
             bg-clip-text
-            text-8xl
+            text-6xl
             font-bold
             text-transparent
             sm:text-9xl
@@ -152,7 +172,7 @@ export default function NotFoundContent() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-4 text-2xl font-bold text-gray-900 sm:text-3xl"
+          className="mt-4 text-xl font-bold text-gray-900 sm:text-3xl"
         >
           اوپس! این صفحه رو پیدا نکردیم
         </motion.h2>
@@ -162,7 +182,7 @@ export default function NotFoundContent() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.45 }}
-          className="mt-4 max-w-md leading-8 text-gray-500"
+          className="mt-4 max-w-md leading-8 text-gray-500 max-sm:text-sm"
         >
           به‌نظر می‌رسه صفحه‌ای که دنبالش بودی جابه‌جا شده یا اصلاً وجود نداره.
           نگران نباش، بریم یه‌جای بهتر رو با هم پیدا کنیم.
@@ -173,7 +193,7 @@ export default function NotFoundContent() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-10 flex flex-wrap items-center justify-center gap-4"
+          className="mt-10 flex flex-nowrap items-center justify-center gap-1 sm:gap-4"
         >
           <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
             <Link
@@ -182,12 +202,14 @@ export default function NotFoundContent() {
                 flex
                 items-center
                 gap-2
+                whitespace-nowrap
                 rounded-full
                 bg-linear-to-l
                 from-pink-500
                 to-rose-400
-                px-7
-                py-3.5
+                px-4
+                py-3
+                text-sm
                 font-bold
                 text-white
                 shadow-lg
@@ -195,6 +217,9 @@ export default function NotFoundContent() {
                 transition-shadow
                 hover:shadow-xl
                 hover:shadow-pink-300/50
+                sm:px-7
+                sm:py-3.5
+                sm:text-base
               "
             >
               <Home size={18} />
@@ -209,17 +234,22 @@ export default function NotFoundContent() {
                 flex
                 items-center
                 gap-2
+                whitespace-nowrap
                 rounded-full
                 border
                 border-gray-200
                 bg-white
-                px-7
-                py-3.5
+                px-4
+                py-3
+                text-sm
                 font-bold
                 text-gray-700
                 transition-colors
                 hover:border-pink-500
                 hover:text-pink-500
+                sm:px-7
+                sm:py-3.5
+                sm:text-base
               "
             >
               <ShoppingBag size={18} />
@@ -233,7 +263,7 @@ export default function NotFoundContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.75 }}
-          className="mt-8 flex items-center gap-2 text-sm text-gray-400"
+          className="mt-8 flex items-center gap-2 text-xs text-gray-400 sm:text-sm"
         >
           <Search size={15} />
           یا از طریق جست‌وجوی سایت محصول موردنظرت رو پیدا کن

@@ -4,9 +4,7 @@ interface Props {
   article: Article;
 }
 
-export default function ArticleContent({
-  article,
-}: Props) {
+export default function ArticleContent({ article }: Props) {
   return (
     <article
       className="

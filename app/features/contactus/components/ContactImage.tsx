@@ -24,6 +24,7 @@ export default function ContactImage() {
         alt="تماس با ما"
         fill
         priority
+        sizes="(max-width: 1024px) 100vw, 50vw"
         className="
           object-cover
 

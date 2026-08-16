@@ -67,6 +67,7 @@ export default function BrandHeroDetail({ brand }: Props) {
               src={brand.thumbnail}
               alt={brand.title}
               fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-contain p-6 sm:p-8"
             />
           ) : (

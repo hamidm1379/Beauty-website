@@ -258,11 +258,11 @@ export default function LoginForm() {
       className="space-y-8"
     >
       <div>
-        <h1 className="text-3xl font-black text-slate-900">
+        <h1 className="text-xl sm:text-3xl font-black text-slate-900">
           ورود به حساب کاربری
         </h1>
 
-        <p className="mt-3 leading-8 text-slate-500">
+        <p className="max-sm:text-sm mt-3 leading-8 text-slate-500">
           شماره موبایل خود را وارد کنید تا کد تأیید برایتان ارسال شود.
         </p>
       </div>

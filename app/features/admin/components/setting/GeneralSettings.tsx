@@ -128,7 +128,7 @@ export default function GeneralSettings({ data, onSave, saving }: Props) {
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
           {logo ? (
             <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-white">
-              <Image src={logo} alt="لوگو" fill className="object-contain p-2" />
+              <Image src={logo} alt="لوگو" fill sizes="80px" className="object-contain p-2" />
 
               <button
                 type="button"

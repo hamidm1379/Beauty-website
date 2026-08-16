@@ -164,6 +164,7 @@ export default function ArticleSidebar({ article, suggestedArticles }: Props) {
                       src={item.thumbnail ?? "/images/no-image.png"}
                       alt={item.title}
                       fill
+                      sizes="56px"
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>

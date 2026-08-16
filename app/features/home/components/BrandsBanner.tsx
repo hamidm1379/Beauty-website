@@ -114,6 +114,7 @@ export default function BrandsBanner() {
               alt={brand.name}
               width={90}
               height={32}
+              style={{ width: "auto", height: "auto" }}
               className="
               object-contain
 

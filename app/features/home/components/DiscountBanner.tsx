@@ -29,26 +29,26 @@ export default function DiscountBanner() {
       lg:h-70
       rounded-2xl
       md:rounded-4xl
-      bg-linear-to-br
-      from-pink-500
-      via-rose-400
-      to-fuchsia-500
+      bg-white
+      border
+      border-pink-100
       py-2
       px-6
       md:p-8
-      text-white
+      text-pink-950
+      shadow-sm
       "
     >
       <div className="flex h-full items-center justify-between">
         {/* Content */}
         <div className="flex h-full flex-col">
-          <Gift size={42} />
+          <Gift size={42} className="text-pink-500" />
 
-          <h3 className="mt-2 sm:mt-5 text-xl md:text-2xl font-bold">
+          <h3 className="mt-2 sm:mt-5 text-xl md:text-2xl font-bold text-pink-600">
             تخفیف اولین خرید
           </h3>
 
-          <p className="mt-3 max-md:text-sm max-w-xs text-white/90">
+          <p className="mt-3 max-md:text-sm max-w-xs text-pink-950/70">
             برای اولین سفارش خود ۲۰٪ تخفیف دریافت کنید.
           </p>
           <div className="grid max-lg:grid-cols-2">
@@ -58,13 +58,15 @@ export default function DiscountBanner() {
             inline-flex
             w-fit
             rounded-2xl
-            bg-white/20
+            bg-pink-50
+            border
+            border-pink-200
             px-4
             py-2
             sm:px-8
             sm:py-2
             sm:font-bold
-            backdrop-blur-sm
+            text-pink-600
             select-none cursor-default
             lg:col-span-2
           "
@@ -77,13 +79,13 @@ export default function DiscountBanner() {
               className="
             
     rounded-2xl
-    bg-white
+    bg-pink-500
     px-2
     py-1
     sm:px-6
     sm:py-2
     font-medium
-    text-pink-600
+    text-white
     text-center
     lg:w-fit
     lg:mt-3
@@ -96,6 +98,7 @@ export default function DiscountBanner() {
     max-lg:h-9.25
     hover:scale-105
     hover:shadow-lg
+    hover:bg-pink-600
   "
             >
               کپی کد تخفیف
@@ -109,6 +112,7 @@ export default function DiscountBanner() {
             src="/discont.png"
             alt="discount"
             fill
+            sizes="240px"
             className="
               object-contain
               drop-shadow-2xl

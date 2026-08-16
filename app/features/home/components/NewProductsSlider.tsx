@@ -10,12 +10,9 @@ interface Props {
   products: Product[];
 }
 
-export default function NewProductsSlider({
-  products,
-}: Props) {
+export default function NewProductsSlider({ products }: Props) {
   return (
     <section className="max-w-7xl mx-auto px-4 lg:px-8 bg-gray-100 py-6 md:py-10 md:rounded-t-3xl">
-
       <div className="mb-8 flex items-center justify-between">
         <h2 className="text-lg sm:text-xl md:text-2xl font-bold">
           جدیدترین محصولات
@@ -30,6 +27,7 @@ export default function NewProductsSlider({
       </div>
 
       <Swiper
+        className="h-auto!"
         slidesPerView={4}
         spaceBetween={20}
         breakpoints={{
@@ -56,12 +54,11 @@ export default function NewProductsSlider({
         }}
       >
         {products.map((product) => (
-          <SwiperSlide key={product.id}>
+          <SwiperSlide key={product.id} className="h-auto!">
             <ProductCard product={product} />
           </SwiperSlide>
         ))}
       </Swiper>
-
     </section>
   );
 }

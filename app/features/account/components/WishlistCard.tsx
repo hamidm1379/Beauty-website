@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Heart, ShoppingBag, Trash2, ArrowLeft } from "lucide-react";
+import { Heart, ShoppingBag, Trash2, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -38,11 +38,20 @@ function calculateDiscount(price: number, discountPercent: number | null) {
   return { hasDiscount, discountPercent: percent, finalPrice };
 }
 
+const ITEMS_PER_PAGE = 9;
+
 export default function WishlistCard({ wishlist: initialWishlist }: Props) {
   const [wishlist, setWishlist] = useState(initialWishlist);
   const [pendingId, setPendingId] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
+
+  const totalPages = Math.ceil(wishlist.length / ITEMS_PER_PAGE);
+  const paginatedWishlist = wishlist.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
 
   async function handleRemove(productId: number) {
     setPendingId(productId);
@@ -127,7 +136,7 @@ export default function WishlistCard({ wishlist: initialWishlist }: Props) {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
-          {wishlist.map((item, index) => {
+          {paginatedWishlist.map((item, index) => {
             const { product } = item;
             const { hasDiscount, finalPrice } = calculateDiscount(
               product.price,
@@ -327,6 +336,40 @@ export default function WishlistCard({ wishlist: initialWishlist }: Props) {
               </motion.div>
             );
           })}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="mt-8 flex items-center justify-center gap-2">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-500 transition hover:border-pink-300 hover:text-pink-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-gray-200 disabled:hover:text-gray-500"
+          >
+            <ChevronRight size={18} />
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`flex h-10 w-10 items-center justify-center rounded-xl text-sm font-semibold transition ${
+                page === currentPage
+                  ? "bg-pink-500 text-white shadow-md"
+                  : "border border-gray-200 text-gray-600 hover:border-pink-300 hover:text-pink-600"
+              }`}
+            >
+              {page.toLocaleString("fa-IR")}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-500 transition hover:border-pink-300 hover:text-pink-600 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-gray-200 disabled:hover:text-gray-500"
+          >
+            <ChevronLeft size={18} />
+          </button>
         </div>
       )}
 

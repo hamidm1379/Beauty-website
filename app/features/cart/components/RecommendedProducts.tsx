@@ -1,11 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 import ProductCard, {
   Product,
 } from "@/app/features/home/components/ProductCard";
+
+import "swiper/css";
 
 interface Props {
   products: Product[];
@@ -58,40 +60,23 @@ export default function RecommendedProducts({ products }: Props) {
 
       {/* Products */}
 
-      <motion.div
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        variants={{
-          hidden: {},
-
-          show: {
-            transition: {
-              staggerChildren: 0.1,
-            },
-          },
+      <Swiper
+        className="h-auto!"
+        slidesPerView={4}
+        spaceBetween={20}
+        breakpoints={{
+          0: { slidesPerView: 2, spaceBetween: 10 },
+          640: { slidesPerView: 2, spaceBetween: 12 },
+          768: { slidesPerView: 3, spaceBetween: 16 },
+          1024: { slidesPerView: 4, spaceBetween: 20 },
         }}
-className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
       >
         {products.map((product) => (
-          <motion.div
-            key={product.id}
-            variants={{
-              hidden: {
-                opacity: 0,
-                y: 30,
-              },
-
-              show: {
-                opacity: 1,
-                y: 0,
-              },
-            }}
-          >
+          <SwiperSlide key={product.id} className="h-auto!">
             <ProductCard product={product} />
-          </motion.div>
+          </SwiperSlide>
         ))}
-      </motion.div>
+      </Swiper>
 
       {/* Mobile Button */}
 

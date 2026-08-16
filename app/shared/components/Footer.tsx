@@ -47,7 +47,9 @@ function FooterLinkGroup({
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.5, delay }}
     >
-      <h4 className="mb-4 sm:mb-6 text-base sm:text-lg font-bold text-gray-900">{title}</h4>
+      <h4 className="mb-4 sm:mb-6 text-base sm:text-lg font-bold text-gray-900">
+        {title}
+      </h4>
 
       <ul className="space-y-2.5 sm:space-y-3">
         {links.map((link) => (
@@ -275,7 +277,9 @@ export default function Footer({ data }: { data: FooterData }) {
                   className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-linear-to-br from-pink-500 to-rose-400"
                 />
               )}
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-800">{siteName}</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-800">
+                {siteName}
+              </h3>
             </div>
 
             <p className="text-sm sm:text-base leading-6 sm:leading-8 text-gray-500">
@@ -308,7 +312,7 @@ export default function Footer({ data }: { data: FooterData }) {
                   >
                     <SocialIcon
                       platform={social.platform}
-                      className="h-[18px] w-[18px]"
+                      className="h-4.5 w-4.5"
                     />
                   </motion.a>
                 ))}
@@ -334,15 +338,16 @@ export default function Footer({ data }: { data: FooterData }) {
 
         {/* Bottom footer */}
         <div className="flex flex-col-reverse items-center justify-between gap-4 text-center text-xs sm:text-sm text-gray-400 md:flex-row">
-          <p>© 2026 تمامی حقوق این وب‌سایت محفوظ است.</p>
+          <p>© {new Date().getFullYear()} تمامی حقوق این وب‌سایت محفوظ است.</p>
 
           <p>
             <Image
-              width={220}
-              height={200}
+              width={150}
+              height={150}
               src={enamad}
               alt="نماد اعتماد الکترونیکی"
-              className="h-auto w-24 sm:w-36 md:w-[220px]"
+              style={{ width: "auto", height: "auto" }}
+              className="h-auto w-24 sm:w-36 md:w-55"
             />
           </p>
         </div>

@@ -56,8 +56,8 @@ export default function Breadcrumb({
         px-5
         py-4
 
-        text-sm
-
+        sm:text-sm
+        text-[12px]
         shadow-sm
       "
     >
