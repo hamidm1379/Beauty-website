@@ -29,8 +29,11 @@ export default function SalesChart({ data }: { data: SalesPoint[] }) {
             <YAxis />
 
             <Tooltip
-              formatter={(value: number) =>
-                [value.toLocaleString() + " تومان", "فروش"] as [string, string]
+              formatter={(value) =>
+                [
+                  `${Number(value ?? 0).toLocaleString()} تومان`,
+                  "فروش",
+                ] as [string, string]
               }
             />
 

@@ -3,81 +3,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { orderService } from "@/lib/services/order.service";
 import { getErrorMessage } from "@/lib/utils/errors";
 
-export async function GET(
-  req: NextRequest,
+import { OrderStatus } from "@prisma/client";
 
-  {
-    params,
-  }: {
-    params: {
-      id: string;
-    };
-  },
-) {
+export async function GET(req: NextRequest) {
   try {
-    const order = await orderService.getAdminOrder(Number(params.id));
+    const { searchParams } = new URL(req.url);
+
+    const status = searchParams.get("status") as OrderStatus | null;
+    const search = searchParams.get("search") ?? undefined;
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 10;
+
+    const data = await orderService.getAdminOrders({
+      status: status ?? undefined,
+      search,
+      page,
+      limit,
+    });
 
     return NextResponse.json({
       success: true,
-
-      data: order,
+      data,
     });
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-
-        message: getErrorMessage(error),
-      },
-      {
-        status: 500,
-      },
-    );
-  }
-}
-
-export async function PATCH(
-  req: NextRequest,
-
-  {
-    params,
-  }: {
-    params: {
-      id: string;
-    };
-  },
-) {
-  try {
-    const body = await req.json();
-
-    if (body.trackingCode) {
-      const order = await orderService.addTrackingCode(
-        Number(params.id),
-        body.trackingCode,
-      );
-
-      return NextResponse.json({
-        success: true,
-
-        data: order,
-      });
-    }
-
-    return NextResponse.json(
-      {
-        success: false,
-
-        message: "داده نامعتبر",
-      },
-      {
-        status: 400,
-      },
-    );
-  } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-
         message: getErrorMessage(error),
       },
       {

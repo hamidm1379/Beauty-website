@@ -1,8 +1,10 @@
 "use client";
 
+import type { ArticleStatus } from "../types";
+
 interface ArticlePublishProps {
   form: {
-    status: "DRAFT" | "PUBLISHED";
+    status: ArticleStatus;
     publishedAt: string;
   };
 

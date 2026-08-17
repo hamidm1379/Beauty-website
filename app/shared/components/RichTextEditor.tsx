@@ -21,7 +21,7 @@ export default function RichTextEditor({
   return (
     <div className="rich-text-editor rounded-xl border border-gray-200 overflow-hidden">
       <CKEditor
-        editor={ClassicEditor}
+        editor={ClassicEditor as never}
         data={value}
         onChange={(_event, editor) => {
           const data = editor.getData();
@@ -29,7 +29,7 @@ export default function RichTextEditor({
         }}
         config={{
           placeholder,
-          extraPlugins: [createUploadAdapterPlugin(uploadFolder)],
+          extraPlugins: [createUploadAdapterPlugin(uploadFolder) as never],
           toolbar: {
             items: [
               "heading",

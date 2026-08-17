@@ -12,11 +12,12 @@ import { Sparkles } from "lucide-react";
 
 // ========== Types ==========
 export type HeroSlideProps = {
+  id?: number;
   title: string;
-  subtitle?: string;
+  subtitle?: string | null;
   image: string;
-  buttonText?: string;
-  link?: string;
+  buttonText?: string | null;
+  link?: string | null;
 };
 
 // ========== Constants ==========

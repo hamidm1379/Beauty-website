@@ -91,3 +91,6 @@ class OtpService {
 }
 
 export const otpService = new OtpService();
+
+export const sendOtp = (phone: string, type?: OtpType) =>
+  otpService.sendOtp(phone, type);

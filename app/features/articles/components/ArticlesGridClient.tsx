@@ -6,7 +6,16 @@ import ArticleCard from "./ArticleCard";
 
 
 interface Props {
-  articles: { id: number; title: string; slug: string; thumbnail?: string | null; excerpt?: string | null; category?: { title: string } | null; createdAt: string | Date }[];
+  articles: {
+    id: number;
+    title: string;
+    slug: string;
+    thumbnail?: string | null;
+    excerpt?: string | null;
+    category?: { title: string } | null;
+    createdAt: string | Date;
+    publishedAt?: string | Date | null;
+  }[];
 }
 
 const container = {
@@ -63,15 +72,14 @@ export default function ArticlesGridClient({
 
                 title: article.title,
 
-                excerpt: article.excerpt,
+                excerpt: article.excerpt ?? "",
 
-                image: article.thumbnail,
+                image: article.thumbnail ?? "",
 
-                category: article.category.title,
-                
+                category: article.category?.title ?? "",
 
                 date: new Intl.DateTimeFormat("fa-IR").format(
-                  new Date(article.publishedAt)
+                  new Date(article.publishedAt ?? article.createdAt),
                 ),
 
                 readTime: `5 دقیقه`,

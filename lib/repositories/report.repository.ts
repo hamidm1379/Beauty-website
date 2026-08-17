@@ -208,7 +208,9 @@ class ReportRepository {
       take: 10,
     });
 
-    const ids = products.map((item) => item.productId);
+    const ids = products
+      .map((item) => item.productId)
+      .filter((id): id is number => id != null);
 
     const details = await prisma.product.findMany({
       where: {
@@ -301,7 +303,7 @@ class ReportRepository {
       netSales += order.total;
 
       order.items.forEach((item) => {
-        const cost = item.product.purchasePrice * item.quantity;
+        const cost = (item.product?.purchasePrice ?? 0) * item.quantity;
 
         const income = item.unitPrice * item.quantity;
 

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import ArticleForm, { type ArticleInitialData } from "@/app/features/admin/components/articles/ArticleForm";
+import ArticleForm from "@/app/features/admin/components/articles/ArticleForm";
 import { articleService } from "@/lib/services/article.service";
 
 interface EditArticlePageProps {

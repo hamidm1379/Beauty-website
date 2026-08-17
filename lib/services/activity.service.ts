@@ -83,8 +83,7 @@ class ActivityService {
 
         prisma.product.findMany({
           where: {
-            stock: { lte: 10 },
-            stock: { gt: 0 },
+            AND: [{ stock: { lte: 10 } }, { stock: { gt: 0 } }],
           },
           orderBy: { stock: "asc" },
           take: 2,

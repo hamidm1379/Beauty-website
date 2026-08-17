@@ -38,7 +38,7 @@ export interface ArticleInitialData {
   thumbnail?: string | null;
   categoryId?: number | string | null;
   status?: ArticleStatus | null;
-  publishedAt?: string | null;
+  publishedAt?: string | Date | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
   seoKeywords?: string | null;

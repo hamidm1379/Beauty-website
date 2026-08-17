@@ -8,7 +8,7 @@ export interface AdminOrderItem {
   totalPrice: number;
   productTitle: string;
   productImage: string | null;
-  productId: number;
+  productId: number | null;
   variantTitle: string | null;
   variantColor: string | null;
   discount?: number;

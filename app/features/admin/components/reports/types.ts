@@ -34,7 +34,7 @@ export interface OrderStatusPoint {
 
 /** یک ردیف محصولات پرفروش (خروجی getTopProducts). */
 export interface TopProduct {
-  id: number;
+  id: number | null;
   title: string | null | undefined;
   thumbnail: string | null | undefined;
   quantity: number;

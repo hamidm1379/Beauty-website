@@ -87,7 +87,7 @@ function ItemCard({ item }: { item: AdminOrderItem }) {
               تعداد {item.quantity.toLocaleString("fa-IR")}
             </span>
 
-            {item.discount > 0 && (
+            {(item.discount ?? 0) > 0 && (
               <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-600">
                 {item.discount}% تخفیف
               </span>
@@ -157,7 +157,7 @@ function ItemRow({ item }: { item: AdminOrderItem }) {
             <span className="rounded-full bg-gray-100 px-1.5 py-0.5 text-[10px] font-bold text-gray-700">
               ×{item.quantity.toLocaleString("fa-IR")}
             </span>
-            {item.discount > 0 && (
+            {(item.discount ?? 0) > 0 && (
               <span className="rounded-full bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-600">
                 {item.discount}%
               </span>
