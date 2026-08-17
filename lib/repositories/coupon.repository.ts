@@ -57,6 +57,13 @@ export class CouponRepository {
   async delete(id: number) {
     return prisma.coupon.delete({ where: { id } });
   }
+
+  async incrementUsedCount(id: number) {
+    return prisma.coupon.update({
+      where: { id },
+      data: { usedCount: { increment: 1 } },
+    });
+  }
 }
 
 export const couponRepository = new CouponRepository();

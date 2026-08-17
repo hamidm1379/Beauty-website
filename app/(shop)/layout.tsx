@@ -15,7 +15,7 @@ export default async function ShopLayout({ children }: Props) {
     <div className="min-h-screen bg-white">
       <Header />
 
-      <main className="pt-5">
+      <main className="pt-0">
         {children}
       </main>
 

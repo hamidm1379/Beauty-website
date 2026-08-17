@@ -27,7 +27,12 @@ function isActivePath(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
-export default function HeaderClient({ cartCount, isLoggedIn, role, siteLogo }: Props) {
+export default function HeaderClient({
+  cartCount,
+  isLoggedIn,
+  role,
+  siteLogo,
+}: Props) {
   const isAdminOrSupport = role === "ADMIN" || role === "SUPPORT";
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -39,7 +44,7 @@ export default function HeaderClient({ cartCount, isLoggedIn, role, siteLogo }: 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/90 backdrop-blur">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
-        <div className="flex items-center justify-between gap-5 py-4">
+        <div className="flex items-center justify-between gap-5 py-2">
           {/* Mobile Menu */}
 
           <button
@@ -56,13 +61,13 @@ export default function HeaderClient({ cartCount, isLoggedIn, role, siteLogo }: 
               <Image
                 src={siteLogo}
                 alt="لوگو"
-                width={120}
-                height={40}
-                className="h-10 w-auto object-contain"
+                width={170}
+                height={70}
+                className="h-17 w-auto object-contain"
                 priority
               />
             ) : (
-              <span className="text-2xl font-black text-gray-900">برق لب</span>
+              <span className="text-2xl font-black text-gray-900">اریکه</span>
             )}
           </Link>
 

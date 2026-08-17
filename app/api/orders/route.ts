@@ -26,6 +26,8 @@ export async function POST(req: Request) {
       Number(session.user.id),
 
       Number(body.addressId),
+
+      body.couponCode || undefined,
     );
 
     return NextResponse.json({

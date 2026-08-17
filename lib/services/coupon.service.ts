@@ -196,6 +196,15 @@ class CouponService {
       discountAmount,
     };
   }
+
+  /**
+   * اعمال کد تخفیف روی سفارش: اعتبارسنجی + افزایش شمارنده استفاده
+   */
+  async applyCoupon(code: string, amount: number) {
+    const result = await this.validate(code, amount);
+    await couponRepository.incrementUsedCount(result.id);
+    return result;
+  }
 }
 
 export const couponService = new CouponService();

@@ -1,5 +1,6 @@
 import { orderRepository } from "@/lib/repositories/order.repository";
 import { cartService } from "@/lib/services/cart.service";
+import { couponService } from "@/lib/services/coupon.service";
 
 import { OrderStatus } from "@prisma/client";
 
@@ -109,6 +110,8 @@ class OrderService {
     userId: number,
 
     addressId: number,
+
+    couponCode?: string,
   ) {
     const cart = await cartService.getCart(userId);
 
@@ -170,6 +173,17 @@ class OrderService {
       };
     });
 
+    let couponDiscount = 0;
+    let couponId: number | undefined;
+
+    if (couponCode) {
+      const couponResult = await couponService.applyCoupon(couponCode, total);
+      couponDiscount = couponResult.discountAmount;
+      couponId = couponResult.id;
+    }
+
+    total = Math.max(total - couponDiscount, 0);
+
     const order = await orderRepository.create({
       orderNumber: generateOrderNumber(),
 
@@ -177,7 +191,7 @@ class OrderService {
 
       subtotal,
 
-      discount,
+      discount: discount + couponDiscount,
 
       shippingCost: 0,
 
@@ -194,6 +208,16 @@ class OrderService {
           id: addressId,
         },
       },
+
+      ...(couponId
+        ? {
+            coupon: {
+              connect: {
+                id: couponId,
+              },
+            },
+          }
+        : {}),
 
       items: {
         create: items,
