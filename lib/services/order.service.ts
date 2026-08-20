@@ -1,6 +1,7 @@
 import { orderRepository } from "@/lib/repositories/order.repository";
 import { cartService } from "@/lib/services/cart.service";
 import { couponService } from "@/lib/services/coupon.service";
+import { couponRepository } from "@/lib/repositories/coupon.repository";
 
 import { OrderStatus } from "@prisma/client";
 
@@ -255,6 +256,36 @@ class OrderService {
     }
 
     return order;
+  }
+
+  /**
+   * لغو سفارش: بازگرداندن آیتم‌ها به سبد، آزادسازی کد تخفیف و حذف سفارش
+   */
+  async cancelOrder(id: number, userId: number) {
+    const order = await orderRepository.findById(id);
+
+    if (!order) {
+      throw new Error("سفارش پیدا نشد");
+    }
+
+    if (order.userId !== userId) {
+      throw new Error("دسترسی غیرمجاز");
+    }
+
+    await cartService.restoreCartFromOrder(userId, {
+      items: order.items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        variantId: item.variantId,
+      })),
+    });
+
+    if (order.couponId) {
+      await couponRepository.decrementUsedCount(order.couponId);
+    }
+
+    await orderRepository.delete(id);
   }
 }
 

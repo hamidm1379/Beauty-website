@@ -373,6 +373,10 @@ class OrderRepository {
       where: { status: OrderStatus.PENDING },
     });
   }
+
+  async delete(id: number) {
+    return prisma.order.delete({ where: { id } });
+  }
 }
 
 export const orderRepository = new OrderRepository();

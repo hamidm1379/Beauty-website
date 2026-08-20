@@ -205,6 +205,16 @@ class CouponService {
     await couponRepository.incrementUsedCount(result.id);
     return result;
   }
+
+  /**
+   * آزادسازی کد تخفیف: کاهش شمارنده استفاده (مثلاً در صورت شکست پرداخت)
+   */
+  async releaseCoupon(code: string) {
+    const normalizedCode = code.trim().toUpperCase();
+    const coupon = await couponRepository.findByCode(normalizedCode);
+    if (!coupon) return;
+    await couponRepository.decrementUsedCount(coupon.id);
+  }
 }
 
 export const couponService = new CouponService();

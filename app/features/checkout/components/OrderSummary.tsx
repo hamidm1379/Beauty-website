@@ -126,6 +126,8 @@ export default function OrderSummary({
       return;
     }
 
+    let orderId: number | null = null;
+
     try {
       setSubmitting(true);
 
@@ -149,7 +151,7 @@ export default function OrderSummary({
         throw new Error(result.message ?? "خطا در ثبت سفارش");
       }
 
-      const orderId = result.data.id;
+      orderId = result.data.id;
 
       const payRes = await fetch(`/api/orders/${orderId}/pay`, {
         method: "POST",
@@ -158,6 +160,7 @@ export default function OrderSummary({
       const payResult = await payRes.json();
 
       if (!payRes.ok || !payResult.success) {
+        fetch(`/api/orders/${orderId}/cancel`, { method: "POST" });
         toast.error(payResult.message ?? "خطا در اتصال به درگاه پرداخت");
         router.push(`/account`);
         return;
@@ -165,6 +168,9 @@ export default function OrderSummary({
 
       window.location.href = payResult.data.gatewayUrl;
     } catch (error) {
+      if (orderId) {
+        fetch(`/api/orders/${orderId}/cancel`, { method: "POST" });
+      }
       toast.error(getErrorMessage(error) ?? "خطا در ثبت سفارش");
     } finally {
       setSubmitting(false);

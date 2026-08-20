@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { verifyPayment } from "@/lib/payment";
 import { sendSms } from "@/lib/sms/kavenegar";
 import { cartService } from "@/lib/services/cart.service";
+import { couponRepository } from "@/lib/repositories/coupon.repository";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -39,6 +40,10 @@ export async function GET(request: NextRequest) {
           variantId: item.variantId,
         })),
       });
+
+      if (safeOrder.couponId) {
+        await couponRepository.decrementUsedCount(safeOrder.couponId);
+      }
 
       await prisma.order.delete({ where: { id: safeOrder.id } });
     } catch (error) {

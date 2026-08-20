@@ -64,6 +64,15 @@ export class CouponRepository {
       data: { usedCount: { increment: 1 } },
     });
   }
+
+  async decrementUsedCount(id: number) {
+    const coupon = await prisma.coupon.findUnique({ where: { id } });
+    if (!coupon || coupon.usedCount <= 0) return coupon;
+    return prisma.coupon.update({
+      where: { id },
+      data: { usedCount: { decrement: 1 } },
+    });
+  }
 }
 
 export const couponRepository = new CouponRepository();
